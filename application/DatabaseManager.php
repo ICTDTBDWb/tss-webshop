@@ -71,7 +71,7 @@ class DatabaseManager
      *
      * @return mixed Returns the value on success and false on failure.
      */
-    public function find(): mixed
+    public function first(): mixed
     {
         return $this->statement->fetch();
     }
