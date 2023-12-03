@@ -1,7 +1,3 @@
-<?php
-    if (isset($_SESSION)) $winkelwagen_aantal = count($_SESSION['winkelwagen']['producten']);
-?>
-
 <header class="container-fluid h-fit d-flex justify-content-center shadow-sm bg-white">
     <div class="container-lg mx-auto py-3 row gx-0 items-center">
         <!--Logo-->
