@@ -16,44 +16,61 @@
         <!--Pagina content container-->
 
 
-            <div class="container mt-5">
+        <div class="container mt-5 text-center">
+            <div class="row">
+                <!-- Laatste bestellingen sectie -->
+                <div class="col-md-9">
+                    <div class="card">
 
+                        <div class="card-header">
+                            Laatste bestellingen
+                        </div>
+                        <div class="card-body">
 
-                <div class="row">
-
-
-
-                    <?php $klant = queryKlant(1);?>
-                    <div class="col-md-4">
-                        <div class="card">
-
-                            <div class="card-body">
-                                <!-- Laatste bestellingen sectie -->
-                                <div class="card-header">
-                                    Laatste bestellingen</div>
-                            <!-- Klantgegevens sectie -->
-                            <div class="card-header">
-                                Klantgegevens</div>
-                            <div class="card-body">
-                                <h5 class="card-title"><?php echo "Naam: ".$klant->voornaam; ?> <?php echo ($klant->achternaam); ?></h5>
-                                <h5 class="card-title"><?php echo "Adres: ".$klant->straat; ?> <?php echo ($klant->huisnummer); ?></h5>
-                                <h5 class="card-title"><?php echo "Postcode: ".$klant->postcode; ?></h5>
-                                <h5 class="card-title"><?php echo "Woonplaats: ".$klant->woonplaats; ?></h5>
-                                <h5 class="card-title"><?php echo "Email: ".$klant->email; ?></h5>
-                                <h5 class="card-title"><?php echo "Klantnummer: ".$klant->id; ?></h5>
-                                <!-- Andere klantgegevens indien nodig -->
-
-                                <!-- Cadeaubonnen -->
-                                <div class="card-header">
-                                    Cadeaubonnen</div>
-
-
-
-
-                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <br>
+            <div class="row">
+                <?php $klant = queryKlant(1);?>
+                <div class="col-md-4">
+                    <div class="card">
+                        <!-- Klantgegevens sectie -->
+
+                        <div class="card-header">
+                            Klantgegevens
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo "Naam: ".$klant->voornaam; ?> <?php echo ($klant->achternaam); ?></h5>
+                            <h5 class="card-title"><?php echo "Adres: ".$klant->straat; ?> <?php echo ($klant->huisnummer); ?></h5>
+                            <h5 class="card-title"><?php echo "Postcode: ".$klant->postcode; ?></h5>
+                            <h5 class="card-title"><?php echo "Woonplaats: ".$klant->woonplaats; ?></h5>
+                            <h5 class="card-title"><?php echo "Email: ".$klant->email; ?></h5>
+                            <h5 class="card-title"><?php echo "Klantnummer: ".$klant->id; ?></h5>
+                            <!-- Andere klantgegevens indien nodig -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 offset-1">
+                    <div class="card">
+                        <!-- Klantgegevens sectie -->
+
+                        <div class="card-header">
+                            Cadeaubonnen
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo "Naam: ".$klant->voornaam; ?> <?php echo ($klant->achternaam); ?></h5>
+                            <h5 class="card-title"><?php echo "Adres: ".$klant->straat; ?> <?php echo ($klant->huisnummer); ?></h5>
+                            <h5 class="card-title"><?php echo "Postcode: ".$klant->postcode; ?></h5>
+                            <h5 class="card-title"><?php echo "Woonplaats: ".$klant->woonplaats; ?></h5>
+                            <h5 class="card-title"><?php echo "Email: ".$klant->email; ?></h5>
+                            <h5 class="card-title"><?php echo "Klantnummer: ".$klant->id; ?></h5>
+                            <!-- Andere klantgegevens indien nodig -->
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
         </div>
@@ -61,5 +78,6 @@
         <!--Footer & Scripts-->
         <?php include __DIR__ . "/../../application/components/layout/footer.php"; ?>
         <?php include __DIR__ . "/../../application/components/layout/scripts.php"; ?>
+
     </body>
 </html>
