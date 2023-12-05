@@ -20,3 +20,23 @@ class Klant {
         $this->id = $id;
     }
 }
+
+class Laatstebestelling {
+    public $bestelling_id;
+    public $product_naam;
+    public $product_foto_pad;
+    public $product_foto_naam;
+    public $besteldatum;
+    public $klant_id;
+
+    public function __construct($bestelling_id, $product_naam, $product_foto_pad, $product_foto_naam, $besteldatum, $klant_id) {
+        $this->bestelling_id = $bestelling_id;
+        $this->product_naam = $product_naam;
+        $this->product_foto_pad = $product_foto_pad;
+        $this->product_foto_naam = $product_foto_naam;
+        $this->besteldatum = $besteldatum;
+        $this->klant_id = $klant_id;
+    }
+}
+
+
