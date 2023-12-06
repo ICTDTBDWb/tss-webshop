@@ -77,7 +77,7 @@ use \application\DatabaseManager;
 
         if(empty($producten))
         {
-            $producten[0]['naam'] = "";
+            $contruct .= "<strong></strong>";
         }
 
         foreach($producten as $product)
@@ -104,7 +104,7 @@ use \application\DatabaseManager;
     function get_categorieen()
     {
         $database = new DatabaseManager();
-        $categorieen = $database->query("SELECT * FROM categorieen")->get();
+        $categorieen = $database->query("SELECT * FROM categorieen ORDER BY id ASC")->get();
         $database->close();
         return $categorieen;
     }
@@ -112,7 +112,7 @@ use \application\DatabaseManager;
     function get_producten($categorie_id)
     {
         $database = new DatabaseManager();
-        $producten = $database->query("SELECT * FROM producten inner join product_categorieen where product_categorieen.categorie_id = ? ", [encode($categorie_id)] )->get();
+        $producten = $database->query("SELECT * FROM producten inner join product_categorieen where product_id = producten.id and categorie_id  = ? ORDER BY naam ASC", [$categorie_id] )->get();
         $database->close();
 
         return $producten;
@@ -121,7 +121,7 @@ use \application\DatabaseManager;
     function get_overige_producten()
     {
         $database = new DatabaseManager();
-        $producten = $database->query("SELECT * FROM producten WHERE NOT EXISTS ( SELECT * FROM product_categorieen where product_categorieen.product_id = producten.id)")->get();
+        $producten = $database->query("SELECT * FROM producten WHERE NOT EXISTS ( SELECT * FROM product_categorieen where product_categorieen.product_id = producten.id) ORDER BY naam ASC ")->get();
         $database->close();
 
         return $producten;

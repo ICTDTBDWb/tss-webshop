@@ -20,7 +20,10 @@
 
 
         }
-
+   main{
+       width:80%;
+       float:right;
+   }
 
 
 
@@ -82,6 +85,9 @@
 
         <!--Pagina content container-->
         <div class="container-lg flex-grow-1 gx-0 py-4" >
+            <main>
+                <?php include __DIR__ . "/../../application/beheer/productbeheer_form.php" ?>
+            </main>
 
              <input type="text" value="test" id="test"  onkeyup="myFunction()"    />
              <aside class="" id="aside">
@@ -91,6 +97,9 @@
 
                  <?php include __DIR__ . "/../../application/beheer/productbeheer_items.php" ?>
              </aside>
+
+
+
         </div>
 
         <!--Footer & Scripts-->
