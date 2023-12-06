@@ -1,6 +1,6 @@
 <?php
 include __DIR__ . "/../../application/DatabaseManager.php";
-include __DIR__ . "/../../application/account/models.php";
+//include __DIR__ . "/../../application/account/models.php";
 use \application\DatabaseManager;
 
 
@@ -36,11 +36,11 @@ function create_buttons($var)
                 "class='button' /><br/>";
         }
 
-        /*for ($i=50; $i< 800; $i++)
+        for ($i=50; $i< 800; $i++)
         {
             $button.= "<input type='button' value=".encode("test".$i)."name='btn_".$i."' id=".encode($i).
                 "class='button' /><br/>";
-        }*/
+        }
     }
     catch(\mysql_xdevapi\Exception $e )
     {
