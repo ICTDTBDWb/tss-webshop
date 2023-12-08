@@ -1,18 +1,20 @@
 <!-- PHP logica -->
-<?php include __DIR__ . '/../../application/account/services.php'; ?>
-<?php include_once __DIR__ . '/../../application/DatabaseManager.php';?>
+<?php
+include __DIR__ . "/../../Application/Http/account/services.php";
+$session = \application\SessionManager::getInstance();
+?>
 <?php $current_page = basename($_SERVER['PHP_SELF']);;?>
 <!DOCTYPE html>
 
 <html lang="en">
 <!--Head-->
-<?php include __DIR__ . "/../../application/components/layout/head.php"; ?>
+<?php include __DIR__ . "/../../Resources/components/layout/head.php"; ?>
 
 <body class="min-vw-100 min-vh-100 d-flex flex-column bg-white">
 <!--Header-->
-<?php include __DIR__ . "/../../application/components/layout/header.php"; ?>
+<?php include __DIR__ . "/../../Resources/components/layout/header.php"; ?>
 <!--Header-->
-<?php include __DIR__ . '/../../application/account/menu.php'; ?>
+<?php include __DIR__ . '/../../Application/Http/account/menu.php'; ?>
 <!--Pagina content container-->
 
 
@@ -71,8 +73,8 @@
         </div>
 
         <!--Footer & Scripts-->
-        <?php include __DIR__ . "/../../application/components/layout/footer.php"; ?>
-        <?php include __DIR__ . "/../../application/components/layout/scripts.php"; ?>
+        <?php include __DIR__ . "/../../Resources/components/layout/footer.php"; ?>
+        <?php include __DIR__ . "/../../Resources/components/layout/scripts.php"; ?>
 
         </body>
 </html>

@@ -1,6 +1,8 @@
 <?php
-include __DIR__ . "/../../application/DatabaseManager.php";
-include __DIR__ . "/../../application/account/models.php";
+
+include(__DIR__ . '/../../DatabaseManager.php');
+include(__DIR__ . '/../../SessionManager.php');
+include __DIR__ . "/models.php";
 use \application\DatabaseManager;
 
 function queryKlant($klantId) {
