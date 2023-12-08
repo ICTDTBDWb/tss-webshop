@@ -1,5 +1,5 @@
 <!-- PHP logica -->
-<?php include __DIR__ . '/../Application/producten.php'; ?>
+<?php include __DIR__ . '/../Application/Http/producten.php'; ?>
 
 <!DOCTYPE html>
 

@@ -1,6 +1,6 @@
 <?php
 
-include __DIR__ . '/DatabaseManager.php';
+include __DIR__ . '/../DatabaseManager.php';
 
 /**
  * Haalt meerdere items op uit de database.
