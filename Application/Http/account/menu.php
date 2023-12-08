@@ -28,8 +28,8 @@
                 <li class="nav-item <?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">
                     <a class="nav-link" href="index.php">Accountoverzicht</a>
                 </li>
-                <li class="nav-item <?php echo ($current_page == 'bestelling.php') ? 'active' : ''; ?>">
-                    <a class="nav-link" href="bestellingen.php">Bestellingen</a>
+                <li class="nav-item <?php echo ($current_page == 'bestellingen.php') ? 'active' : ''; ?>">
+                <a class="nav-link" href="bestellingen.php">Bestellingen</a>
                 </li>
                 <li class="nav-item <?php echo ($current_page == 'cadeaubonnen.php') ? 'active' : ''; ?>">
                     <a class="nav-link" href="cadeaubonnen.php">Cadeaubonnen/Giftboxen</a>
