@@ -1,12 +1,12 @@
 <?php
 
-include __DIR__ . '/DatabaseManager.php';
+include __DIR__ . '/../DatabaseManager.php';
 
 /**
  * Haalt meerdere items op uit de database.
  */
 function queryMeerdereItems() {
-    $database = new \application\DatabaseManager(); // Maak een instantie van de DatabaseManager klasse.
+    $database = new application\DatabaseManager(); // Maak een instantie van de DatabaseManager klasse.
     $result = $database->query("SELECT * FROM klanten")->get(); // Voer een query uit en haal meerdere rijen op.
 
     $database->close(); // Sluit de database connectie.
@@ -18,7 +18,7 @@ function queryMeerdereItems() {
  * Haalt een enkel item op uit de database op basis van het opgegeven ID.
  */
 function queryEnkelItem() {
-    $database = new \application\DatabaseManager(); // Maak een instantie van de DatabaseManager klasse.
+    $database = new application\DatabaseManager(); // Maak een instantie van de DatabaseManager klasse.
     $result = $database->query(
         "SELECT * FROM klanten WHERE id = ?",
         [1] // Haal de rij op met het opgegeven ID (bijv. ID = 1).
@@ -33,7 +33,7 @@ function queryEnkelItem() {
  * Voegt een nieuw item toe aan de database.
  */
 function queryInsertItem() {
-    $database = new \application\DatabaseManager(); // Maak een instantie van de DatabaseManager klasse.
+    $database = new application\DatabaseManager(); // Maak een instantie van de DatabaseManager klasse.
     $database->query(
         "INSERT INTO tabel_naam (kolom1, kolom2, kolom3) VALUES (?, ?, ?)",
         ["value1", 2, "value3"]
