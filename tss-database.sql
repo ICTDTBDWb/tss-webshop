@@ -92,12 +92,12 @@ CREATE TABLE IF NOT EXISTS `tss`.`product_categorieen` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `product_id_idx` (`product_id` ASC) VISIBLE,
   INDEX `categorie_id_idx` (`categorie_id` ASC) VISIBLE,
-  CONSTRAINT `fk_product_id`
+  CONSTRAINT `fk_product_id_product_categorieen`
     FOREIGN KEY (`product_id`)
     REFERENCES `tss`.`producten` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_categorie_id`
+  CONSTRAINT `fk_categorie_id_product_categorieen`
     FOREIGN KEY (`categorie_id`)
     REFERENCES `tss`.`categorieen` (`id`)
     ON DELETE NO ACTION
