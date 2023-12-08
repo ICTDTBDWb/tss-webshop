@@ -1,18 +1,18 @@
 <!-- PHP logica -->
-<?php include __DIR__ . '/../../application/beheer/klanten.php'; ?>
+<?php include __DIR__ . '/../../Application/Http/beheer/klanten.php'; ?>
 
 <!DOCTYPE html>
 
 <html lang="en">
 <!--Head-->
-<?php include __DIR__ . "/../../application/components/layout/head.php"; ?>
+<?php include __DIR__ . "/../../Application/Http/components/layout/head.php"; ?>
 
 <body class="min-vw-100 min-vh-100 d-flex flex-column bg-white">
 <!--Header-->
-<?php include __DIR__ . "/../../application/components/layout/header.php"; ?>
+<?php include __DIR__ . "/../../Resources/components/layout/header.php"; ?>
 
 <!--Menu-->
-<?php include __DIR__ . "/../../application/beheer/menu.php"; ?>
+<?php include __DIR__ . "/../../Application/Http/beheer/menu.php"; ?>
 
 <!--Pagina content container-->
 <!--Zoekbalk rechts-->
@@ -31,7 +31,7 @@
 </div>
 
 <!--Footer & Scripts-->
-<?php include __DIR__ . "/../../application/components/layout/footer.php"; ?>
-<?php include __DIR__ . "/../../application/components/layout/scripts.php"; ?>
+<?php include __DIR__ . "/../../Resources/components/layout/footer.php"; ?>
+<?php include __DIR__ . "/../../Resources/components/layout/scripts.php"; ?>
 </body>
 </html><?php
