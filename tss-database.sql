@@ -232,33 +232,16 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tss`.`media` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `product_id` BIGINT UNSIGNED NOT NULL,
   `naam` VARCHAR(255) NOT NULL,
   `pad` VARCHAR(255) NOT NULL,
   `extensie` VARCHAR(255) NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `tss`.`product_media`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `tss`.`product_media` (
-  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `product_id` BIGINT UNSIGNED NOT NULL,
-  `media_id` BIGINT UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`, `product_id`, `media_id`),
+  PRIMARY KEY (`id`, `product_id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `product_id_idx` (`product_id` ASC) VISIBLE,
-  INDEX `media_id_idx` (`media_id` ASC) VISIBLE,
-  CONSTRAINT `fk_product_id_product_media`
+  CONSTRAINT `fk_product_id_media`
     FOREIGN KEY (`product_id`)
     REFERENCES `tss`.`producten` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_media_id_product_media`
-    FOREIGN KEY (`media_id`)
-    REFERENCES `tss`.`media` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
