@@ -1,83 +1,23 @@
 <!-- PHP logica -->
-<?php include __DIR__ . '/../../application/account/overzicht.php'; ?>
-<?php include_once __DIR__ . '/../../application/DatabaseManager.php';?>
+<?php include __DIR__ . '/../../Application/account/overzicht.php'; ?>
 
 <!DOCTYPE html>
 
 <html lang="en">
     <!--Head-->
-    <?php include __DIR__ . "/../../application/components/layout/head.php"; ?>
+    <?php include __DIR__ . "/../../Application/components/layout/head.php"; ?>
 
     <body class="min-vw-100 min-vh-100 d-flex flex-column bg-white">
         <!--Header-->
-        <?php include __DIR__ . "/../../application/components/layout/header.php"; ?>
-        <!--Header-->
-        <?php include __DIR__ . '/../../application/account/menu.php'; ?>
+        <?php include __DIR__ . "/../../Application/components/layout/header.php"; ?>
+
         <!--Pagina content container-->
-
-
-        <div class="container mt-5 text-center">
-            <div class="row">
-                <!-- Laatste bestellingen sectie -->
-                <div class="col-md-9">
-                    <div class="card">
-
-                        <div class="card-header">
-                            Laatste bestellingen
-                        </div>
-                        <div class="card-body">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <?php $klant = queryKlant(1);?>
-                <div class="col-md-4">
-                    <div class="card">
-                        <!-- Klantgegevens sectie -->
-
-                        <div class="card-header">
-                            Klantgegevens
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title"><?php echo "Naam: ".$klant->voornaam; ?> <?php echo ($klant->achternaam); ?></h5>
-                            <h5 class="card-title"><?php echo "Adres: ".$klant->straat; ?> <?php echo ($klant->huisnummer); ?></h5>
-                            <h5 class="card-title"><?php echo "Postcode: ".$klant->postcode; ?></h5>
-                            <h5 class="card-title"><?php echo "Woonplaats: ".$klant->woonplaats; ?></h5>
-                            <h5 class="card-title"><?php echo "Email: ".$klant->email; ?></h5>
-                            <h5 class="card-title"><?php echo "Klantnummer: ".$klant->id; ?></h5>
-                            <!-- Andere klantgegevens indien nodig -->
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 offset-1">
-                    <div class="card">
-                        <!-- Klantgegevens sectie -->
-
-                        <div class="card-header">
-                            Cadeaubonnen
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title"><?php echo "Naam: ".$klant->voornaam; ?> <?php echo ($klant->achternaam); ?></h5>
-                            <h5 class="card-title"><?php echo "Adres: ".$klant->straat; ?> <?php echo ($klant->huisnummer); ?></h5>
-                            <h5 class="card-title"><?php echo "Postcode: ".$klant->postcode; ?></h5>
-                            <h5 class="card-title"><?php echo "Woonplaats: ".$klant->woonplaats; ?></h5>
-                            <h5 class="card-title"><?php echo "Email: ".$klant->email; ?></h5>
-                            <h5 class="card-title"><?php echo "Klantnummer: ".$klant->id; ?></h5>
-                            <!-- Andere klantgegevens indien nodig -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
+        <div class="container-lg flex-grow-1 gx-0 py-4">
+            <!--Plaats hier de pagina elementen-->
         </div>
 
         <!--Footer & Scripts-->
-        <?php include __DIR__ . "/../../application/components/layout/footer.php"; ?>
-        <?php include __DIR__ . "/../../application/components/layout/scripts.php"; ?>
-
+        <?php include __DIR__ . "/../../Application/components/layout/footer.php"; ?>
+        <?php include __DIR__ . "/../../Application/components/layout/scripts.php"; ?>
     </body>
 </html>
