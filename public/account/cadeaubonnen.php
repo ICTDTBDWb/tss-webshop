@@ -5,13 +5,18 @@
 <!DOCTYPE html>
 
 <html lang="en">
-    <!--Head-->
-    <?php include __DIR__ . "/../application/components/layout/head.php"; ?>
+<!--Head-->
+<?php include __DIR__ . "/../../application/components/layout/head.php"; ?>
 
-    <body class="min-vw-100 min-vh-100 d-flex flex-column bg-white">
-        <!--Header-->
-        <?php include __DIR__ . "/../application/components/layout/header.php"; ?>
+<body class="min-vw-100 min-vh-100 d-flex flex-column bg-white">
+<!--Header-->
+<?php include __DIR__ . "/../../application/components/layout/header.php"; ?>
+<!--Header-->
+<?php include __DIR__ . '/../../application/account/menu.php'; ?>
+<!--Pagina content container-->
 
+
+<!--Pagina content container-->
         <!--Pagina content container-->
         <body>
         <div class="container mt-5">
