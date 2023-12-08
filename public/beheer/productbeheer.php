@@ -1,6 +1,21 @@
 
 
 <?php include __DIR__ . '/../../application/beheer/productbeheer.php'; ?> <!--Verander example.php naar jouw gewenste file-->
+<?php
+     
+     $filter = $_SESSION['POST_FILTER_BEHEERITEM'];
+     if (is_array($_POST) && !empty($_POST))
+     {
+         $filter = filter_input(INPUT_GET, 'filter', FILTER_SANITIZE_SPECIAL_CHARS);
+     }
+     $_SESSION['POST_FILTER_BEHEERITEM'] = $filter;
+?>
+
+
+
+
+
+
 
 <!DOCTYPE html>
 
@@ -53,10 +68,8 @@
         var input, filter, ul, li, a, i, txtValue;
         input = document.getElementById("test");
         filter = input.value.toUpperCase();
-        print(filter);
-        ul = document.getElementById("producten");
+        ul = document.getElementById("product_item_button");
         li = ul.getElementsByTagName("input");
-        print(li);
         for (i = 0; i < li.length; i++) {
             a = li['value']
             txtValue = a.textContent || a.innerText;
@@ -88,8 +101,9 @@
             <main>
                 <?php include __DIR__ . "/../../application/beheer/productbeheer_form.php" ?>
             </main>
-
-             <input type="text" value="test" id="test"  onkeyup="myFunction()"    />
+             <form method="Post" action=''>
+                <input type="search" value='<?php echo $filter ?> '  id="test" name="filter"/>
+             </form>
              <aside class="" id="aside">
                  <form  id="producten">
                     <?php //echo $producten ?>

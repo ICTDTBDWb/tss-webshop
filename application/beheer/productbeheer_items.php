@@ -4,6 +4,8 @@
 
 
 
+
+
 <!DOCTYPE html>
 
 <style>
@@ -16,19 +18,30 @@
 </style>
 
 <div class="accordion" id="accordionPanelsStayOpenExample">
+
     <?php echo get_arcordion_items() ?>
+
+
+
+
 </div>
 
 
-
-
-
 <?php
+
 //include __DIR__ . "/../../application/DatabaseManager.php";
 //include __DIR__ . "/../../application/account/models.php";
 use \application\DatabaseManager;
 
-    function arcordion_constructer($categorieen)
+$filter = "%%";
+if (is_array($_POST) && !empty($_POST)) {
+
+    var_dump($_POST);
+    //echo ("<script>alert('$test');</script>");
+}
+
+
+function arcordion_constructer($categorieen)
     {
         $contruct = "";
         foreach ($categorieen as $categorie) {
@@ -38,7 +51,7 @@ use \application\DatabaseManager;
                                     . $categorie['naam'] .
                                 "</button>
                             </h2>"
-                            . arcordion_item_constructor($categorie,false)." 
+                            . arcordion_item_constructor($categorie,false, )." 
                         </div>";
         }
 
@@ -49,9 +62,9 @@ use \application\DatabaseManager;
                             <h2 class='accordion-header' id=".encode("accordion-headeroverig").">
                                 <button class='accordion-button collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#accordion-collapseoverig' aria-expanded='false' aria-controls='accordion-collapseoverig'>"
                                     . "Overig" .
-                                "</button>
+                                "</button>                          
                             </h2>"
-                                . arcordion_item_constructor($producten, true)." 
+                                . arcordion_item_constructor($producten, true,)." 
                          </div>";
         }
 
@@ -60,7 +73,7 @@ use \application\DatabaseManager;
         return $contruct;
     }
 
-    function arcordion_item_constructor($categorie,$overig)
+    function arcordion_item_constructor($categorie,$overig,)
     {
         if (!$overig) {
             $ID = $categorie['id'];
@@ -82,9 +95,11 @@ use \application\DatabaseManager;
 
         foreach($producten as $product)
         {
-            $contruct .= "<button class='btn btn-light' style='width: 100%; margin-top: 2%'>
+            $contruct .= "<form action='' method='get'> 
+                            <button class='btn btn-light' style='width: 100%; margin-top: 2%' id=".encode("btn_product_".$product['id'])." name='Product' value=".encode($product['id']).">
                                 <strong>".$product['naam']."</strong>
-                          </button>";
+                            </button>
+                          </form>";
 
 
         }
@@ -111,8 +126,12 @@ use \application\DatabaseManager;
 
     function get_producten($categorie_id)
     {
+        $filter = $_SESSION['POST_FILTER_BEHEERITEM'];
+        if (is_array($_POST) && !empty($_POST))
+            $filter = filter_input(INPUT_POST,'filter', FILTER_SANITIZE_SPECIAL_CHARS );
+
         $database = new DatabaseManager();
-        $producten = $database->query("SELECT * FROM producten inner join product_categorieen where product_id = producten.id and categorie_id  = ? ORDER BY naam ASC", [$categorie_id] )->get();
+        $producten = $database->query("SELECT * FROM producten inner join product_categorieen where product_id = producten.id and categorie_id  = ? and naam like ? ORDER BY naam ASC", [$categorie_id, "%".$filter."%"] )->get();
         $database->close();
 
         return $producten;
