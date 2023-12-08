@@ -41,7 +41,7 @@
     </div>
 </div>
 
-<?php $bestellingen = haalBestellingenOpVanKlant(klantId:1); // Haal de bestellingen op. ?>
+<?php $bestellingen = haalBestellingenOpVanKlant(klantId:2); // Haal de bestellingen op. ?>
 
 <!DOCTYPE html>
 <html lang="nl">
