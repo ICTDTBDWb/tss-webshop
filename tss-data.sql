@@ -79,19 +79,3 @@ VALUES
   (1, 'PayPal', NOW(), 999.99),
   (2, 'Credit Card', NOW(), 2499.98),
   (3, 'iDeal', NOW(), 399.97);
-
--- Dummy data voor media
-INSERT INTO `tss`.`media` (`naam`, `pad`, `extensie`)
-VALUES
-  ('Gitaar Afbeelding 1', '/afbeeldingen/gitaar1.jpg', 'jpg'),
-  ('Gitaar Afbeelding 2', '/afbeeldingen/gitaar2.jpg', 'jpg'),
-  ('Gitaar Afbeelding 3', '/afbeeldingen/gitaar3.jpg', 'jpg');
-
--- Dummy data voor product_media
-INSERT INTO `tss`.`product_media` (`product_id`, `media_id`)
-VALUES
-  (1, 1),
-  (2, 2),
-  (3, 3),
-  (4, 1),
-  (5, 2);
