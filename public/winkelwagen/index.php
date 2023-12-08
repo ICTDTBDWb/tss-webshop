@@ -1,5 +1,5 @@
 <!-- PHP logica -->
-<?php include __DIR__ . '/../../Application/Http/winkelwagen/dev-winkelwagen.php'; ?> <!--Verander example.php naar jouw gewenste file-->
+<?php include __DIR__ . '/../../Application/Http/winkelwagen/winkelwagen.php'; ?> <!--Verander example.php naar jouw gewenste file-->
 
 <!DOCTYPE html>
 
@@ -13,16 +13,13 @@
 
 
 <style>
-    .fcol {
-        flex: 1;
-    }
-
     .productimage {
         width: 256px;
         height: auto;
         object-fit: contain;
     }
 </style>
+
 <div class="d-flex flex-row justify-content-start navigation py-3">
     <a class="btn btn-outline-primary mx-3" href="/homepagina" role="button">Homepagina</a>
     <a class="btn btn-outline-primary mx-3" href="/categorieen" role="button">Categoriepagina</a>
