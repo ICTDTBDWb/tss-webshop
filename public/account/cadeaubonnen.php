@@ -71,7 +71,8 @@
         </div>
 
         <!--Footer & Scripts-->
-        <?php include __DIR__ . "/../application/components/layout/footer.php"; ?>
-        <?php include __DIR__ . "/../application/components/layout/scripts.php"; ?>
-    </body>
+        <?php include __DIR__ . "/../../application/components/layout/footer.php"; ?>
+        <?php include __DIR__ . "/../../application/components/layout/scripts.php"; ?>
+
+        </body>
 </html>
