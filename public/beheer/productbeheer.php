@@ -1,14 +1,18 @@
 
+<?php include __DIR__ . "/../../Application/DatabaseManager.php"?>
+<?php include __DIR__ . "/../../Application/SessionManager.php"?>
 
-<?php include __DIR__ . '/../../application/beheer/productbeheer.php'; ?> <!--Verander example.php naar jouw gewenste file-->
+
+
+<?php include __DIR__ . '/../../Application/Http/beheer/productbeheer.php'; ?> <!--Verander example.php naar jouw gewenste file-->
 <?php
-     
-     $filter = $_SESSION['POST_FILTER_BEHEERITEM'];
+     $session = \application\SessionManager::getInstance();
+     $filter = $session->exists("POST_FILTER_BEHEERITEM") ? $session->get("POST_FILTER_BEHEERITEM") : "" ;
      if (is_array($_POST) && !empty($_POST))
      {
-         $filter = filter_input(INPUT_GET, 'filter', FILTER_SANITIZE_SPECIAL_CHARS);
+         $filter = filter_input(INPUT_POST, 'filter', FILTER_SANITIZE_SPECIAL_CHARS);
      }
-     $_SESSION['POST_FILTER_BEHEERITEM'] = $filter;
+     $session->set("POST_FILTER_BEHEERITEM", $filter);
 ?>
 
 
@@ -87,19 +91,20 @@
 
 <html lang="en">
     <!--Head-->
-    <?php include __DIR__ . "/../../application/components/layout/head.php"; ?>
+
+    <?php include __DIR__ . "/../../Resources/components/layout/head.php"; ?>
 
 
 
     <body class="min-vw-100 min-vh-100 d-flex flex-column bg-white">
         <!--Header-->
-        <?php include __DIR__ . "/../../application/components/layout/header.php"; ?>
+        <?php include __DIR__ . "/../../Resources/components/layout/header.php"; ?>
 
 
         <!--Pagina content container-->
         <div class="container-lg flex-grow-1 gx-0 py-4" >
             <main>
-                <?php include __DIR__ . "/../../application/beheer/productbeheer_form.php" ?>
+                <?php include __DIR__ . "/../../Application/Http/beheer/productbeheer_form.php" ?>
             </main>
              <form method="Post" action=''>
                 <input type="search" value='<?php echo $filter ?> '  id="test" name="filter"/>
@@ -109,7 +114,7 @@
                     <?php //echo $producten ?>
                  </form>
 
-                 <?php include __DIR__ . "/../../application/beheer/productbeheer_items.php" ?>
+                 <?php include __DIR__ . "/../../Application/Http/beheer/productbeheer_items.php" ?>
              </aside>
 
 
@@ -117,7 +122,7 @@
         </div>
 
         <!--Footer & Scripts-->
-    <?php include __DIR__ . "/../../application/components/layout/footer.php"; ?>
-    <?php include __DIR__ . "/../../application/components/layout/scripts.php"; ?>
+    <?php include __DIR__ . "/../../Resources/components/layout/footer.php"; ?>
+    <?php include __DIR__ . "/../../Resources/components/layout/scripts.php"; ?>
     </body>
 </html>

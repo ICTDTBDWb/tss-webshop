@@ -29,9 +29,10 @@
 
 <?php
 
-//include __DIR__ . "/../../application/DatabaseManager.php";
-//include __DIR__ . "/../../application/account/models.php";
+//include __DIR__ . "/../../Application/DatabaseManager.php";
+
 use \application\DatabaseManager;
+
 
 $filter = "%%";
 if (is_array($_POST) && !empty($_POST)) {
@@ -39,6 +40,8 @@ if (is_array($_POST) && !empty($_POST)) {
     var_dump($_POST);
     //echo ("<script>alert('$test');</script>");
 }
+
+
 
 
 function arcordion_constructer($categorieen)
@@ -126,7 +129,8 @@ function arcordion_constructer($categorieen)
 
     function get_producten($categorie_id)
     {
-        $filter = $_SESSION['POST_FILTER_BEHEERITEM'];
+        $session = \application\SessionManager::getInstance();
+        $filter = $session->exists("POST_FILTER_BEHEERITEM") ? $session->get("POST_FILTER_BEHEERITEM") : "";
         if (is_array($_POST) && !empty($_POST))
             $filter = filter_input(INPUT_POST,'filter', FILTER_SANITIZE_SPECIAL_CHARS );
 

@@ -1,6 +1,6 @@
 <?php
-include __DIR__ . "/../../application/DatabaseManager.php";
-//include __DIR__ . "/../../application/account/models.php";
+
+
 use \application\DatabaseManager;
 
 

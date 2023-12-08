@@ -53,7 +53,8 @@ class SessionManager
      */
     public function set(string $variable, string $value): void
     {
-        $_SESSION[$variable] = $value;
+        if (!is_null($value))
+            $_SESSION[$variable] = $value;
     }
 
     /**
