@@ -26,12 +26,13 @@
             <div class="col-md-6 offset-md-3">
                 <div class="card">
                     <div class="card-header">
-                        Laatste bestellingen
+                        Laatste bestelling
                     </div>
                     <div class="card-body">
                         <?php foreach ($laatstebestellingen as $laatstebestelling) { ?>
                             <h6 class="card-text">Product: <?php echo $laatstebestelling['productnaam']; ?></h6>
-                            <h6 class="card-text">Afbeelding: <?php echo $laatstebestelling['mediapad']; ?></h6>
+                            <img class="" src="<?php echo $laatstebestelling['mediapad']; ?>" style="width: auto; height: 256px;"/>
+
                         <?php } ?>
                     </div>
                 </div>

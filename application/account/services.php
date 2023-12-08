@@ -36,6 +36,7 @@ GROUP BY
     b.totaal
 ORDER BY 
     b.besteldatum DESC
+LIMIT 1
 ";
 
     $resultaat = $database->query($query, [$klantId])->get(); // De query methode moet worden aangepast om prepared statements te ondersteunen.

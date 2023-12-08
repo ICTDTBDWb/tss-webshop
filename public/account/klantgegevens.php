@@ -1,5 +1,5 @@
 <?php
-
+include_once __DIR__ . '/../../application/DatabaseManager.php';
 session_start();
 
 $_SESSION['user']['logged_in'] = true;
