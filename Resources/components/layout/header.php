@@ -43,9 +43,9 @@
             <?php } ?>
             <a href="/winkelwagen.php" class="btn btn-link position-relative" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Winkelwagen">
                 <i class="fa fa-cart-shopping fa-lg text-dark"></i>
-                <?php if ($session->exists('winkelwagen.producten')) { ?>
+                <?php if (isset($_SESSION['winkelwagen']['producten'])) { ?>
                         <span class="position-absolute start-100 translate-middle badge rounded-pill bg-light text-dark border" style="top: 5px;">
-                            <?php echo count($session->get('winkelwage.producten')); ?>
+                            <?php echo count($_SESSION['winkelwagen']['producten']); ?>
                         </span>
                 <?php } ?>
             </a>
