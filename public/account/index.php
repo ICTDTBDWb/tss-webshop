@@ -30,9 +30,10 @@ $session = \application\SessionManager::getInstance();
                     </div>
                     <div class="card-body">
                         <?php foreach ($laatstebestellingen as $laatstebestelling) { ?>
-                            <h6 class="card-text">Product: <?php echo $laatstebestelling['productnaam']; ?></h6>
-                            <img class="" src="<?php echo $laatstebestelling['mediapad']; ?>" style="width: auto; height: 256px;"/>
-
+                            <a href="bestelling_detail.php?id=<?php echo urlencode($laatstebestelling['bestelling_id']); ?>" class="text-decoration-none text-dark">
+                                <p class="card-text"><strong>Product:</strong> <?php echo $laatstebestelling['productnaam']; ?></p>
+                                <img class="" src="<?php echo $laatstebestelling['mediapad']; ?>" style="width: 512px; height: auto;"/>
+                            </a>
                         <?php } ?>
                     </div>
                 </div>
@@ -77,13 +78,19 @@ $session = \application\SessionManager::getInstance();
                                         Klantgegevens
                                     </div>
                                     <div class="card-body">
-                                        <?php $klant = queryKlant(1); ?>
-                                        <h6 class="card-text"><?php echo "Naam: ".$klant->voornaam; ?> <?php echo ($klant->achternaam); ?></h6>
-                                        <h6 class="card-text"><?php echo "Adres: ".$klant->straat; ?> <?php echo ($klant->huisnummer); ?></h6>
-                                        <h6 class="card-text"><?php echo "Postcode: ".$klant->postcode; ?></h6>
-                                        <h6 class="card-text"><?php echo "Woonplaats: ".$klant->woonplaats; ?></h6>
-                                        <h6 class="card-text"><?php echo "Email: ".$klant->email; ?></h6>
-                                        <h6 class="card-text"><?php echo "Klantnummer: ".$klant->id; ?></h6>
+                                        <?php
+                                        $klant = queryKlant(1);
+                                        if ($klant) {
+                                            echo "<p class='card-text'><strong>Naam:</strong> " . $klant['voornaam'] . " " . $klant['achternaam'] . "</p>";
+                                            echo "<p class='card-text'><strong>Adres:</strong> " . $klant['straat'] . " " . $klant['huisnummer'] . "</p>";
+                                            echo "<p class='card-text'><strong>Postcode:</strong> " . $klant['postcode'] . "</p>";
+                                            echo "<p class='card-text'><strong>Woonplaats:</strong> " . $klant['woonplaats'] . "</p>";
+                                            echo "<p class='card-text'><strong>Email:</strong> " . $klant['email'] . "</p>";
+                                            echo "<p class='card-text'><strong>Klantnummer:</strong> " . $klant['id'] . "</p>";
+                                        } else {
+                                            echo "<p>Klantgegevens niet gevonden.</p>";
+                                        }
+                                        ?>
                                     </div>
                                 </div>
 
@@ -96,7 +103,7 @@ $session = \application\SessionManager::getInstance();
                                     <div class="card-body">
                                         <p class="card-text"><strong>Bon gekregen?</strong></p>
                                         <p class="card-text">
-                                            Check de waarde en voeg het saldo toe aan je account op de
+                                            Check de waarde van je cadeaubon:
                                             <a href="/account/cadeaubonnen.php">cadeaubonnenpagina</a>.
                                         </p>
                                     </div>

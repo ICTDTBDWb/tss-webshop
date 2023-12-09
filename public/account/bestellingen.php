@@ -1,49 +1,26 @@
-<!-- PHP logica -->
 <?php
+// Inclusie van de benodigde PHP-bestanden en sessiebeheer
 include __DIR__ . "/../../Application/Http/account/services.php";
 $session = \application\SessionManager::getInstance();
+
+$klantId = 1; // Voorbeeld klantID, vervang door $session->getKlantId();
+$zoekterm = isset($_GET['zoekterm']) ? $_GET['zoekterm'] : '';
+
+function zoekBestellingen($klantId, $zoekterm) {
+    $database = new \application\DatabaseManager();
+    $zoekterm = '%' . $zoekterm . '%';
+
+    $query = "SELECT b.*, p.naam AS productnaam FROM tss.bestellingen b 
+              JOIN tss.bestelling_regels br ON b.id = br.bestelling_id
+              JOIN tss.producten p ON br.product_id = p.id
+              WHERE b.klant_id = ? AND (b.id LIKE ? OR p.naam LIKE ?)
+              GROUP BY b.id";
+
+    return $database->query($query, [$klantId, $zoekterm, $zoekterm])->get();
+}
+
+$bestellingen = zoekBestellingen($klantId, $zoekterm);
 ?>
-
-<!DOCTYPE html>
-
-<html lang="en">
-<!--Head-->
-<?php include __DIR__ . "/../../Resources/components/layout/head.php"; ?>
-
-<body class="min-vw-100 min-vh-100 d-flex flex-column bg-white">
-<!--Header-->
-<?php include __DIR__ . "/../../Resources/components/layout/header.php"; ?>
-<!--Header-->
-<?php include __DIR__ . '/../../Application/Http/account/menu.php'; ?>
-<!--Pagina content container--><div class="container mt-5 text-center"></div>
-
-<!-- Container voor de titel en zoekbalk, gecentreerd op de pagina -->
-
-<div class="container">
-    <!-- Titel boven de zoekbalk met ondermarge voor ruimte -->
-    <div class="row justify-content-center">
-        <div class="col-12 text-center mb-3"> <!-- mb-3 voegt ruimte toe onder de titel -->
-            <h2>Bestelling zoeken</h2>
-        </div>
-    </div>
-    <!-- Zoekbalk in het midden van de pagina -->
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="input-group">
-                <input type="text" name="search" id="header-search"
-                       placeholder="Bestelling zoeken"
-                       aria-label="Bestelling zoeken."
-                       aria-describedby="addon-wrapping"
-                       class="form-control border text-center">
-                <button class="btn btn-outline-light border text-dark" type="button">
-                    <i class="fa fa-search"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<?php $bestellingen = haalBestellingenOpVanKlant(klantId:2); // Haal de bestellingen op. ?>
 
 <!DOCTYPE html>
 <html lang="nl">
@@ -51,9 +28,26 @@ $session = \application\SessionManager::getInstance();
     <meta charset="UTF-8">
     <title>Bestelling Overzicht</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <?php include __DIR__ . "/../../Resources/components/layout/head.php"; ?>
 </head>
-<body>
+<body class="min-vw-100 min-vh-100 d-flex flex-column bg-white">
+<?php include __DIR__ . "/../../Resources/components/layout/header.php"; ?>
+<?php include __DIR__ . '/../../Application/Http/account/menu.php'; ?>
+
 <div class="container mt-5">
+    <div class="row justify-content-center mb-3">
+        <div class="col-md-6">
+            <form action="bestellingen.php" method="get">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="zoekterm" placeholder="Zoeken op bestelling-ID of product">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit">Zoeken</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <?php if (!empty($bestellingen)): ?>
         <table class="table">
             <thead>
@@ -67,29 +61,20 @@ $session = \application\SessionManager::getInstance();
             <tbody>
             <?php foreach ($bestellingen as $bestelling): ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($bestelling['bestelling_id']); ?></td>
+                    <td><a href="bestelling_detail.php?id=<?php echo htmlspecialchars($bestelling['id']); ?>"><?php echo htmlspecialchars($bestelling['id']); ?></a></td>
                     <td><?php echo htmlspecialchars($bestelling['besteldatum']); ?></td>
                     <td><?php echo htmlspecialchars($bestelling['productnaam']); ?></td>
                     <td>€<?php echo htmlspecialchars(number_format($bestelling['totaal'], 2, ',', '.')); ?></td>
-
                 </tr>
             <?php endforeach; ?>
-
             </tbody>
         </table>
     <?php else: ?>
         <p>Geen bestellingen gevonden.</p>
     <?php endif; ?>
 </div>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-</body>
-</html>
 
-<!--Footer & Scripts-->
 <?php include __DIR__ . "/../../Resources/components/layout/footer.php"; ?>
 <?php include __DIR__ . "/../../Resources/components/layout/scripts.php"; ?>
-
 </body>
 </html>

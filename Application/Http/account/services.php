@@ -2,22 +2,15 @@
 
 include(__DIR__ . '/../../DatabaseManager.php');
 include(__DIR__ . '/../../SessionManager.php');
-include __DIR__ . "/models.php";
 use \application\DatabaseManager;
 
 function queryKlant($klantId) {
-        $database = new DatabaseManager();
-        $klanten = $database->query("SELECT * FROM klanten where id = $klantId")->get();
-        $klant = new Klant($klanten[0]['voornaam'], $klanten[0]['achternaam'], $klanten[0]['straat'],$klanten[0]['huisnummer'],$klanten[0]['postcode'],$klanten[0]['woonplaats'],$klanten[0]['email'],$klanten[0]['id']);
-        return $klant;
-}
-
-function queryKlanten() {
     $database = new DatabaseManager();
-    $klanten = $database->query("SELECT * FROM klanten")->get();
-    return $klanten;
-}
+    $klanten = $database->query("SELECT * FROM klanten WHERE id = $klantId")->get();
 
+    // Controleer of er resultaten zijn en retourneer de eerste klant als een array
+    return (count($klanten) > 0) ? $klanten[0] : null;
+}
 
 
 function queryLaatstebestellingen($klantId) {
@@ -26,10 +19,14 @@ function queryLaatstebestellingen($klantId) {
     b.id AS bestelling_id, 
     b.besteldatum, 
     b.totaal, 
-    (SELECT p.naam FROM tss.producten p JOIN tss.bestelling_regels br ON p.id = br.product_id WHERE br.bestelling_id = b.id LIMIT 1) AS productnaam,
-    (SELECT pm.pad FROM tss.media pm JOIN tss.product_media prm ON pm.id = prm.media_id JOIN tss.bestelling_regels br ON prm.product_id = br.product_id WHERE br.bestelling_id = b.id LIMIT 1) AS mediapad
+    p.naam AS productnaam,
+    pm.pad AS mediapad
 FROM 
     tss.bestellingen AS b
+JOIN tss.bestelling_regels AS br ON b.id = br.bestelling_id
+JOIN tss.producten AS p ON br.product_id = p.id
+JOIN tss.product_media AS prm ON p.id = prm.product_id
+JOIN tss.media AS pm ON prm.media_id = pm.id
 WHERE 
     b.klant_id = ? -- Vervang '?' met de specifieke klant_id.
 GROUP BY 
@@ -37,7 +34,7 @@ GROUP BY
     b.besteldatum, 
     b.totaal
 ORDER BY 
-    b.besteldatum DESC
+    b.besteldatum DESC 
 LIMIT 1
 ";
 
@@ -74,31 +71,26 @@ ORDER BY
     return $resultaat;
 }
 
+/**
+ * Verifieert de cadeauboncode en PIN en haalt het saldo op uit de database.
+ *
+ * @param string $code De cadeauboncode die geverifieerd moet worden.
+ * @param string $pin De PIN van de cadeaubon die geverifieerd moet worden.
+ * @return array|null Het resultaat van de database query of null als de code en/of PIN niet klopt(en).
+ */
+function verifieerCadeaubon($code, $pin) {
+    $database = new application\DatabaseManager();
+    $result = $database->query(
+        "SELECT bedrag FROM cadeaubonnen WHERE code = ? AND pin = ?",
+        [$code, $pin]
+    )->first();
 
-function zoekBestellingen($zoekterm)
-{
-    // Maak verbinding met de database
-    // (Vervang dit met je eigen databaseverbinding logica)
-    $db = new DatabaseManager();
-    $db->connect();
+    $database->close();
 
-    // Zorg voor veilige zoektermen
-    $veiligeZoekterm = $db->escapeString($zoekterm);
-
-    // SQL query
-    $query = "SELECT * FROM bestellingen WHERE kolom_naam LIKE '%$veiligeZoekterm%'";
-
-    // Voer de query uit
-    $resultaten = $db->query($query);
-
-    $bestellingen = [];
-    while ($row = $db->fetchAssoc($resultaten)) {
-        $bestellingen[] = $row;
-    }
-
-    $db->close();
-
-    return $bestellingen;
+    return $result;
 }
+
+
+
 
 
