@@ -40,7 +40,7 @@
 
         }
    main{
-       width:80%;
+       width:70%;
        float:right;
    }
 
@@ -106,14 +106,11 @@
             <main>
                 <?php include __DIR__ . "/../../Application/Http/beheer/productbeheer_form.php" ?>
             </main>
-             <form method="Post" action=''>
-                <input type="search" value='<?php echo $filter ?> '  id="test" name="filter"/>
-             </form>
-             <aside class="" id="aside">
-                 <form  id="producten">
-                    <?php //echo $producten ?>
-                 </form>
 
+             <aside class="" id="aside">
+                 <form method="Post" action=''>
+                     <input type="search" value='<?php echo $filter ?> ' class="form-control border" id="test" name="filter"/>
+                 </form>
                  <?php include __DIR__ . "/../../Application/Http/beheer/productbeheer_items.php" ?>
              </aside>
 
