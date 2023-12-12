@@ -1,5 +1,5 @@
 <?php
-    global $session;
+global $session;
 ?>
 <header class="container-fluid h-fit px-4 d-flex justify-content-center shadow-sm bg-white">
     <div class="container-lg mx-auto py-3 row gx-0 items-center">
@@ -44,7 +44,7 @@
             <a href="/winkelwagen.php" class="btn btn-link position-relative" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Winkelwagen">
                 <i class="fa fa-cart-shopping fa-lg text-dark"></i>
                 <?php if ($session->exists('winkelwagen.producten')) { ?>
-                        <span class="position-absolute start-100 translate-middle badge rounded-pill bg-light text-dark border" style="top: 5px;">
+                    <span class="position-absolute start-100 translate-middle badge rounded-pill bg-light text-dark border" style="top: 5px;">
                             <?php echo count($session->get('winkelwage.producten')); ?>
                         </span>
                 <?php } ?>
