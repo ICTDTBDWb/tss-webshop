@@ -7,12 +7,13 @@
 <?php include __DIR__ . '/../../Application/Http/beheer/productbeheer.php'; ?> <!--Verander example.php naar jouw gewenste file-->
 <?php
      $session = \application\SessionManager::getInstance();
-     $filter = $session->exists("POST_FILTER_BEHEERITEM") ? $session->get("POST_FILTER_BEHEERITEM") : "" ;
-     if (is_array($_POST) && !empty($_POST))
+     $filter ="";
+     if (is_array($_GET) && !empty($_GET))
      {
-         $filter = filter_input(INPUT_POST, 'filter', FILTER_SANITIZE_SPECIAL_CHARS);
+         $filter = filter_input(INPUT_GET, 'filter', FILTER_SANITIZE_SPECIAL_CHARS);
+         $filter = trim($filter);
      }
-     $session->set("POST_FILTER_BEHEERITEM", $filter);
+
 ?>
 
 
@@ -108,10 +109,21 @@
             </main>
 
              <aside class="" id="aside">
-                 <form method="Post" action=''>
-                     <input type="search" value='<?php echo $filter ?> ' class="form-control border" id="test" name="filter"/>
+                 <form method="GET" action=''>
+                  <div class="coll">
+                     <div class="row">
+                        <input type="search" value='<?php echo $filter ?> ' class="form-control border" id="test" name="filter"/>
+                     </div>
+                     <div class="row">
+                         <select id="Merkselectie" class="form-select">
+                             <option selected>Categorie</option>
+                             <option>Merk</option>
+                         </select>
+                     </div>
+                  </div>
+                     <?php include __DIR__ . "/../../Application/Http/beheer/productbeheer_items.php" ?>
                  </form>
-                 <?php include __DIR__ . "/../../Application/Http/beheer/productbeheer_items.php" ?>
+
              </aside>
 
 
