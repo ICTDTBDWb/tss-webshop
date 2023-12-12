@@ -1,6 +1,5 @@
 <!-- PHP logica -->
 <?php include __DIR__ . '/../../Application/Http/winkelwagen/winkelwagen.php'; ?> <!--Verander example.php naar jouw gewenste file-->
-
 <!DOCTYPE html>
 
 <html lang="en">
@@ -20,12 +19,14 @@
     }
 </style>
 
+<!-- Navigatie -->
 <div class="d-flex flex-row justify-content-start navigation py-3">
     <a class="btn btn-outline-primary mx-3" href="/homepagina" role="button">Homepagina</a>
     <a class="btn btn-outline-primary mx-3" href="/categorieen" role="button">Categoriepagina</a>
     <a class="btn btn-outline-primary mx-3" href="/contactpagina" role="button">Contactpagina</a>
 </div>
 
+<!-- Pagina content -->
 <div class="d-flex flex-column flex-grow-1 overflow-hidden">
     <form action="" method="post" class="d-flex flex-column flex-grow-1 overflow-hidden">
     <div class="d-flex flex-row wijzigingen">
@@ -43,7 +44,7 @@
                     <div class="d-flex border flex-grow-1 p-1 product">
                         <div clas="d-flex">
                                 <a href="/product/<?php echo $product['id'] ?>">
-                                    <img class="productimage p-2"  alt="<?php echo $product['media_naam'] ?>" src="<?php echo $product['media_pad'] ?>"></img>
+                                    <img class="productimage p-2"  alt="<?php echo $product['media_naam'] ?>" src="<?php echo "/winkelwagen/".$product['media_pad'] ?>"></img>
                                 </a>
                             </div>
                         <div class="d-flex flex-grow-1 flex-column justify-content-between py-2">
@@ -84,7 +85,7 @@
                     </span>
                 </div>
                 <?php if($user_logged_in) { ?>
-                    <a href="/checkout" class="btn btn-primary flex-grow-1" role="button">Volgende stap</a>
+                    <a href="/checkout" class="btn btn-primary flex-grow-1 <?php if(!$producten){echo "disabled";}?>" role="button">Volgende stap</a>
 
                 <?php } else { ?>
                     <a href="/login" class="btn-primary flex-grow-1" role="button">Volgende stap</a>

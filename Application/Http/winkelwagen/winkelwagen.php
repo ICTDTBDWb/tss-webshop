@@ -1,46 +1,25 @@
 <?php
 include(__DIR__."/../../DatabaseManager.php");
+include("functies.php");
 session_start();
-$connection = new \application\DatabaseManager();
+$databaseManager = new \application\DatabaseManager();
 
 // hard coded true for testing
 $path = "http://localhost/tss/public/winkelwagen";
 $path_product = "http://localhost/tss/public/product";
 //$path_media ="http://localhost/tss/public/winkelwagen";
-$path_media ="/winkelwagen";
+
 
 $placeholder = "/gitaar1.jpg";
 
+//Zet een totaalprijs om op te bouwen met up-to-date productinformatie
 $totaal_prijs = 0;
 
 //hardcode logged in
 $user_logged_in = $_SESSION['user']['logged_in']??true;
+//$_SESSION = [];
 
-// Update session cart info with most recent data
-if(isset($_SESSION["winkelwagen"]["producten"]) && count($_SESSION["winkelwagen"]["producten"])) {
-
-    $product_ids = array_column($_SESSION["winkelwagen"]["producten"], 'id');
-    $query = "SELECT p.id, p.naam as product_naam, p.prijs, m.naam as media_naam, m.pad as media_pad ".
-        "FROM producten as p ".
-        "JOIN product_media as pm on p.id=pm.product_id ".
-        "JOIN media as m on m.id=pm.media_id ".
-        "WHERE p.id IN ( ". implode(", ", $product_ids) . " ) ".
-        "GROUP BY pm.product_id ";
-
-    $result = $connection->query($query)->get();
-
-    foreach($result as $row) {
-        foreach ($_SESSION["winkelwagen"]["producten"] as $key => $product){
-            if($product['id'] == $row['id']) {
-                $_SESSION["winkelwagen"]["producten"][$key]["id"] = $row['id'];
-                $_SESSION["winkelwagen"]["producten"][$key]["product_naam"] = $row['product_naam'];
-                $_SESSION["winkelwagen"]["producten"][$key]["prijs"] = $row['prijs'];
-                $_SESSION["winkelwagen"]["producten"][$key]["media_naam"] = $row['media_naam'];
-                $_SESSION["winkelwagen"]["producten"][$key]["media_pad"] = $path_media.$row['media_pad'];
-            }
-        }
-    }
-}
+updateSessionCartProducts($databaseManager);
 
 
 
@@ -88,59 +67,38 @@ if(isset($_POST['wijzigingen_opslaan']) && count($_POST) > 1){
     }
 }
 
-// Testdata: Vul cart met een paar producten
+// Testdata: Vul cart met een paar producten, dirty as well, use product_id as key for product
 // Todo: Remove before going to production
-if (($_GET['addtocart']??false) == 1){
-    $_SESSION['winkelwagen']['producten'] = [
-        [
-            "id" => 1,
-            "product_name" => "Fender Stratocaster",
-            "prijs" => 999.99,
-            "media_naam" => "Gitaar Afbeelding",
-            "media_pad" => "/afbeeldingen/gitaar.jpg",
-            "hoeveelheid_in_winkelwagen" => 2,
-        ],
-        [
-            "id" => 2,
-            "naam" => "Taylor 214ce Akoestische Gitaar",
-            "prijs" => 1499.99,
-            "media_naam" => "Gitaar Afbeelding",
-            "media_pad" => "/afbeeldingen/gitaar.jpg",
-            "hoeveelheid_in_winkelwagen" => 2,
-        ],
-        [
-            "id" => 3,
-            "naam" => "Ibanez SR500 Basgitaar",
-            "prijs" => 799.99,
-            "media_naam" => "Gitaar Afbeelding",
-            "media_pad" => "/afbeeldingen/gitaar.jpg",
-            "hoeveelheid_in_winkelwagen" => 2,
-        ],
-        [
-            "id" => 4,
-            "naam" => "Marshall JVM410H Gitaarversterker",
-            "prijs" => 1999.99,
-            "media_naam" => "Gitaar Afbeelding",
-            "media_pad" => "/afbeeldingen/gitaar.jpg",
-            "hoeveelheid_in_winkelwagen" => 2,
-        ],
-        [
-            "id" => 5,
-            "naam" => "D'Addario EXL120 Snarenset",
-            "prijs" => 9.99,
-            "media_naam" => "Gitaar Afbeelding",
-            "media_pad" => "/afbeeldingen/gitaar.jpg",
-            "hoeveelheid_in_winkelwagen" => 2,
-        ]
-    ];
+if ($_GET['addtocart']??false){
+        $id = $_GET['addtocart'];
+
+        $query = "SELECT p.id, p.naam as product_naam, p.prijs, m.naam as media_naam, m.pad as media_pad ".
+            "FROM producten as p ".
+            "JOIN product_media as pm on p.id=pm.product_id ".
+            "JOIN media as m on m.id=pm.media_id ".
+            "WHERE p.id = :id ".
+            "GROUP BY pm.product_id ";
+
+        $result = $databaseManager->query($query, ["id" => $id])->first();
+        if(isset($_SESSION["winkelwagen"]["producten"][$id])) {
+            $_SESSION["winkelwagen"]["producten"][$id]["hoeveelheid_in_winkelwagen"]++;
+        } else {
+            $_SESSION["winkelwagen"]["producten"][$id]["hoeveelheid_in_winkelwagen"] = 1;
+        }
+
+        $_SESSION["winkelwagen"]["producten"][$id]["id"] = $result['id'];
+        $_SESSION["winkelwagen"]["producten"][$id]["product_naam"] = $result['product_naam'];
+        $_SESSION["winkelwagen"]["producten"][$id]["prijs"] = $result['prijs'];
+        $_SESSION["winkelwagen"]["producten"][$id]["media_naam"] = $result['media_naam'];
+        $_SESSION["winkelwagen"]["producten"][$id]["media_pad"] = $result['media_pad'];
 }
+
 //Check winkelwagen of set false
 if(
     ($_SESSION["winkelwagen"]['producten']??false)
     && count($_SESSION["winkelwagen"]['producten'])
 ){
     $producten = $_SESSION["winkelwagen"]['producten'];
-
 } else{
     $producten = false;
 }
