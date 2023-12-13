@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <?php
+// Plaats van benodigde PHP-bestanden en sessiebeheer
 include __DIR__ . "/../../Application/Http/account/services.php";
 $session = \application\SessionManager::getInstance();
 ?>
 
 <html lang="en">
-<!--Head-->
+<!-- Headgedeelte -->
 <?php include __DIR__ . "/../../Resources/components/layout/head.php"; ?>
 
 <body class="min-vw-100 min-vh-100 d-flex flex-column bg-white">
-<!--Header-->
+<!-- Headergedeelte -->
 <?php include __DIR__ . "/../../Resources/components/layout/header.php"; ?>
-<!--Header-->
+<!-- Navigatiemenu voor de accountsectie -->
 <?php include __DIR__ . '/../../Application/Http/account/menu.php'; ?>
-<!--Pagina content container-->
+<!-- Container voor de pagina-inhoud -->
 
 
 <div class="container mt-5 text-center">
     <div class="row">
         <?php
+        // Ophalen van de laatste bestelling(en)
         $laatstebestellingen = queryLaatstebestellingen(1);
         if (count($laatstebestellingen) > 0) {
             // Als er bestellingen zijn, toon de details
@@ -58,9 +60,6 @@ $session = \application\SessionManager::getInstance();
     </div>
 </div>
 
-
-
-
 <br>
 <br>
 <div class="row">
@@ -79,6 +78,7 @@ $session = \application\SessionManager::getInstance();
                                     </div>
                                     <div class="card-body">
                                         <?php
+                                        // Ophalen van klantgegevens
                                         $klant = queryKlant(1);
                                         if ($klant) {
                                             echo "<p class='card-text'><strong>Naam:</strong> " . $klant['voornaam'] . " " . $klant['achternaam'] . "</p>";
@@ -93,7 +93,6 @@ $session = \application\SessionManager::getInstance();
                                         ?>
                                     </div>
                                 </div>
-
 
                                 <!-- Cadeaubonnen sectie -->
                                 <div class="col-md-6">
@@ -116,16 +115,13 @@ $session = \application\SessionManager::getInstance();
 
                 <!-- Andere inhoud... -->
             </div>
-
-
-
         </div>
 
-        <!--Footer & Scripts-->
+        <!-- Footer & Scripts -->
         <?php include __DIR__ . "/../../Resources/components/layout/footer.php"; ?>
         <?php include __DIR__ . "/../../Resources/components/layout/scripts.php"; ?>
-
-
+    </div>
+</div>
 
 </body>
 </html>

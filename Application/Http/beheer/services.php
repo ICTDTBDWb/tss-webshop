@@ -1,28 +1,44 @@
 <?php
+// Inclusie van benodigde klassen voor database- en sessiebeheer.
 include(__DIR__ . '/../../DatabaseManager.php');
 include(__DIR__ . '/../../SessionManager.php');
+
+// Gebruik namespace voor DatabaseManager.
 use \application\DatabaseManager;
+
 /**
  * Voegt een nieuwe cadeaubon toe aan de database.
+ *
+ * @param string $code Unieke code van de cadeaubon.
+ * @param string $pin PIN van de cadeaubon.
+ * @param float $bedrag Het bedrag dat de cadeaubon vertegenwoordigt.
  */
 function queryVoegCadeaubonToe($code, $pin, $bedrag) {
+    // Maak een instantie van de DatabaseManager klasse.
     $database = new application\DatabaseManager();
+    // Voer een INSERT-query uit om de cadeaubon toe te voegen.
     $database->query(
         "INSERT INTO cadeaubonnen (code, pin, bedrag) VALUES (?, ?, ?)",
         [$code, $pin, $bedrag]
     );
+    // Sluit de databaseverbinding.
     $database->close();
 }
 
 /**
  * Verwijdert een cadeaubon uit de database op basis van het opgegeven ID.
+ *
+ * @param int $cadeaubonId De unieke ID van de cadeaubon die verwijderd moet worden.
  */
 function queryVerwijderCadeaubon($cadeaubonId) {
+    // Maak een instantie van de DatabaseManager klasse.
     $database = new application\DatabaseManager();
+    // Voer een DELETE-query uit om de cadeaubon te verwijderen.
     $database->query(
         "DELETE FROM cadeaubonnen WHERE id = ?",
         [$cadeaubonId]
     );
+    // Sluit de databaseverbinding.
     $database->close();
 }
 
@@ -32,13 +48,16 @@ function queryVerwijderCadeaubon($cadeaubonId) {
  * @return array Een array van cadeaubonnen.
  */
 function queryHaalCadeaubonnenOp() {
-    $database = new application\DatabaseManager(); // Maak een instantie van de DatabaseManager klasse.
+    // Maak een instantie van de DatabaseManager klasse.
+    $database = new application\DatabaseManager();
 
-    // Voer een query uit om alle cadeaubonnen op te halen.
+    // Voer een SELECT-query uit om alle cadeaubonnen op te halen en sla het resultaat op.
     $result = $database->query("SELECT * FROM cadeaubonnen")->get();
 
-    $database->close(); // Sluit de database connectie.
+    // Sluit de databaseverbinding.
+    $database->close();
 
+    // Retourneer het resultaat.
     return $result;
 }
 
@@ -50,12 +69,13 @@ function queryHaalCadeaubonnenOp() {
  * @param float $nieuwBedrag Het nieuwe bedrag van de cadeaubon.
  */
 function queryWijzigCadeaubon($cadeaubonId, $nieuweCode, $nieuwBedrag) {
+    // Maak een instantie van de DatabaseManager klasse.
     $database = new application\DatabaseManager();
+    // Voer een UPDATE-query uit om de cadeaubon te wijzigen.
     $database->query(
         "UPDATE cadeaubonnen SET code = ?, bedrag = ? WHERE id = ?",
         [$nieuweCode, $nieuwBedrag, $cadeaubonId]
     );
+    // Sluit de databaseverbinding.
     $database->close();
 }
-
-?>
