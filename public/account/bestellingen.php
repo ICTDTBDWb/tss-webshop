@@ -13,8 +13,7 @@ $bestellingen = zoekBestellingen($klantId, $zoekterm);
 <head>
     <meta charset="UTF-8">
     <title>Bestelling Overzicht</title>
-    <!-- Plaats van Bootstrap CSS-stijlen -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
     <!-- Plaats van andere head-elementen, zoals stylesheets of scripts -->
     <?php include __DIR__ . "/../../Resources/components/layout/head.php"; ?>
 </head>
