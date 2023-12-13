@@ -29,15 +29,16 @@ function arcordion_constructer($categorieen)
     foreach ($categorieen as $key => $categorie) {
 
         $show_categorie = $categorie['show'];
+        $naam_categorie = $categorie['naam'];
 
 
         $contruct .= "<div class='accordion-item'>
                             <h2 class='accordion-header' id='accordion-header_$key'>
                                 <button class='accordion-button $show_categorie ' type='button' data-bs-toggle='collapse' data-bs-target='#accordion-collapse_$key' aria-expanded='false' aria-controls='accordion-collapse_$key' >
-                                    $key
+                                    $naam_categorie
                                 </button>
                             </h2>"
-                                . arcordion_item_constructor($categorie, $key)." 
+                                . arcordion_item_constructor($categorie['product'], $key, $show_categorie )." 
                         </div>";
     }
 
@@ -45,9 +46,10 @@ function arcordion_constructer($categorieen)
 }
 
 
-    function arcordion_item_constructor($categorie, $key)
+    function arcordion_item_constructor($categorie, $key, $show )
     {
-        $show_categorie = $categorie['show'];
+
+        $show_categorie = $show;
         $contruct = "<div id='accordion-collapse_$key' class='accordion-collapse $show_categorie ' aria-labelledby='accordion-header_$key' >
                             <div class='accordion-body'>";
 

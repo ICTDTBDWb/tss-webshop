@@ -35,10 +35,12 @@
       foreach ($categorieen as $categorie)
       {
           $categorie_id = $categorie['id'];
-          $producten_categorie[$categorie['naam']] = $database->query("SELECT * FROM producten inner join product_categorieen where product_id = producten.id and categorie_id  = ? and naam like ? ORDER BY naam ASC", [$categorie_id, "%".$filter."%"] )->get();
+          $producten_categorie[$categorie_id]['product'] = $database->query("SELECT * FROM producten inner join product_categorieen where product_id = producten.id and categorie_id  = ? and naam like ? ORDER BY naam ASC", [$categorie_id, "%".$filter."%"] )->get();
+          $producten_categorie[$categorie_id]['naam'] = $categorie['naam'];
       }
         //filter prodcut with no categorie
-      $producten_categorie['overig'] = $database->query("SELECT * FROM producten WHERE naam like ? and NOT EXISTS ( SELECT * FROM product_categorieen where product_categorieen.product_id = producten.id) ORDER BY naam ASC " , ["%".$filter."%"])->get();
+      $producten_categorie['overig']['product'] = $database->query("SELECT * FROM producten WHERE naam like ? and NOT EXISTS ( SELECT * FROM product_categorieen where product_categorieen.product_id = producten.id) ORDER BY naam ASC " , ["%".$filter."%"])->get();
+      $producten_categorie['overig']['naam'] = "overig";
       //close database;
       $database->close();
 
@@ -46,30 +48,32 @@
       foreach  ($producten_categorie as $key => &$item)
       {
           //button pressed
-          foreach($item as $_key => $value) {
-              $item[$_key]['show'] = $filter != "" ? "" : "collapse";
-              if ($value['id'] == $product_select[0] && $key == $product_select[1]) {
-                  $item[$_key]['active'] = "Active";
+          foreach($item['product'] as $_key => &$value) {
+              $value['show'] = $filter != "" ? "" : "collapse";
+              if ($value['id'] == $product_select[0] && $item['naam'] == $product_select[1]) {
+                  $value['active'] = "Active";
                   $item['show'] = "";
               } else
-                  $item[$_key]['active'] = "";
+                  $value['active'] = "";
 
 
           }
           //filter on categorie
           $item['show'] = ($filter != "" && count($item) > 0) || array_key_exists("show", $item) ? "" : "collapsed";
           //if categorie is shown, make all buttons show up
-          foreach($item as $_key => $value)
+          foreach($item['product'] as $_key => &$value)
           {
               if( $item['show'] = "")
               {
-                  $item[$_key]['show'] = "";
+                  $value['show'] = "";
               }
 
 
           }
 
       }
+
+      var_dump($producten_categorie);
 
 ?>
 
@@ -167,17 +171,9 @@
 
              <aside class="" id="aside">
                  <form method="GET" action=''>
-                  <div class="coll">
-                     <div class="row">
-                        <input type="search" value='<?php echo $filter ?> ' class="form-control border" id="test" name="filter"/>
-                     </div>
-                     <div class="row">
-                         <select id="Merkselectie" class="form-select">
-                             <option selected>Categorie</option>
-                             <option>Merk</option>
-                         </select>
-                     </div>
-                  </div>
+                    <input type="search" value='<?php echo $filter ?> ' class="form-control border" id="test" name="filter"/>
+
+
                      <?php include __DIR__ . "/../../Application/Http/beheer/productbeheer_items.php" ?>
                      <div class="accordion" id="accordionPanelsStayOpenExample">
 
