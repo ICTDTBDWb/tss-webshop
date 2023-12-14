@@ -1,53 +1,101 @@
 <?php
 
 
-use \application\DatabaseManager;
 
-
-
-
-function get_products($var)
+//make arcordion header
+function arcordion_constructer($categorieen)
 {
-    $var = "'%".$var."%'";
-    $database = new DatabaseManager();
-    $products = $database->query("SELECT * FROM producten where naam like". $var)->get();
-    $database->close();
-    return $products;
-}
+
+    $contruct = "";
+    foreach ($categorieen as $key => $categorie) {
+
+        $show_categorie = $categorie['show'];
+        $naam_categorie = $categorie['naam'];
 
 
-function encode($var)
-{
-    $var = "'". $var."'";
-    return $var;
-}
-
-function create_buttons($var)
-{
-    try
-    {
-        $products = get_products($var);
-        $button = '';
-        foreach ($products as $item)
-        {
-
-
-            $button.= "<input type='button' value=".encode($item['naam'])."name='btn_".$item['id']."' id=".encode($item['id']).
-                "class='button' /><br/>";
-        }
-
-        for ($i=50; $i< 800; $i++)
-        {
-            $button.= "<input type='button' value=".encode("test".$i)."name='btn_".$i."' id=".encode($i).
-                "class='button' /><br/>";
-        }
-    }
-    catch(\mysql_xdevapi\Exception $e )
-    {
-        $button = '';
+        $contruct .= "<div class='accordion-item'>
+                            <h2 class='accordion-header' id='accordion-header_$key'>
+                                <button class='accordion-button $show_categorie ' type='button' data-bs-toggle='collapse' data-bs-target='#accordion-collapse_$key' aria-expanded='false' aria-controls='accordion-collapse_$key' >
+                                    $naam_categorie
+                                </button>
+                            </h2>"
+            . arcordion_item_constructor($categorie['product'], $key, $show_categorie )." 
+                        </div>";
     }
 
-    return $button;
+    return $contruct;
 }
+
+//make arcordion items
+function arcordion_item_constructor($categorie, $key, $show )
+{
+
+    $show_categorie = $show != "" ? "" : "show";
+    $contruct = "<div id='accordion-collapse_$key' class='accordion-collapse collapse $show_categorie ' aria-labelledby='accordion-header_$key' >
+                            <div class='accordion-body'>";
+
+
+    foreach ($categorie as $_key => $product) {
+
+        if(is_array($product)) {
+            $product_naam = $product['naam'];
+            $product_id = $product['id'];
+            $contruct .= "
+                            <button class='btn btn-light' style='width: 100%; margin-top: 2%' id='btn_product_$product_id' name='Product' value='$product_id $key'>
+                                <strong>$product_naam</strong>
+                            </button>
+                          ";
+        }
+        else
+            $contruct .= "<strong></strong>";
+
+    }
+
+    $contruct .= "        </div>
+                     </div>";
+
+
+    return $contruct;
+}
+
+
+function checkbox_constructor($categorie, $product)
+{
+
+    $construct = "";
+    //check if categorie needs to be checked
+    foreach ($categorie as $item)
+    {
+        $checked = "";
+        if (array_key_exists("0", $product))
+        {
+            foreach ($product[0]['categorie'] as $value)
+            {
+                $checked = $value['naam'] == $item['naam'] ? "checked" : "";
+            }
+        }
+
+        $categorie_id = $item['id'];
+        $categorie_naam = $item['naam'];
+        $construct.= "<div class='form-check'>
+                        <input class='form-check-input' type='checkbox' id='checkbox_$categorie_id' $checked>
+                        <label class='form-check-label' for='checkbox_$categorie_id'>
+                            $categorie_naam
+                        </label>
+                      </div>";
+
+
+    }
+
+
+    return $construct;
+
+}
+
+
+
+
+
+
 
 
