@@ -7,7 +7,7 @@
         <h1 class="mt-0 font-weight-bold mb-5">Beheerdersportaal</h1>
     </div>
     <!--Button overzicht-->
-    <div class="mt-2 mb-5 d-flex justify-content-evenly" style="max-width: 75%">
+    <div class="mt-2 mb-0 d-flex justify-content-evenly" style="max-width: 75%">
         <a class="btn btn-secondary" href="#" role="button">Beheeroverzicht</a>
         <a class="btn btn-secondary" href="#" role="button">Accountgegevens</a>
         <a class="btn btn-secondary" href="#" role="button">Productbeheer</a>
