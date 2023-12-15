@@ -1,15 +1,15 @@
 -- Dummy data voor medewerkers
 INSERT INTO `tss`.`medewerkers` (`rol`, `email`, `password`, `voornaam`, `tussenvoegsel`, `achternaam`, `straat`, `huisnummer`, `postcode`, `woonplaats`, `land`)
 VALUES
-  ('klantenservice', 'medewerker1@email.com', 'wachtwoord1', 'John', 'van', 'Doe', 'Straatnaam 1', '123', '1234 AB', 'Stad', 'Nederland'),
-  ('webredacteur', 'medewerker2@email.com', 'wachtwoord2', 'Jane', NULL, 'Doe', 'Straatnaam 2', '456', '5678 CD', 'Stad', 'Nederland'),
-  ('seospecialist', 'medewerker3@email.com', 'wachtwoord3', 'Bob', 'de', 'Bouwer', 'Straatnaam 3', '789', '9012 EF', 'Stad', 'Nederland');
+  ('klantenservice', 'medewerker1@email.com', '$2y$10$DCY9NotoJlmBlXzT35GmUOufSMIm8kbOjUCpsAcJHdw2Yr/556T2i', 'John', 'van', 'Doe', 'Straatnaam 1', '123', '1234 AB', 'Stad', 'Nederland'),
+  ('webredacteur', 'medewerker2@email.com', '$2y$10$DCY9NotoJlmBlXzT35GmUOufSMIm8kbOjUCpsAcJHdw2Yr/556T2i', 'Jane', NULL, 'Doe', 'Straatnaam 2', '456', '5678 CD', 'Stad', 'Nederland'),
+  ('seospecialist', 'medewerker3@email.com', '$2y$10$DCY9NotoJlmBlXzT35GmUOufSMIm8kbOjUCpsAcJHdw2Yr/556T2i', 'Bob', 'de', 'Bouwer', 'Straatnaam 3', '789', '9012 EF', 'Stad', 'Nederland');
 
 -- Dummy data voor klanten
 INSERT INTO `tss`.`klanten` (`email`, `password`, `voornaam`, `tussenvoegsel`, `achternaam`, `straat`, `huisnummer`, `postcode`, `woonplaats`, `land`)
 VALUES
-  ('klant1@email.com', 'wachtwoordklant1', 'Alice', NULL, 'Klant', 'Klantenstraat 1', '101', '2345 GH', 'Dorp', 'Nederland'),
-  ('klant2@email.com', 'wachtwoordklant2', 'Bob', NULL, 'Klant', 'Klantenstraat 2', '202', '3456 IJ', 'Dorp', 'Nederland');
+  ('klant1@email.com', '$2y$10$DCY9NotoJlmBlXzT35GmUOufSMIm8kbOjUCpsAcJHdw2Yr/556T2i', 'Alice', NULL, 'Klant', 'Klantenstraat 1', '101', '2345 GH', 'Dorp', 'Nederland'),
+  ('klant2@email.com', '$2y$10$DCY9NotoJlmBlXzT35GmUOufSMIm8kbOjUCpsAcJHdw2Yr/556T2i', 'Bob', NULL, 'Klant', 'Klantenstraat 2', '202', '3456 IJ', 'Dorp', 'Nederland');
 
 -- Dummy data voor producten
 INSERT INTO `tss`.`producten` (`naam`, `prijs`, `aantal`)
@@ -81,17 +81,8 @@ VALUES
   (3, 'iDeal', NOW(), 399.97);
 
 -- Dummy data voor media
-INSERT INTO `tss`.`media` (`naam`, `pad`, `extensie`)
+INSERT INTO `tss`.`media` (`id`, `product_id`, `naam`, `pad`, `extensie`)
 VALUES
-  ('Gitaar Afbeelding 1', '/afbeeldingen/gitaar1.jpg', 'jpg'),
-  ('Gitaar Afbeelding 2', '/afbeeldingen/gitaar2.jpg', 'jpg'),
-  ('Gitaar Afbeelding 3', '/afbeeldingen/gitaar3.jpg', 'jpg');
-
--- Dummy data voor product_media
-INSERT INTO `tss`.`product_media` (`product_id`, `media_id`)
-VALUES
-  (1, 1),
-  (2, 2),
-  (3, 3),
-  (4, 1),
-  (5, 2);
+  (1, 1, 'foto1', '/assets/afbeeldingen/guitar1', 'jpg'),
+  (2, 2, 'foto2', '/assets/afbeeldingen/guitar2', 'jpg'),
+  (3, 3, 'foto3', '/assets/afbeeldingen/guitar3', 'jpg');
