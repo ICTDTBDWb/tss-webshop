@@ -74,10 +74,9 @@ if ($_GET['addtocart']??false){
 
         $query = "SELECT p.id, p.naam as product_naam, p.prijs, m.naam as media_naam, m.pad as media_pad ".
             "FROM producten as p ".
-            "JOIN product_media as pm on p.id=pm.product_id ".
-            "JOIN media as m on m.id=pm.media_id ".
+            "JOIN media as m on m.product_id=p.id ".
             "WHERE p.id = :id ".
-            "GROUP BY pm.product_id ";
+            "GROUP BY p.id ";
 
         $result = $databaseManager->query($query, ["id" => $id])->first();
         if(isset($_SESSION["winkelwagen"]["producten"][$id])) {

@@ -100,3 +100,6 @@ function getVerzendmethodes(\application\DatabaseManager $dbm) {
     return $dbm->query("SELECT * FROM verzendmethoden")->get();
 }
 
+function genereerPdf($bestelling_id) {
+
+}
