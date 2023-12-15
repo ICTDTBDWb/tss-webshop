@@ -84,5 +84,5 @@ VALUES
 INSERT INTO `tss`.`media` (`id`, `product_id`, `naam`, `pad`, `extensie`)
 VALUES
   (1, 1, 'foto1', '/assets/afbeeldingen/guitar1', 'jpg'),
-  (2, 2, 'foto2', '/assets/afbeeldingen/guitar2', 'jpg),
+  (2, 2, 'foto2', '/assets/afbeeldingen/guitar2', 'jpg'),
   (3, 3, 'foto3', '/assets/afbeeldingen/guitar3', 'jpg');
