@@ -41,3 +41,4 @@ function queryInsertItem() {
 
     $database->close(); // Sluit de database connectie.
 }
+
