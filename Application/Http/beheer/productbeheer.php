@@ -9,6 +9,7 @@ function arcordion_constructer($categorieen)
     $contruct = "";
     foreach ($categorieen as $key => $categorie) {
 
+
         $show_categorie = $categorie['show'];
         $naam_categorie = $categorie['naam'];
 
@@ -66,19 +67,24 @@ function checkbox_constructor($categorie, $product)
     //check if categorie needs to be checked
     foreach ($categorie as $item)
     {
+
+
         $checked = "";
         if (array_key_exists("0", $product))
         {
             foreach ($product[0]['categorie'] as $value)
             {
                 $checked = $value['naam'] == $item['naam'] ? "checked" : "";
+                if ($checked != "")
+                    break;
             }
         }
 
+        //<input class='form-check-input' type='hidden' name='checkbox_$categorie_id' value='off'  id='checkbox_$categorie_id'>
         $categorie_id = $item['id'];
         $categorie_naam = $item['naam'];
         $construct.= "<div class='form-check'>
-                        <input class='form-check-input' type='checkbox' id='checkbox_$categorie_id' $checked>
+                        <input class='form-check-input' type='checkbox' name='checkbox_$categorie_id'  id='checkbox_$categorie_id' $checked>
                         <label class='form-check-label' for='checkbox_$categorie_id'>
                             $categorie_naam
                         </label>

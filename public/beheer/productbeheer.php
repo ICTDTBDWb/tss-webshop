@@ -9,12 +9,86 @@
      // sessie
      $session = \application\SessionManager::getInstance();
 
+    //database
+    use application\DatabaseManager;
+    $database = new DatabaseManager();
+    // get categorien
+    $categorieen = $database->query("SELECT * FROM categorieen ORDER BY id ASC")->get();
+
 
      //get and post
-
     if (is_array($_POST) && !empty($_POST))
     {
-        var_dump($_POST);
+
+        if(isset($_POST['opslaan']))
+        {
+            $opslaan = $_POST['opslaan'];
+            $product_id = array_key_exists("product_id", $_POST) ? $_POST['product_id'] : "";
+            $product_naam = array_key_exists("product_naam", $_POST) ? $_POST['product_naam'] : "";
+            $product_prijs = array_key_exists("product_prijs", $_POST) ? $_POST['product_prijs'] : 0;
+            $product_aantal = array_key_exists("product_aantal", $_POST) ? $_POST['product_aantal'] : 0;
+            $product_beschrijving = array_key_exists("product_beschrijving", $_POST) ? $_POST['product_beschrijving'] : "";
+            $product_merk = array_key_exists("product_merk", $_POST) ? $_POST['product_merk'] : "";
+            $product_categorie = [];
+
+            foreach($_POST as $key => $value)
+            {
+                if(str_contains($key,"checkbox_"))
+                {
+                   $key = str_replace("checkbox_","", $key);
+                   $product_categorie[$key] = $value;
+
+                }
+
+            }
+
+            var_dump($product_categorie);
+
+
+            if ($opslaan == "opslaan")
+            {
+                if ($product_id == "")
+                   $product_id = $database->query("INSERT INTO producten (`naam`, `prijs`, `aantal`) VALUES (?,?,?) ", [$product_naam, $product_prijs, $product_aantal])->insert();
+                else
+                    $database->query("UPDATE producten SET naam = ? , prijs = ? , aantal = ? WHERE id = ? ", [$product_naam, $product_prijs, $product_aantal, $product_id]);
+
+
+                $database->query("DELETE FROM product_categorieen where product_id = ?",[$product_id]);
+                if(count($product_categorie)> 0) {
+                   // $query = "INSERT INTO product_categorieen ('product_id', 'categorie_id' ) VALUES "
+                   // $values ="[";
+
+                    foreach ($product_categorie as $key => $value) {
+                       $database->query("INSERT INTO product_categorieen (`product_id`, `categorie_id` ) VALUES (?,?) ", [$product_id, $key])->get();
+
+                    }
+
+                }
+
+            }
+            elseif ($opslaan == "toevoegen")
+            {
+
+                $product_id = $database->query("INSERT INTO producten (`naam`, `prijs`, `aantal`) VALUES (?,?,?) ", [$product_naam, $product_prijs, $product_aantal])->insert();
+                foreach ($product_categorie as $key => $value) {
+                    $database->query("INSERT INTO product_categorieen (`product_id`, `categorie_id` ) VALUES (?,?) ", [$product_id, $key])->get();
+
+                }
+
+            }
+            elseif ($opslaan == "verwijderen")
+            {
+                if ($product_id != "")
+                {
+                    $database->query("DELETE FROM product_categorieen where product_id = ?",[$product_id]);
+                    $database->query("DELETE FROM producten where id = ?",[$product_id]);
+
+                }
+
+
+
+            }
+        }
     }
 
      $filter ="";
@@ -22,35 +96,37 @@
      $product_select[1] = "";
      if (is_array($_GET) && !empty($_GET))
      {
-         $filter = filter_input(INPUT_GET, 'filter', FILTER_SANITIZE_SPECIAL_CHARS);
+
+         $filter = array_key_exists("filter",$_GET) ? $_GET['filter'] : "";
          $filter = trim($filter);
+         var_dump("filter = ". $filter."$");
 
          if(isset($_GET['Product'])) {
              $product_select = filter_input(INPUT_GET, 'Product', FILTER_SANITIZE_SPECIAL_CHARS);
              $product_select = preg_split("/ /", $product_select);
+             $_POST['id']  = $product_select[0];
          }
      }
 
 
 
-      //database
-      use \application\DatabaseManager;
-      $database = new DatabaseManager();
-        // get categorien
-      $categorieen = $database->query("SELECT * FROM categorieen ORDER BY id ASC")->get();
+
         // filter products in categories
       $producten_categorie = [];
       foreach ($categorieen as $categorie)
       {
           $categorie_id = $categorie['id'];
-          $producten_categorie[$categorie_id]['product'] = $database->query("SELECT * FROM producten inner join product_categorieen where product_id = producten.id and categorie_id  = ? and naam like ? ORDER BY naam ASC", [$categorie_id, "%".$filter."%"] )->get();
+          $producten_categorie[$categorie_id]['product'] = $database->query("SELECT * FROM producten where naam like ? and id IN (SELECT `product_id` from product_categorieen where categorie_id  = ? ) ORDER BY naam ASC", ["%".$filter."%",$categorie_id] )->get();
           $producten_categorie[$categorie_id]['naam'] = $categorie['naam'];
+          var_dump($categorie_id ."+".$categorie['naam']);
       }
+      //var_dump($producten_categorie);
         //filter prodcut with no categorie
       $producten_categorie['overig']['product'] = $database->query("SELECT * FROM producten WHERE naam like ? and NOT EXISTS ( SELECT * FROM product_categorieen where product_categorieen.product_id = producten.id) ORDER BY naam ASC " , ["%".$filter."%"])->get();
       $producten_categorie['overig']['naam'] = "overig";
 
       $product = $database->query("SELECT * FROM producten where id = ?",[$product_select[0]])->get();
+      $product_id = "";
       $product_naam = "";
       $product_prijs  = "";
       $product_aantal = "";
@@ -60,12 +136,14 @@
 
       if (is_array($product) and array_key_exists("0", $product))
       {
-          $product[0]["categorie"] = $database->query("SELECT * FROM tss.categorieen inner join tss.product_categorieen where tss.categorieen.id = tss.product_categorieen.categorie_id and tss.product_categorieen.product_id = ?",[$product[0]['id']])->get();
+          $product[0]["categorie"] = $database->query("SELECT * FROM categorieen where id IN (SELECT `categorie_id` from product_categorieen where product_id = ?)",[$product[0]['id']])->get();
+
+          $product_id = array_key_exists("id", $product[0]) ? $product[0]['id'] : "";
           $product_naam = array_key_exists("naam", $product[0]) ? $product[0]['naam'] : "";
           $product_prijs = array_key_exists("prijs", $product[0]) ? $product[0]['prijs'] : "";
           $product_aantal = array_key_exists("aantal", $product[0]) ? $product[0]['aantal'] : "";
           $product_beschrijving = array_key_exists("beschrijving", $product[0]) ? $product[0]['beschrijving'] : "";
-          $product_merk = array_key_exists("merk", $product[0]) ? $product[0]['beschrijving'] : "";
+          $product_merk = array_key_exists("merk", $product[0]) ? $product[0]['merk'] : "";
 
       }
 
@@ -75,30 +153,21 @@
       //check selected or filter
       foreach  ($producten_categorie as $key => &$item)
       {
+          $active = false;
           //button pressed
           foreach($item['product'] as $_key => &$value) {
-              $value['show'] = $filter != "" ? "" : "show";
-              if ($value['id'] == $product_select[0] && $item['naam'] == $product_select[1]) {
+
+
+              if ($value['id'] == $product_select[0] && $key == $product_select[1]) {
                   $value['active'] = "active";
-                  $item['show'] = "";
+                  $active = true;
               } else
                   $value['active'] = "";
 
 
           }
           //filter on categorie
-          $item['show'] = ($filter != "" && count($item) > 0) || array_key_exists("show", $item) ? "" : "collapsed";
-          //if categorie is shown, make all buttons show up
-          foreach($item['product'] as $_key => &$value)
-          {
-              if( $item['show'] = "")
-              {
-                  $value['show'] = "";
-              }
-
-
-          }
-
+          $item['show'] = ($filter != "" && count($item['product']) > 0) || $active == true  ? "" : "collapsed";
       }
 
 
@@ -171,7 +240,7 @@
         <!--Pagina content container-->
         <div class="container-lg flex-grow-1 gx-0 py-4" >
             <main>
-                <form method='POST' action=''>
+                <form method="POST" action=''>
                     <div class="row  align-items-top ">
                         <!-- Carousel -->
                         <div id="demo" class="carousel slide col " data-bs-ride="carousel" style="max-width:20vh; max-height:20vh; min-height: 20vh; min-width: 20vh; margin-left: 2vh; margin-right: 2vh" data-bs-interval="false">
@@ -214,14 +283,15 @@
                         <div class="col">
                             <div class="mb-3" >
                                 <label for="product_naam" class="form-label">Product Naam:</label>
-                                <input type="text" class="form-control" id="product_naam" aria-describedby="product_help" value='<?php echo $product_naam ?>'>
+                                <input type="text" class="form-control" id="product_naam" name="product_naam" aria-describedby="product_help" value='<?php echo $product_naam ?>'>
+                                <input type="hidden" class="form-control" id="product_id" name="product_id"   value='<?php echo $product_id ?>'>
                                 <div id="product_help" class="form-text">verander of geef naam van product op.</div><br>
 
 
                                 <div class="row">
                                     <div class="col" style='min-width: 50%'>
                                         <label for="product_merk" class="form-label" >Product Merk:</label>
-                                        <input type="text" class="form-control" id="product_Merk"  list="merknamen" >
+                                        <input type="text" class="form-control" id="product_merk" name="product_merk"  list="merknamen" >
                                         <datalist id="merknamen">
                                             <option value="Boston">
                                             <option value="Cambridge">
@@ -229,13 +299,13 @@
                                     </div>
                                     <div class="col" >
                                         <label for="product_aantal" class="form-label" >aantal:</label>
-                                        <input type="number" class="form-control" id="product_aantal" min="0" value='<?php echo $product_aantal ?>'>
+                                        <input type="number" class="form-control" id="product_aantal" name="product_aantal" min="0" value='<?php echo $product_aantal ?>'>
                                     </div>
                                     <div class="col">
                                         <label for="product_prijs" class="form-label">prijs</label>
                                         <div class="input-group mb-3">
                                         <span class="input-group-text" id="product_prijs">€</span>
-                                        <input type="number" class="form-control" id="product_prijs" min="0" value='<?php echo $product_prijs ?>'>
+                                        <input type="number" class="form-control" id="product_prijs" name="product_prijs" min="0.00" step="any" value='<?php echo $product_prijs ?>'>
                                         </div>
                                     </div>
                                 </div>
@@ -245,7 +315,7 @@
                     <div class="row">
                         <div class="container col" style="max-width: 30%; align-content: flex-start" >
                             <label for="hoofd_afbeelding" class="form-label">Hoofd afbeelding </label>
-                            <select id="hoofd_afbeelding" class="form-select">
+                            <select id="hoofd_afbeelding" class="form-select" name="hoofd_afbeelding">
                                 <option selected>pic1</option>
                                 <option>pic1</option>
                                 <option>pic2</option>
@@ -260,19 +330,19 @@
                         </div>
                         <div class="col">
                             <label for="beschrijving" class="form-label">Beschrijving</label>
-                            <textarea class="form-control" id="beschrijving" aria-label="With textarea" style="resize: none; height: 50vh" ><?php echo $product_beschrijving?> </textarea>
+                            <textarea class="form-control" id="beschrijving" aria-label="With textarea" name="product_beschrijving" style="resize: none; height: 50vh" ><?php echo $product_beschrijving?> </textarea>
                         </div>
                     </div><br>
 
                     <div class="row">
                         <div class="col">
-                            <button type="button" class="btn btn-outline-secondary" id="opslaan" name="opslaan" value="toevoegen" style="width: 100%">Toevoegen als nieuw</button>
+                            <button type="submit" class="btn btn-outline-secondary" id="opslaan" name="opslaan" value="toevoegen" style="width: 100%">Toevoegen als nieuw</button>
                         </div>
                         <div class="col">
-                            <button type="button" class="btn btn-outline-secondary" id="opslaan"  name="opslaan" value="opslaan"  style="width: 100%">Opslaan</button>
+                            <button type="submit" class="btn btn-outline-secondary" id="opslaan"  name="opslaan" value='opslaan'  style="width: 100%">Opslaan</button>
                         </div>
                         <div class="col">
-                            <button type="button" class="btn btn-outline-secondary" id="opslaan"  name="opslaan" value="verwijderen"  style="width: 100%">Verwijderen</button>
+                            <button type="submit" class="btn btn-outline-secondary" id="opslaan"  name="opslaan" value="verwijderen"  style="width: 100%">Verwijderen</button>
                         </div>
 
                     </div>

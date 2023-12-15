@@ -76,6 +76,11 @@ class DatabaseManager
         return $this->statement->fetch();
     }
 
+    public function insert(): mixed
+    {
+        return  $this->connection->lastInsertId();
+    }
+
     /**
      * Close the PDO connection.
      */
