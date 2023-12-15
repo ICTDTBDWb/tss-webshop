@@ -1,24 +1,8 @@
 <!-- PHP logica -->
-<?php include __DIR__ . '/../../Application/Http//beheer/klanten.php'; ?>
-<?php $session = \application\SessionManager::getInstance()?>
-
-<!DOCTYPE html>
-
-<html lang="en">
-
-<!--Head-->
-<?php include __DIR__ . "/../../Resources/components/layout/head.php"; ?>
-
-    <body class="min-vw-100 min-vh-100 d-flex flex-column bg-white">
-<!--Header-->
-<?php include __DIR__ . "/../../Resources/components/layout/header.php"; ?>
-
-
-    <!--Invul velden om klant toe te voegen-->
-    <div class="container-lg flex-grow-1 gx-0 py-4">
+<?php include basePath("Application/Http/beheer/klanten.php"); ?>
         <h1>Klant toevoegen</h1>
         <div class="d-flex justify-content-end mt-2">
-            <a class="btn btn-secondary" href="klanten.php" role="button" style="align-content: end">Terug naar klantoverzicht</a>
+            <a class="btn btn-secondary" href="klanten" role="button" style="align-content: end">Terug naar klantoverzicht</a>
         </div>
         <br>
         <style>
@@ -63,7 +47,6 @@
                 <button class="btn btn-secondary" type="submit" name="submit">Toevoegen</button>
             </div>
         </form>
-    </div>
 
 
     <!--set $_POST condities-->
@@ -93,17 +76,3 @@
 
     }
     ?>
-</div>
-
-
-
-</body>
-</html>
-
-
-
-<!--Footer & Scripts-->
-<?php include __DIR__ . "/../../Resources/components/layout/footer.php"; ?>
-<?php include __DIR__ . "/../../Resources/components/layout/scripts.php"; ?>
-    </body>
-</html>

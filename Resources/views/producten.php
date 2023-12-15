@@ -1,24 +1,11 @@
 <!-- PHP logica -->
-<?php include __DIR__ . '/../Application/Http/producten.php'; ?>
-
-<!DOCTYPE html>
-
-<html lang="en">
-    <!--Head-->
-    <?php include __DIR__ . "/../Resources/components/layout/head.php"; ?>
-
-    <body class="min-vw-100 min-vh-100 d-flex flex-column bg-white">
-        <!--Header-->
-        <?php include __DIR__ . "/../Resources/components/layout/header.php"; ?>
+<?php include basePath("Application/Http/producten.php"); ?>
 
 <!--Pagina content container-->
     <div class="container-lg flex-grow-1 gx-0 py-4">
         <div class="d-flex justify-content-center">
             <h1 class="mt-0 font-weight-bold mb-5">Producten</h1>
         </div>
-    </div>
-        <!--Weergave categorien-->
-    <div class="container-lg flex-grow-1 gx-o py-4">
         <div class="row">
             <div class="col-sm-2">
                 <h5 class="font-weight-bold d-flex justify-content-center" >Categorien</h5>
@@ -95,11 +82,3 @@
             </div>
         </div>
     </div>
-</div>
-<!--Plaats hier de pagina elementen-->
-
-        <!--Footer & Scripts-->
-        <?php include __DIR__ . "/../Resources/components/layout/footer.php"; ?>
-        <?php include __DIR__ . "/../Resources/components/layout/scripts.php"; ?>
-    </body>
-</html>

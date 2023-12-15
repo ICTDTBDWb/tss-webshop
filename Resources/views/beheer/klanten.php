@@ -1,21 +1,9 @@
 <!-- PHP logica -->
-<?php include __DIR__ . '/../../Application/Http/beheer/klanten.php'; ?>
-
-<!DOCTYPE html>
-
-<html lang="en">
-<!--Head-->
-<?php include __DIR__ . "/../../Resources/components/layout/head.php"; ?>
-
-<body class="min-vw-100 min-vh-100 d-flex flex-column bg-white">
-<!--Header-->
-<?php include __DIR__ . "/../../Resources/components/layout/header.php"; ?>
-
 <!--Menu-->
-<?php include __DIR__ . "/../../Application/Http/beheer/menu.php"; ?>
+<?php include basePath("Application/Http/beheer/menu.php"); ?>
 
 <!--Zoekbalk rechts-->
-<div class="container-lg flex-grow-1 gx-o py-4">
+<div class="container-lg flex-grow-1 gx-0 py-4">
     <div class="d-flex justify-content-end mt-3">
         <input class="form-control" list="datalistOptions" id="klantenZoeken" placeholder="Klanten zoeken..." style="max-width: 25%">
         <datalist id="datalistOptions">
@@ -46,7 +34,7 @@
                 <td><?php print $klanten['voornaam'];?></td>
                 <td><?php print $klanten['tussenvoegsel']; ?></td>
                 <td><?php print $klanten['achternaam']; ?></td>
-                <td><a class="btn btn-secondary" href="klanten_detail.php?id=<?php echo ($klanten['id']); ?>" role="button">Wijzigen</a></td>
+                <td><a class="btn btn-secondary" href="/beheer/klanten_detail?id=<?php echo ($klanten['id']); ?>" role="button">Wijzigen</a></td>
                 <td>
                     <form method="POST" action="<?php echo $_SERVER['PHP_SELF'];?>">
                         <input name="klantId" class="d-none" value="<?php echo ($klanten['id']);?>">
@@ -62,7 +50,7 @@
     </div>
     <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $database = new application\DatabaseManager();
+        $database = new Database();
 
         // Verwijder klant uit database
         $result = $database->query("DELETE klanten FROM klanten WHERE id={$klanten['id']}");
@@ -75,15 +63,8 @@
     ?>
 </div>
 <br>
-<div class="container-lg flex-grow-1 gx-o py-4"">
+<div class="container-lg flex-grow-1 gx-o py-4">
     <div class="d-flex justify-content-end">
-        <a class="btn btn-secondary" href="klanten_nieuw.php" role="button">Nieuwe klant aanmaken</a>
+        <a class="btn btn-secondary" href="klanten_nieuw" role="button">Nieuwe klant aanmaken</a>
     </div>
 </div>
-    <!--Plaats hier de pagina elementen-->
-
-<!--Footer & Scripts-->
-<?php include __DIR__ . "/../../Resources/components/layout/footer.php"; ?>
-<?php include __DIR__ . "/../../Resources/components/layout/scripts.php"; ?>
-</body>
-</html><?php

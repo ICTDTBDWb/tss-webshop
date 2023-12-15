@@ -1,19 +1,5 @@
 <!-- PHP logica -->
-<?php include __DIR__ . '/../../Application/Http//beheer/klanten.php'; ?>
-<?php $session = \application\SessionManager::getInstance()?>
-
-<!DOCTYPE html>
-
-<html lang="en">
-<!--Head-->
-<?php include __DIR__ . "/../../Resources/components/layout/head.php"; ?>
-
-<body class="min-vw-100 min-vh-100 d-flex flex-column bg-white">
-<!--Header-->
-<?php include __DIR__ . "/../../Resources/components/layout/header.php"; ?>
-
-<!--Haal de klant ID op-->
-<?php
+<?php include basePath("Application/Http/beheer/klanten.php");
 $klantId = isset($_GET['id']) ? $_GET['id'] : null;
 $klantDetails = null;
 if ($klantId) {
@@ -25,7 +11,7 @@ if ($klantId) {
 <div class="container">
     <h1>Klant details</h1>
     <div class="d-flex justify-content-end mt-2">
-        <a class="btn btn-secondary" href="klanten.php" role="button" style="align-content: end">Terug naar klantoverzicht</a>
+        <a class="btn btn-secondary" href="/beheer/klanten" role="button" style="align-content: end">Terug naar klantoverzicht</a>
     </div>
     <br>
     <?php foreach ($klantDetails as $enkeleKlant) {?>
@@ -112,8 +98,3 @@ if ($klantId) {
             <button class="btn btn-outline-secondary" type="button" id="button-addon2" value="">Wijzig</button>
         </div>
 </div>
-<!--Footer & Scripts-->
-<?php include __DIR__ . "/../../Resources/components/layout/footer.php"; ?>
-<?php include __DIR__ . "/../../Resources/components/layout/scripts.php"; ?>
-</body>
-</html>
