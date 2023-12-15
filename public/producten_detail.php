@@ -22,8 +22,14 @@ if ($productId) {
 ?>
 
 <!--Print enkel product aan de hand van ID-->
-<div class="container">
-    <h1>Product details</h1>
+<!--Title-->
+<div class="container-lg flex-grow-1 gx-0 py-2">
+    <div class="d-flex justify-content-center">
+        <h1 class="mt-0 font-weight-bold mb-1">Product details</h1>
+    </div>
+    <div class="d-flex justify-content-end">
+        <a class="btn btn-secondary" href="producten.php" role="button" >Terug naar productoverzicht</a>
+    </div>
     <br>
         <?php foreach ($productDetails as $enkelProduct) {?>
             <div class="col text-right">
