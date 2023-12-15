@@ -13,15 +13,19 @@
 <!--Header-->
 <?php include __DIR__ . "/../../Resources/components/layout/header.php"; ?>
 
-<style>
-    input {
-        width: 100%;
-    }
-</style>
 
     <!--Invul velden om klant toe te voegen-->
     <div class="container-lg flex-grow-1 gx-0 py-4">
-        <h3>Klant toevoegen</h3>
+        <h1>Klant toevoegen</h1>
+        <div class="d-flex justify-content-end mt-2">
+            <a class="btn btn-secondary" href="klanten.php" role="button" style="align-content: end">Terug naar klantoverzicht</a>
+        </div>
+        <br>
+        <style>
+            input {
+                width: 100%;
+            }
+        </style>
         <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
             <div class="mb-3">
             Email: <input type="email" name="email" placeholder="email">
@@ -54,12 +58,13 @@
             Land: <input type="text" name="land" placeholder="land">
             </div>
             <br>
-            <div class="mb-3">
+            <div class="d-flex justify-content-start mt-2">
                 <!--Voeg klant toe met ingevulde gegevens-->
                 <button class="btn btn-secondary" type="submit" name="submit">Toevoegen</button>
             </div>
         </form>
     </div>
+
 
     <!--set $_POST condities-->
     <?php

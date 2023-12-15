@@ -50,7 +50,7 @@
                 <td>
                     <form method="POST" action="<?php echo $_SERVER['PHP_SELF'];?>">
                         <input name="klantId" class="d-none" value="<?php echo ($klanten['id']);?>">
-                        <button class="btn btn-secondary" onclick="" role="button" name="klantVerwijderen" value="verwijderen">Verwijderen</button>
+                        <button class="btn btn-secondary" role="button" name="klantVerwijderen" value="verwijderen">Verwijderen</button>
                     </form>
                 </td>
             </tr>

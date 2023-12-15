@@ -24,6 +24,9 @@ if ($klantId) {
 <!--Print enkele klant aan de hand van ID-->
 <div class="container">
     <h1>Klant details</h1>
+    <div class="d-flex justify-content-end mt-2">
+        <a class="btn btn-secondary" href="klanten.php" role="button" style="align-content: end">Terug naar klantoverzicht</a>
+    </div>
     <br>
     <?php foreach ($klantDetails as $enkeleKlant) {?>
     <div class="table-responsive-md">
