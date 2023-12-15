@@ -11,6 +11,7 @@
         <a class="btn btn-secondary" href="#" role="button">Beheeroverzicht</a>
         <a class="btn btn-secondary" href="#" role="button">Accountgegevens</a>
         <a class="btn btn-secondary" href="#" role="button">Productbeheer</a>
+        <a class="btn btn-secondary" href="/beheer/cadeaubonnen.php" role="button">Cadeaubonnen</a>
         <a class="btn btn-secondary" href="#" role="button">Overzicht bestellingen</a>
         <a class="btn btn-secondary active" href="/beheer/klanten.php" role="button">Klantbeheer</a>
     </div>
