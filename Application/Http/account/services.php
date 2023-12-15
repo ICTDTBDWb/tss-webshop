@@ -23,6 +23,7 @@ FROM
 JOIN tss.bestelling_regels AS br ON b.id = br.bestelling_id
 JOIN tss.producten AS p ON br.product_id = p.id
 JOIN tss.media AS pm ON pm.product_id = p.id
+
 WHERE 
     b.klant_id = ? -- Vervang '?' met de specifieke klant_id.
 GROUP BY 

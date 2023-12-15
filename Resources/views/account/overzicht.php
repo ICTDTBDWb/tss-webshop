@@ -1,13 +1,17 @@
 <?php
 // Plaats van benodigde PHP-bestanden en sessiebeheer
 include basePath('/Application/Http/account/services.php');
+print_r($_SESSION);
+
+$klantId=Session::get("id");
+
 ?>
 
 <?php include basePath('/Application/Http/account/menu.php'); ?>
     <div class="row">
         <?php
         // Ophalen van de laatste bestelling(en)
-        $laatstebestellingen = queryLaatstebestellingen(1);
+        $laatstebestellingen = queryLaatstebestellingen($klantId);
         if (count($laatstebestellingen) > 0) {
             // Als er bestellingen zijn, toon de details
             ?>
@@ -18,9 +22,9 @@ include basePath('/Application/Http/account/services.php');
                     </div>
                     <div class="card-body">
                         <?php foreach ($laatstebestellingen as $laatstebestelling) { ?>
-                            <a href="bestelling_detail?id=<?php echo urlencode($laatstebestelling['bestelling_id']); ?>" class="text-decoration-none text-dark">
+                            <a href="/account/bestelling_detail?id=<?php echo urlencode($laatstebestelling['bestelling_id']); ?>" class="text-decoration-none text-dark">
                                 <p class="card-text"><strong>Product:</strong> <?php echo $laatstebestelling['productnaam']; ?></p>
-                                <img class="" src="<?php echo $laatstebestelling['mediapad']; ?>" style="width: 512px; height: auto;"/>
+                                <img class="" src="<?php echo $laatstebestelling['mediapad']. ".jpg"; ?>" style="width: 512px; height: auto;"/>
                             </a>
                         <?php } ?>
                     </div>
