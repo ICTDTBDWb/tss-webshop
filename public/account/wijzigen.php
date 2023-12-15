@@ -149,16 +149,37 @@ $klant = $connection->query($query, ["klant_id" => $klant_id])->first();
     <form class="form flex-grow-1 d-flex flex-column justify-content-around" action="" method="POST">
         <div class="form-group">
             <label for="voornaam">Voornaam</label>
-            <input type="text" class="form-control <?php echo $validation_error_array["voornaam"]??"is_invalid";?> id="voornaam" name="voornaam" placeholder="Voornaam" value="<?php echo $klant['voornaam']; ?>"/>
+            <input
+                    type="text"
+                    class="form-control <?php echo $validation_error_array["voornaam"]??"is_invalid";?>"
+                    id="voornaam"
+                    name="voornaam"
+                    placeholder="Voornaam"
+                    value="<?php echo $klant['voornaam']; ?>"
+            />
         </div>
 
         <div class="form-group">
             <label for="tussenvoegsel">Tussenvoegsel</label>
-            <input type="text" class="form-control" id="tussenvoegsel" name="tussenvoegsel" placeholder="Tussenvoegsel" value="<?php echo $klant['tussenvoegsel']; ?>"/>
+            <input
+                    type="text"
+                    class="form-control"
+                    id="tussenvoegsel"
+                    name="tussenvoegsel"
+                    placeholder="Tussenvoegsel"
+                    value="<?php echo $klant['tussenvoegsel']; ?>"
+            />
         </div>
         <div class="form-group">
             <label for="achternaam">Achternaam</label>
-            <input type="text" class="form-control" id="achternaam" name="achternaam" placeholder="Achternaam" value="<?php echo $klant['achternaam']; ?>"/>
+            <input
+                    type="text"
+                    class="form-control <?php echo $validation_error_array["achternaam"]??"is_invalid";?>"
+                    id="achternaam"
+                    name="achternaam"
+                    placeholder="Achternaam"
+                    value="<?php echo $klant['achternaam']; ?>"
+            />
         </div>
         <div class="form-group">
             <label for="wachtwoord">Wachtwoord</label>
@@ -168,7 +189,8 @@ $klant = $connection->query($query, ["klant_id" => $klant_id])->first();
                     id="wachtwoord"
                     name="wachtwoord"
                     placeholder="*********"
-                    aria-describedby="wachtwoordFeedback"/>
+                    aria-describedby="wachtwoordFeedback"
+            />
                 <div id="wachtwoordFeedback" class="invalid-feedback">
                     <ul>
                         <li>Het wachtwoord moet minimaal 8 tekens lang zijn.</li>
@@ -179,15 +201,36 @@ $klant = $connection->query($query, ["klant_id" => $klant_id])->first();
 
         <div class="form-group">
             <label for="straat">Straat</label>
-            <input type="text" class="form-control" id="straat" name="straat" placeholder="Straatnaam" value="<?php echo $klant['straat']; ?>"/>
+            <input
+                    type="text"
+                    class="form-control <?php echo $validation_error_array["straat"]??"is_invalid";?>"
+                    id="straat"
+                    name="straat"
+                    placeholder="Straatnaam"
+                    value="<?php echo $klant['straat']; ?>"
+            />
         </div>
         <div class="form-group">
             <label for="huisnummer">Huisnummer</label>
-            <input type="text" class="form-control" id="huisnummer" name="huisnummer" placeholder="Huisnummer" value="<?php echo $klant['huisnummer']; ?>"/>
+            <input
+                    type="text"
+                    class="form-control <?php echo $validation_error_array["huisnummer"]??"is_invalid";?>"
+                    id="huisnummer"
+                    name="huisnummer"
+                    placeholder="Huisnummer"
+                    value="<?php echo $klant['huisnummer']; ?>"
+            />
         </div>
         <div class="form-group">
             <label for="postcode">Postcode</label>
-            <input type="text" class="form-control" id="postcode" name="postcode" placeholder="4 cijfers en 2 letters" value="<?php echo $klant['postcode']; ?>"/>
+            <input
+                    type="text"
+                    class="form-control <?php echo $validation_error_array["postcode"]??"is_invalid";?>"
+                    id="postcode"
+                    name="postcode"
+                    placeholder="4 cijfers en 2 letters"
+                    value="<?php echo $klant['postcode']; ?>"
+            />
         </div>
         <div class="form-group">
             <label for="email">Email</label>
