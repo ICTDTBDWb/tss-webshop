@@ -62,7 +62,7 @@ class Auth
     {
         $table = $is_admin ? 'beheerders' : 'klanten';
         $result = $this->db->query(
-            "SELECT email, password FROM $table WHERE email = ?",
+            "SELECT id, email, password FROM $table WHERE email = ?",
             [$credentials[0]]
         )->first();
 
