@@ -1,10 +1,4 @@
 <?php
-
-session_start();
-include(__DIR__."/../../Application/DatabaseManager.php");
-
-$connection = new \application\DatabaseManager();
-
 $_SESSION['user']['logged_in'] = true;
 $_SESSION['user']['id'] = 1;
 
@@ -16,7 +10,7 @@ if(!$_SESSION['user']['logged_in']??false){
     exit;
 }
 
-
+$db = new Database();
 $klant_id = $_SESSION['user']['id'];
 
 $invalid_form = false;
@@ -28,6 +22,7 @@ if($_POST??false){
     //Validate
     // Ongevalideerde ChatGPT regular expression voor wachtwoord
     $password_regex = "/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^\w\s]).{8,}$/";
+//    $password_regex = "";
 
     $voornaam = filter_input(INPUT_POST, 'voornaam', FILTER_SANITIZE_SPECIAL_CHARS);
     if($voornaam  === false) {
@@ -45,10 +40,10 @@ if($_POST??false){
     }
 
     $wachtwoord = filter_input(INPUT_POST, 'wachtwoord', FILTER_VALIDATE_REGEXP, [
-            "options" =>
-                [
-                        "regexp" => $password_regex
-                ]
+        "options" =>
+            [
+                "regexp" => $password_regex
+            ]
     ]);
     if($wachtwoord === false) {
         $validation_error_array['wachtwoord'] = true;
@@ -75,72 +70,35 @@ if($_POST??false){
     }
 //    $validation_error_array['email'] = true;
     if(count($validation_error_array) == 0){
-//        $query =
-//            "UPDATE klanten SET " .
-//                "voornaam='" . $voornaam . "', " .
-//                "tussenvoegsel='" . $tussenvoegsel . "', " .
-//                "achternaam='" . $achternaam . "', " .
-//                "straat='" . $straat . "', " .
-//                "huisnummer='" . $huisnummer . "', " .
-//                "postcode='" . $postcode . "', " .
-//                "email='" . $email . "' " .
-//            "WHERE id='". $klant_id. "'";
-//        var_dump($query);exit;
-
-                $query =
+        $query =
             "UPDATE klanten SET " .
-                "voornaam=:voornaam, " .
-                "tussenvoegsel=:tussenvoegsel, " .
-                "achternaam=:achternaam, " .
-                "straat=:straat, " .
-                "huisnummer=:huisnummer, " .
-                "postcode=:postcode, " .
-                "email=:email " .
-            "WHERE id=:klant_id";
-
-        $result = $connection->query($query,
-            [
-                "voornaam"  =>$voornaam,
-                "tussenvoegsel" => $tussenvoegsel,
-                "achternaam"  => $achternaam,
-                "straat"  => $straat,
-                "huisnummer" => $huisnummer,
-                "postcode" => $postcode,
-                "email" => $email,
-                "klant_id"  => $klant_id,
-            ]);
+            "voornaam='" . $voornaam . "', " .
+            "tussenvoegsel='" . $tussenvoegsel . "', " .
+            "achternaam='" . $achternaam . "', " .
+            "straat='" . $straat . "', " .
+            "huisnummer='" . $huisnummer . "', " .
+            "postcode='" . $postcode . "', " .
+            "email='" . $email . "' " .
+            "WHERE id='". $klant_id. "'";
+//        var_dump($query);exit;
+        $result = $db->query($query);
         if(!$result) {
             //Something went wrong
         }
     }
 }
 
-//$query = "SELECT id, email, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode from klanten where id='$klant_id'";
-//$result = mysqli_execute_query($connection, $query);
-//$klant = mysqli_fetch_assoc($result);
-$query = "SELECT id, email, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode from klanten where id=:klant_id";
-$klant = $connection->query($query, ["klant_id" => $klant_id])->first();
-
-//var_dump($klant);exit;
-//mysqli_close($connection);
+$query = "SELECT id, email, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode from klanten where id='$klant_id'";
+$result = $db->query($query);
+$klant = $result->get();
+$db->close();
 ?>
 
-<!DOCTYPE html>
-
-<html lang="en">
-<!--Head-->
-<?php include __DIR__ . "/../../Resources/components/layout/head.php"; ?>
-
-<body class="min-vw-100 vh-100 d-flex flex-column bg-white">
-<!--Header-->
-<?php include __DIR__ . "/../../Resources/components/layout/header.php"; ?>
-
-
 <div class="d-flex flex-row justify-content-start navigation py-3">
-    <a class="btn btn-outline-primary mx-3" href="/accountoverzicht" role="button">Accountoverzicht</a>
-    <a class="btn btn-outline-primary mx-3" href="/bestellingen" role="button">Bestellingen</a>
-    <a class="btn btn-outline-primary mx-3" href="/cadeaubonnenengiftboxes" role="button">Cadeaubonnen en giftboxes</a>
-    <a class="btn btn-outline-primary mx-3" href="/klantgegevensaanpassen" role="button">Klantgegevens aanpassen</a>
+    <a class="btn btn-outline-primary mx-3" href="/account/accountoverzicht" role="button">Accountoverzicht</a>
+    <a class="btn btn-outline-primary mx-3" href="/account/bestellingen" role="button">Bestellingen</a>
+    <a class="btn btn-outline-primary mx-3" href="/account/cadeaubonnenengiftboxes" role="button">Cadeaubonnen en giftboxes</a>
+    <a class="btn btn-outline-primary mx-3" href="/account/klantgegevensaanpassen" role="button">Klantgegevens aanpassen</a>
     <a class="btn btn-outline-primary mx-3" href="/uitloggen" role="button">Uitloggen</a>
 </div>
 
@@ -163,18 +121,18 @@ $klant = $connection->query($query, ["klant_id" => $klant_id])->first();
         <div class="form-group">
             <label for="wachtwoord">Wachtwoord</label>
             <input
-                    type="text"
-                    class="form-control <?php if(isset($validation_error_array["wachtwoord"]))echo"is-invalid";?>"
-                    id="wachtwoord"
-                    name="wachtwoord"
-                    placeholder="*********"
-                    aria-describedby="wachtwoordFeedback"/>
-                <div id="wachtwoordFeedback" class="invalid-feedback">
+                type="text"
+                class="form-control <?php if(isset($validation_error_array["wachtwoord"]))echo"is-invalid";?>"
+                id="wachtwoord"
+                name="wachtwoord"
+                placeholder="*********"
+                aria-describedby="wachtwoordFeedback"/>
+            <div id="wachtwoordFeedback" class="invalid-feedback">
+                <ul>
+                    <li>Het wachtwoord moet minimaal 8 tekens lang zijn.</li>
+                    <li>Het wachtwoord moet minstens één hoofdletter, één kleine letter, één cijfer en één speciaal teken bevatten.</li>
                     <ul>
-                        <li>Het wachtwoord moet minimaal 8 tekens lang zijn.</li>
-                        <li>Het wachtwoord moet minstens één hoofdletter, één kleine letter, één cijfer en één speciaal teken bevatten.</li>
-                    <ul>
-                </div>
+            </div>
         </div>
 
         <div class="form-group">
@@ -192,13 +150,13 @@ $klant = $connection->query($query, ["klant_id" => $klant_id])->first();
         <div class="form-group">
             <label for="email">Email</label>
             <input
-                    type="text"
-                    class="form-control <?php if(isset($validation_error_array["email"]))echo"is-invalid";?> "
-                    id="email"
-                    name="email"
-                    placeholder="<email@domein.nl>"
-                    value="<?php echo $klant['email']; ?>"
-                    aria-describedby="emailFeedback"/>
+                type="text"
+                class="form-control <?php if(isset($validation_error_array["email"]))echo"is-invalid";?> "
+                id="email"
+                name="email"
+                placeholder="<email@domein.nl>"
+                value="<?php echo $klant['email']; ?>"
+                aria-describedby="emailFeedback"/>
             <div id="emailFeedback" class="invalid-feedback">
                 Vul alstublief een geldig e-mail in.
             </div>
@@ -207,9 +165,3 @@ $klant = $connection->query($query, ["klant_id" => $klant_id])->first();
     </form>
     <div class="flex-grow-1"></div>
 </div>
-
-<!--Footer & Scripts-->
-<?php include __DIR__ . "/../../Resources/components/layout/footer.php"; ?>
-<?php include __DIR__ . "/../../Resources/components/layout/scripts.php"; ?>
-</body>
-</html>

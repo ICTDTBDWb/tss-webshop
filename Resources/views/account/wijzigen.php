@@ -1,6 +1,6 @@
 <?php
-include_once __DIR__ . '/../../application/DatabaseManager.php';
-session_start();
+
+$connection = new Database();
 
 $_SESSION['user']['logged_in'] = true;
 $_SESSION['user']['id'] = 1;
@@ -13,17 +13,6 @@ if(!$_SESSION['user']['logged_in']??false){
     exit;
 }
 
-$hostname = "localhost:3308";
-$username = "root";
-$password = "root";
-$database = "tss";
-
-$connection = mysqli_connect($hostname, $username, $password, $database);
-
-if(!$connection){
-    echo "Database connection failed";
-    exit;
-}
 
 $klant_id = $_SESSION['user']['id'];
 
@@ -36,7 +25,6 @@ if($_POST??false){
     //Validate
     // Ongevalideerde ChatGPT regular expression voor wachtwoord
     $password_regex = "/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^\w\s]).{8,}$/";
-//    $password_regex = "";
 
     $voornaam = filter_input(INPUT_POST, 'voornaam', FILTER_SANITIZE_SPECIAL_CHARS);
     if($voornaam  === false) {
@@ -54,10 +42,10 @@ if($_POST??false){
     }
 
     $wachtwoord = filter_input(INPUT_POST, 'wachtwoord', FILTER_VALIDATE_REGEXP, [
-        "options" =>
-            [
-                "regexp" => $password_regex
-            ]
+            "options" =>
+                [
+                        "regexp" => $password_regex
+                ]
     ]);
     if($wachtwoord === false) {
         $validation_error_array['wachtwoord'] = true;
@@ -84,42 +72,55 @@ if($_POST??false){
     }
 //    $validation_error_array['email'] = true;
     if(count($validation_error_array) == 0){
-        $query =
-            "UPDATE klanten SET " .
-            "voornaam='" . $voornaam . "', " .
-            "tussenvoegsel='" . $tussenvoegsel . "', " .
-            "achternaam='" . $achternaam . "', " .
-            "straat='" . $straat . "', " .
-            "huisnummer='" . $huisnummer . "', " .
-            "postcode='" . $postcode . "', " .
-            "email='" . $email . "' " .
-            "WHERE id='". $klant_id. "'";
+//        $query =
+//            "UPDATE klanten SET " .
+//                "voornaam='" . $voornaam . "', " .
+//                "tussenvoegsel='" . $tussenvoegsel . "', " .
+//                "achternaam='" . $achternaam . "', " .
+//                "straat='" . $straat . "', " .
+//                "huisnummer='" . $huisnummer . "', " .
+//                "postcode='" . $postcode . "', " .
+//                "email='" . $email . "' " .
+//            "WHERE id='". $klant_id. "'";
 //        var_dump($query);exit;
-        $result = mysqli_execute_query($connection, $query);
+
+                $query =
+            "UPDATE klanten SET " .
+                "voornaam=:voornaam, " .
+                "tussenvoegsel=:tussenvoegsel, " .
+                "achternaam=:achternaam, " .
+                "straat=:straat, " .
+                "huisnummer=:huisnummer, " .
+                "postcode=:postcode, " .
+                "email=:email " .
+            "WHERE id=:klant_id";
+
+        $result = $connection->query($query,
+            [
+                "voornaam"  =>$voornaam,
+                "tussenvoegsel" => $tussenvoegsel,
+                "achternaam"  => $achternaam,
+                "straat"  => $straat,
+                "huisnummer" => $huisnummer,
+                "postcode" => $postcode,
+                "email" => $email,
+                "klant_id"  => $klant_id,
+            ]);
         if(!$result) {
             //Something went wrong
         }
     }
 }
 
-$query = "SELECT id, email, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode from klanten where id='$klant_id'";
-$result = mysqli_execute_query($connection, $query);
-$klant = mysqli_fetch_assoc($result);
+//$query = "SELECT id, email, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode from klanten where id='$klant_id'";
+//$result = mysqli_execute_query($connection, $query);
+//$klant = mysqli_fetch_assoc($result);
+$query = "SELECT id, email, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode from klanten where id=:klant_id";
+$klant = $connection->query($query, ["klant_id" => $klant_id])->first();
 
 //var_dump($klant);exit;
-mysqli_close($connection);
+//mysqli_close($connection);
 ?>
-
-<!DOCTYPE html>
-
-<html lang="en">
-<!--Head-->
-<?php include __DIR__ . "/../../application/components/layout/head.php"; ?>
-
-<body class="min-vw-100 vh-100 d-flex flex-column bg-white">
-<!--Header-->
-<?php include __DIR__ . "/../../application/components/layout/header.php"; ?>
-
 
 <div class="d-flex flex-row justify-content-start navigation py-3">
     <a class="btn btn-outline-primary mx-3" href="/accountoverzicht" role="button">Accountoverzicht</a>
@@ -148,18 +149,18 @@ mysqli_close($connection);
         <div class="form-group">
             <label for="wachtwoord">Wachtwoord</label>
             <input
-                type="text"
-                class="form-control <?php if(isset($validation_error_array["wachtwoord"]))echo"is-invalid";?>"
-                id="wachtwoord"
-                name="wachtwoord"
-                placeholder="*********"
-                aria-describedby="wachtwoordFeedback"/>
-            <div id="wachtwoordFeedback" class="invalid-feedback">
-                <ul>
-                    <li>Het wachtwoord moet minimaal 8 tekens lang zijn.</li>
-                    <li>Het wachtwoord moet minstens één hoofdletter, één kleine letter, één cijfer en één speciaal teken bevatten.</li>
+                    type="text"
+                    class="form-control <?php if(isset($validation_error_array["wachtwoord"]))echo"is-invalid";?>"
+                    id="wachtwoord"
+                    name="wachtwoord"
+                    placeholder="*********"
+                    aria-describedby="wachtwoordFeedback"/>
+                <div id="wachtwoordFeedback" class="invalid-feedback">
                     <ul>
-            </div>
+                        <li>Het wachtwoord moet minimaal 8 tekens lang zijn.</li>
+                        <li>Het wachtwoord moet minstens één hoofdletter, één kleine letter, één cijfer en één speciaal teken bevatten.</li>
+                    <ul>
+                </div>
         </div>
 
         <div class="form-group">
@@ -177,13 +178,13 @@ mysqli_close($connection);
         <div class="form-group">
             <label for="email">Email</label>
             <input
-                type="text"
-                class="form-control <?php if(isset($validation_error_array["email"]))echo"is-invalid";?> "
-                id="email"
-                name="email"
-                placeholder="<email@domein.nl>"
-                value="<?php echo $klant['email']; ?>"
-                aria-describedby="emailFeedback"/>
+                    type="text"
+                    class="form-control <?php if(isset($validation_error_array["email"]))echo"is-invalid";?> "
+                    id="email"
+                    name="email"
+                    placeholder="<email@domein.nl>"
+                    value="<?php echo $klant['email']; ?>"
+                    aria-describedby="emailFeedback"/>
             <div id="emailFeedback" class="invalid-feedback">
                 Vul alstublief een geldig e-mail in.
             </div>
@@ -192,9 +193,3 @@ mysqli_close($connection);
     </form>
     <div class="flex-grow-1"></div>
 </div>
-
-<!--Footer & Scripts-->
-<?php include __DIR__ . "/../../application/components/layout/footer.php"; ?>
-<?php include __DIR__ . "/../../application/components/layout/scripts.php"; ?>
-</body>
-</html>

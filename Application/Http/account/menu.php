@@ -38,20 +38,20 @@
         <!-- Navigatiemenu-items -->
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item <?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">
-                    <a class="nav-link" href="index.php">Accountoverzicht</a>
+                <li class="nav-item <?php echo ($current_page == 'overzicht.php') ? 'active' : ''; ?>">
+                    <a class="nav-link" href="/account/overzicht">Accountoverzicht</a>
                 </li>
                 <li class="nav-item <?php echo ($current_page == 'bestellingen.php') ? 'active' : ''; ?>">
-                    <a class="nav-link" href="bestellingen.php">Bestellingen</a>
+                    <a class="nav-link" href="/account/bestellingen">Bestellingen</a>
                 </li>
                 <li class="nav-item <?php echo ($current_page == 'cadeaubonnen.php') ? 'active' : ''; ?>">
-                    <a class="nav-link" href="cadeaubonnen.php">Cadeaubonnen/Giftboxen</a>
+                    <a class="nav-link" href="/account/cadeaubonnen">Cadeaubonnen/Giftboxen</a>
                 </li>
                 <li class="nav-item <?php echo ($current_page == 'klantgegevens.php') ? 'active' : ''; ?>">
-                    <a class="nav-link" href="klantgegevens.php">Klantgegevens aanpassen</a>
+                    <a class="nav-link" href="/account/klantgegevens">Klantgegevens aanpassen</a>
                 </li>
                 <li class="nav-item <?php echo ($current_page == 'uitloggen.php') ? 'active' : ''; ?>">
-                    <a class="nav-link" href="uitloggen.php">Uitloggen</a>
+                    <a class="nav-link" href="uitloggen">Uitloggen</a>
                 </li>
             </ul>
         </div>

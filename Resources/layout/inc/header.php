@@ -1,6 +1,5 @@
 <?php
     global $auth;
-    global $session;
 ?>
 
 <header class="container-fluid h-fit px-4 d-flex justify-content-center shadow-sm bg-white">
@@ -39,7 +38,7 @@
                     <i class="fa fa-arrow-right-to-bracket fa-lg text-dark"></i>
                 </a>
             <?php } else { ?>
-                <a href="/profiel" class="btn btn-link me-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Profiel">
+                <a href="/account/overzicht" class="btn btn-link me-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Profiel">
                     <i class="fa fa-user fa-lg text-dark"></i>
                 </a>
             <?php } ?>
