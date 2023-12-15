@@ -21,30 +21,32 @@
     }
 ?>
 
-<form
-    id="user-loginForm" method="POST" action="/login"
-    class="d-flex flex-column gap-4 w-50"
->
-    <div>
-        <label for="user-emailInput">E-mail</label>
-        <input
-            id="user-emailInput" name="email" type="text" placeholder="E-mail"
-            class="form-control"
-        >
-    </div>
-
-    <div>
-        <label for="user-passwordInput">Wachtwoord</label>
-        <input
-            id="user-passwordInput" name="password" type="password" placeholder="Wachtwoord"
-            class="form-control"
-        >
-    </div>
-
-    <button
-        name="intent" value="user_login"
-        class="btn btn-primary w-100"
+<div class="d-flex flex-grow-1 justify-content-center">
+    <form
+            id="user-loginForm" method="POST" action="/login"
+            class="d-flex flex-column gap-4"
     >
-        Login
-    </button>
-</form>
+        <div>
+            <label for="user-emailInput">E-mail</label>
+            <input
+                    id="user-emailInput" name="email" type="text" placeholder="E-mail"
+                    class="form-control"
+            >
+        </div>
+
+        <div>
+            <label for="user-passwordInput">Wachtwoord</label>
+            <input
+                    id="user-passwordInput" name="password" type="password" placeholder="Wachtwoord"
+                    class="form-control"
+            >
+        </div>
+
+        <button
+                name="intent" value="user_login"
+                class="btn btn-primary w-100"
+        >
+            Login
+        </button>
+    </form>
+</div>

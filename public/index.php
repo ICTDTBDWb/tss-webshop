@@ -18,7 +18,7 @@ if (file_exists($logic_file = basePath("Application/Http/$page.php"))) {
 
 // Get the path to the page view and include the variable inside the layout.
 if (!file_exists($content = basePath("Resources/views/$page.php"))) {
-    $content = basePath("Resources/views/404.php");
+    $content = basePath("Resources/views/errors/404.php");
 }
 
 // Include the base layout using the __DIR__ constant
