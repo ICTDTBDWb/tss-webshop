@@ -7,6 +7,9 @@ session_start();
 // Trim / at the start of the request URI. If it is empty default to "homepagina".
 $uri = trim($_SERVER['REQUEST_URI'], '/');
 $page = (empty($uri) ? 'homepagina' : $uri);
+$url = explode('?', $page);
+$page = $url[0];
+$params = $url[1] ?? "";
 
 // Include the base imports.
 require_once basePath('Application/includes.php');
@@ -22,4 +25,4 @@ if (!file_exists($content = basePath("Resources/views/$page.php"))) {
 }
 
 // Include the base layout using the __DIR__ constant
-require_once  basePath("Resources/layout/layout.php");
+require_once basePath("Resources/layout/layout.php");
