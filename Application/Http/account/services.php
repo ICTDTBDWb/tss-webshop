@@ -22,8 +22,7 @@ FROM
     tss.bestellingen AS b
 JOIN tss.bestelling_regels AS br ON b.id = br.bestelling_id
 JOIN tss.producten AS p ON br.product_id = p.id
-JOIN tss.product_media AS prm ON p.id = prm.product_id
-JOIN tss.media AS pm ON prm.media_id = pm.id
+JOIN tss.media AS pm ON pm.product_id = p.id
 WHERE 
     b.klant_id = ? -- Vervang '?' met de specifieke klant_id.
 GROUP BY 
@@ -124,7 +123,7 @@ function haalBestellingDetailsOp($bestellingId) {
                       JOIN tss.bestelling_regels br ON p.id = br.product_id 
                       WHERE br.bestelling_id = b.id LIMIT 1) AS productnaam,
                      (SELECT pm.pad FROM tss.media pm 
-                      JOIN tss.product_media prm ON pm.id = prm.media_id 
+                      JOIN tss.media prm ON pm.id = prm.product_id 
                       JOIN tss.bestelling_regels br ON prm.product_id = br.product_id 
                       WHERE br.bestelling_id = b.id LIMIT 1) AS mediapad
               FROM tss.bestellingen b 

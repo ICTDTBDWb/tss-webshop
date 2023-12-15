@@ -11,7 +11,7 @@ $bestellingen = zoekBestellingen($klantId, $zoekterm);
 <div class="row justify-content-center mb-3">
     <div class="col-md-6">
         <!-- Zoekformulier voor bestellingen -->
-        <form action="bestellingen" method="get">
+        <form action="/account/bestellingen" method="get">
             <div class="input-group">
                 <input type="text" class="form-control" name="zoekterm" placeholder="Zoeken op bestelling-ID of product">
                 <div class="input-group-append">
@@ -39,7 +39,7 @@ $bestellingen = zoekBestellingen($klantId, $zoekterm);
             <tr>
                 <td>
                     <!-- Link naar de gedetailleerde bestellingspagina met het bestellings-ID als parameter -->
-                    <a href="bestelling_detail?id=<?php echo htmlspecialchars($bestelling['id']); ?>">
+                    <a href="/account/bestelling_detail?id=<?php echo htmlspecialchars($bestelling['id']); ?>">
                         <?php echo htmlspecialchars($bestelling['id']); ?>
                     </a>
                 </td>
