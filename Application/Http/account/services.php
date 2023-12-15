@@ -1,12 +1,8 @@
 <?php
 
-include(__DIR__ . '/../../DatabaseManager.php');
-include(__DIR__ . '/../../SessionManager.php');
-use \application\DatabaseManager;
-
 // Functie om klantgegevens op te halen op basis van klantId
 function queryKlant($klantId) {
-    $database = new DatabaseManager();
+    $database = new Database();
     $klanten = $database->query("SELECT * FROM klanten WHERE id = $klantId")->get();
 
     // Controleer of er resultaten zijn en retourneer de eerste klant als een array
@@ -15,7 +11,7 @@ function queryKlant($klantId) {
 
 // Functie om de laatste bestelling van een klant op te halen
 function queryLaatstebestellingen($klantId) {
-    $database = new \application\DatabaseManager();
+    $database = new Database();
     $query = "SELECT 
     b.id AS bestelling_id, 
     b.besteldatum, 
@@ -47,7 +43,7 @@ LIMIT 1
 
 // Functie om bestellingen van een klant op te halen
 function haalBestellingenOpVanKlant($klantId) {
-    $database = new \application\DatabaseManager();
+    $database = new Database();
     $query = "SELECT 
     b.id AS bestelling_id, 
     b.besteldatum, 
@@ -80,7 +76,7 @@ ORDER BY
  * @return array|null Het resultaat van de database query of null als de code en/of PIN niet klopt(en).
  */
 function verifieerCadeaubon($code, $pin) {
-    $database = new application\DatabaseManager();
+    $database = new Database();
     $result = $database->query(
         "SELECT bedrag FROM cadeaubonnen WHERE code = ? AND pin = ?",
         [$code, $pin]
@@ -93,7 +89,7 @@ function verifieerCadeaubon($code, $pin) {
 
 // Functie om bestellingen van een klant te zoeken op basis van een zoekterm
 function zoekBestellingen($klantId, $zoekterm) {
-    $database = new \application\DatabaseManager();
+    $database = new Database();
     $zoekterm = '%' . $zoekterm . '%';
 
     $query = "SELECT b.*, p.naam AS productnaam FROM tss.bestellingen b 
@@ -107,7 +103,7 @@ function zoekBestellingen($klantId, $zoekterm) {
 
 // Functie om een giftbox toe te voegen aan een bestelling
 function voegGiftboxToeAanBestelling($bestelling_id, $product_id, $aantal, $stukprijs) {
-    $database = new application\DatabaseManager();
+    $database = new Database();
     $totaal = $stukprijs * $aantal;
     $result = $database->query(
         "INSERT INTO `tss`.`bestelling_regels` (`bestelling_id`, `product_id`, `aantal`, `stukprijs`, `totaal`) VALUES (?, ?, ?, ?, ?)",
@@ -119,7 +115,7 @@ function voegGiftboxToeAanBestelling($bestelling_id, $product_id, $aantal, $stuk
 
 // Functie om bestellingdetails op te halen op basis van bestellingId
 function haalBestellingDetailsOp($bestellingId) {
-    $database = new \application\DatabaseManager();
+    $database = new Database();
 
     // Aangepaste query om bestelling_id, betaalprovider_id, prijs, status, productnaam en mediapad op te halen
     $query = "SELECT b.id AS bestelling_id, bt.betalingsprovider, b.totaal AS prijs, 

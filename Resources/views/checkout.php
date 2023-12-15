@@ -1,16 +1,4 @@
-<!-- PHP logica -->
-<?php include __DIR__ . '/../../Application/Http/checkout/checkout.php'; ?> <!--Verander example.php naar jouw gewenste file-->
-
-<!DOCTYPE html>
-
-<html lang="en">
-<!--Head-->
-<?php include __DIR__ . "/../../Resources/components/layout/head.php"; ?>
-
-<body class="min-vw-100 vh-100 d-flex flex-column bg-white">
-<!--Header-->
-<?php include __DIR__ . "/../../Resources/components/layout/header.php"; ?>
-
+<?php include basePath("Application/Http/winkelwagen/winkelwagen.php"); ?> <!--Verander example.php naar jouw gewenste file-->
 <!-- Navigatie -->
 <div class="d-flex flex-row justify-content-start navigation py-3">
     <a class="btn btn-outline-primary mx-3" href="/productpagina" role="button">Productpagina</a>
@@ -183,13 +171,5 @@
 
             </div>
         </div>
-        </div>
-
     </form>
 </div>
-
-<!--Footer & Scripts-->
-<?php include __DIR__ . "/../../Resources/components/layout/footer.php"; ?>
-<?php include __DIR__ . "/../../Resources/components/layout/scripts.php"; ?>
-</body>
-</html>

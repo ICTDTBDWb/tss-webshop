@@ -1,7 +1,6 @@
 <?php
 
 session_start();
-include(__DIR__."/../../DatabaseManager.php");
 include(__DIR__."/../winkelwagen/functies.php");
 include(__DIR__."/../checkout/functies.php");
 
@@ -16,7 +15,7 @@ if(!$_SESSION['user']['logged_in']??false){
     exit;
 }
 
-$dbm = new \application\DatabaseManager();
+$dbm = new Database();
 
 
 $klant_id = $_SESSION['user']['id'];

@@ -1,23 +1,9 @@
-<!DOCTYPE html>
 <?php
 // Plaats van benodigde PHP-bestanden en sessiebeheer
-include __DIR__ . "/../../Application/Http/account/services.php";
-$session = \application\SessionManager::getInstance();
+include basePath('/Application/Http/account/services.php');
 ?>
 
-<html lang="en">
-<!-- Headgedeelte -->
-<?php include __DIR__ . "/../../Resources/components/layout/head.php"; ?>
-
-<body class="min-vw-100 min-vh-100 d-flex flex-column bg-white">
-<!-- Headergedeelte -->
-<?php include __DIR__ . "/../../Resources/components/layout/header.php"; ?>
-<!-- Navigatiemenu voor de accountsectie -->
-<?php include __DIR__ . '/../../Application/Http/account/menu.php'; ?>
-<!-- Container voor de pagina-inhoud -->
-
-
-<div class="container mt-5 text-center">
+<?php include basePath('/Application/Http/account/menu.php'); ?>
     <div class="row">
         <?php
         // Ophalen van de laatste bestelling(en)
@@ -32,7 +18,7 @@ $session = \application\SessionManager::getInstance();
                     </div>
                     <div class="card-body">
                         <?php foreach ($laatstebestellingen as $laatstebestelling) { ?>
-                            <a href="bestelling_detail.php?id=<?php echo urlencode($laatstebestelling['bestelling_id']); ?>" class="text-decoration-none text-dark">
+                            <a href="bestelling_detail?id=<?php echo urlencode($laatstebestelling['bestelling_id']); ?>" class="text-decoration-none text-dark">
                                 <p class="card-text"><strong>Product:</strong> <?php echo $laatstebestelling['productnaam']; ?></p>
                                 <img class="" src="<?php echo $laatstebestelling['mediapad']; ?>" style="width: 512px; height: auto;"/>
                             </a>
@@ -103,7 +89,7 @@ $session = \application\SessionManager::getInstance();
                                         <p class="card-text"><strong>Bon gekregen?</strong></p>
                                         <p class="card-text">
                                             Check de waarde van je cadeaubon:
-                                            <a href="/account/cadeaubonnen.php">cadeaubonnenpagina</a>.
+                                            <a href="/account/cadeaubonnen">cadeaubonnenpagina</a>.
                                         </p>
                                     </div>
                                 </div>
@@ -116,12 +102,5 @@ $session = \application\SessionManager::getInstance();
                 <!-- Andere inhoud... -->
             </div>
         </div>
-
-        <!-- Footer & Scripts -->
-        <?php include __DIR__ . "/../../Resources/components/layout/footer.php"; ?>
-        <?php include __DIR__ . "/../../Resources/components/layout/scripts.php"; ?>
     </div>
 </div>
-
-</body>
-</html>

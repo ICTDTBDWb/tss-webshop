@@ -1,8 +1,6 @@
 <?php
-include(__DIR__."/../../DatabaseManager.php");
 include("functies.php");
-session_start();
-$databaseManager = new \application\DatabaseManager();
+$databaseManager = new Database();
 
 // hard coded true for testing
 $path = "http://localhost/tss/public/winkelwagen";

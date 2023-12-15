@@ -1,15 +1,5 @@
 <!-- PHP logica -->
-<?php include __DIR__ . '/../../Application/Http/winkelwagen/winkelwagen.php'; ?> <!--Verander example.php naar jouw gewenste file-->
-<!DOCTYPE html>
-
-<html lang="en">
-<!--Head-->
-<?php include __DIR__ . "/../../Resources/components/layout/head.php"; ?>
-
-<body class="min-vw-100 vh-100 d-flex flex-column bg-white">
-<!--Header-->
-<?php include __DIR__ . "/../../Resources/components/layout/header.php"; ?>
-
+<?php include basePath("Application/Http/winkelwagen/winkelwagen.php"); ?> <!--Verander example.php naar jouw gewenste file-->
 
 <style>
     .productimage {
@@ -95,9 +85,3 @@
     </div>
     </form>
 </div>
-
-<!--Footer & Scripts-->
-<?php include __DIR__ . "/../../Resources/components/layout/footer.php"; ?>
-<?php include __DIR__ . "/../../Resources/components/layout/scripts.php"; ?>
-</body>
-</html>

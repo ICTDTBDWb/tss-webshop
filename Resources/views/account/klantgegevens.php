@@ -1,7 +1,4 @@
 <?php
-include_once __DIR__ . '/../../application/DatabaseManager.php';
-session_start();
-
 $_SESSION['user']['logged_in'] = true;
 $_SESSION['user']['id'] = 1;
 
@@ -13,18 +10,7 @@ if(!$_SESSION['user']['logged_in']??false){
     exit;
 }
 
-$hostname = "localhost:3308";
-$username = "root";
-$password = "root";
-$database = "tss";
-
-$connection = mysqli_connect($hostname, $username, $password, $database);
-
-if(!$connection){
-    echo "Database connection failed";
-    exit;
-}
-
+$db = new Database();
 $klant_id = $_SESSION['user']['id'];
 
 $invalid_form = false;
@@ -95,7 +81,7 @@ if($_POST??false){
             "email='" . $email . "' " .
             "WHERE id='". $klant_id. "'";
 //        var_dump($query);exit;
-        $result = mysqli_execute_query($connection, $query);
+        $result = $db->query($query);
         if(!$result) {
             //Something went wrong
         }
@@ -103,29 +89,16 @@ if($_POST??false){
 }
 
 $query = "SELECT id, email, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode from klanten where id='$klant_id'";
-$result = mysqli_execute_query($connection, $query);
-$klant = mysqli_fetch_assoc($result);
-
-//var_dump($klant);exit;
-mysqli_close($connection);
+$result = $db->query($query);
+$klant = $result->get();
+$db->close();
 ?>
 
-<!DOCTYPE html>
-
-<html lang="en">
-<!--Head-->
-<?php include __DIR__ . "/../../application/components/layout/head.php"; ?>
-
-<body class="min-vw-100 vh-100 d-flex flex-column bg-white">
-<!--Header-->
-<?php include __DIR__ . "/../../application/components/layout/header.php"; ?>
-
-
 <div class="d-flex flex-row justify-content-start navigation py-3">
-    <a class="btn btn-outline-primary mx-3" href="/accountoverzicht" role="button">Accountoverzicht</a>
-    <a class="btn btn-outline-primary mx-3" href="/bestellingen" role="button">Bestellingen</a>
-    <a class="btn btn-outline-primary mx-3" href="/cadeaubonnenengiftboxes" role="button">Cadeaubonnen en giftboxes</a>
-    <a class="btn btn-outline-primary mx-3" href="/klantgegevensaanpassen" role="button">Klantgegevens aanpassen</a>
+    <a class="btn btn-outline-primary mx-3" href="/account/accountoverzicht" role="button">Accountoverzicht</a>
+    <a class="btn btn-outline-primary mx-3" href="/account/bestellingen" role="button">Bestellingen</a>
+    <a class="btn btn-outline-primary mx-3" href="/account/cadeaubonnenengiftboxes" role="button">Cadeaubonnen en giftboxes</a>
+    <a class="btn btn-outline-primary mx-3" href="/account/klantgegevensaanpassen" role="button">Klantgegevens aanpassen</a>
     <a class="btn btn-outline-primary mx-3" href="/uitloggen" role="button">Uitloggen</a>
 </div>
 
@@ -192,9 +165,3 @@ mysqli_close($connection);
     </form>
     <div class="flex-grow-1"></div>
 </div>
-
-<!--Footer & Scripts-->
-<?php include __DIR__ . "/../../application/components/layout/footer.php"; ?>
-<?php include __DIR__ . "/../../application/components/layout/scripts.php"; ?>
-</body>
-</html>

@@ -8,13 +8,13 @@
  *
  * Returns array with products that have been removed or changed.
  *
- * @param \application\DatabaseManager $databaseManager
+ * @param Database $databaseManager
  * @return array[
  *  'removed_products' =>  [],
  *  'changed_products' => [],
  * ]
  */
-function updateSessionCartProducts(\application\DatabaseManager $databaseManager) {
+function updateSessionCartProducts(Database $databaseManager) {
     $path_media ="/winkelwagen";
 
     $return = [

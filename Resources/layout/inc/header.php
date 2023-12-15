@@ -1,6 +1,7 @@
 <?php
-global $session;
+    global $auth;
 ?>
+
 <header class="container-fluid h-fit px-4 d-flex justify-content-center shadow-sm bg-white">
     <div class="container-lg mx-auto py-3 row gx-0 items-center">
         <!--Logo-->
@@ -32,21 +33,21 @@ global $session;
             <button class="btn btn-link text-dark d-block d-md-none" type="button">
                 <i class="fa fa-search"></i>
             </button>
-            <?php if (empty($_SESSION['logged-in'])) { ?>
-                <a href="/login.php" class="btn btn-link me-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Inloggen">
+            <?php if (!$auth->isLoggedIn()) { ?>
+                <a href="/login" class="btn btn-link me-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Inloggen">
                     <i class="fa fa-arrow-right-to-bracket fa-lg text-dark"></i>
                 </a>
             <?php } else { ?>
-                <a href="/profiel.php" class="btn btn-link me-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Profiel">
+                <a href="/account/overzicht" class="btn btn-link me-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Profiel">
                     <i class="fa fa-user fa-lg text-dark"></i>
                 </a>
             <?php } ?>
             <a href="/winkelwagen" class="btn btn-link position-relative" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Winkelwagen">
                 <i class="fa fa-cart-shopping fa-lg text-dark"></i>
-                <?php if ($session->exists('winkelwagen.producten')) { ?>
-                    <span class="position-absolute start-100 translate-middle badge rounded-pill bg-light text-dark border" style="top: 5px;">
-                      <?php echo count($session->get('winkelwage.producten')); ?>
-                    </span>
+                <?php if (Session::exists('winkelwagen')) { ?>
+                        <span class="position-absolute start-100 translate-middle badge rounded-pill bg-light text-dark border" style="top: 5px;">
+                            <?php echo count(Session::get('winkelwagen')['producten']); ?>
+                        </span>
                 <?php } ?>
             </a>
         </div>

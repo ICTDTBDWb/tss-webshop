@@ -1,9 +1,6 @@
 <?php
 
-session_start();
-include(__DIR__."/../../Application/DatabaseManager.php");
-
-$connection = new \application\DatabaseManager();
+$connection = new Database();
 
 $_SESSION['user']['logged_in'] = true;
 $_SESSION['user']['id'] = 1;
@@ -125,17 +122,6 @@ $klant = $connection->query($query, ["klant_id" => $klant_id])->first();
 //mysqli_close($connection);
 ?>
 
-<!DOCTYPE html>
-
-<html lang="en">
-<!--Head-->
-<?php include __DIR__ . "/../../Resources/components/layout/head.php"; ?>
-
-<body class="min-vw-100 vh-100 d-flex flex-column bg-white">
-<!--Header-->
-<?php include __DIR__ . "/../../Resources/components/layout/header.php"; ?>
-
-
 <div class="d-flex flex-row justify-content-start navigation py-3">
     <a class="btn btn-outline-primary mx-3" href="/accountoverzicht" role="button">Accountoverzicht</a>
     <a class="btn btn-outline-primary mx-3" href="/bestellingen" role="button">Bestellingen</a>
@@ -250,9 +236,3 @@ $klant = $connection->query($query, ["klant_id" => $klant_id])->first();
     </form>
     <div class="flex-grow-1"></div>
 </div>
-
-<!--Footer & Scripts-->
-<?php include __DIR__ . "/../../Resources/components/layout/footer.php"; ?>
-<?php include __DIR__ . "/../../Resources/components/layout/scripts.php"; ?>
-</body>
-</html>

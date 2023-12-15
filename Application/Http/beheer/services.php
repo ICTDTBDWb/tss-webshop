@@ -1,10 +1,4 @@
 <?php
-// Inclusie van benodigde klassen voor database- en sessiebeheer.
-include(__DIR__ . '/../../DatabaseManager.php');
-include(__DIR__ . '/../../SessionManager.php');
-
-// Gebruik namespace voor DatabaseManager.
-use \application\DatabaseManager;
 
 /**
  * Voegt een nieuwe cadeaubon toe aan de database.
@@ -15,7 +9,7 @@ use \application\DatabaseManager;
  */
 function queryVoegCadeaubonToe($code, $pin, $bedrag) {
     // Maak een instantie van de DatabaseManager klasse.
-    $database = new application\DatabaseManager();
+    $database = new Database();
     // Voer een INSERT-query uit om de cadeaubon toe te voegen.
     $database->query(
         "INSERT INTO cadeaubonnen (code, pin, bedrag) VALUES (?, ?, ?)",
@@ -32,7 +26,7 @@ function queryVoegCadeaubonToe($code, $pin, $bedrag) {
  */
 function queryVerwijderCadeaubon($cadeaubonId) {
     // Maak een instantie van de DatabaseManager klasse.
-    $database = new application\DatabaseManager();
+    $database = new Database();
     // Voer een DELETE-query uit om de cadeaubon te verwijderen.
     $database->query(
         "DELETE FROM cadeaubonnen WHERE id = ?",
@@ -49,7 +43,7 @@ function queryVerwijderCadeaubon($cadeaubonId) {
  */
 function queryHaalCadeaubonnenOp() {
     // Maak een instantie van de DatabaseManager klasse.
-    $database = new application\DatabaseManager();
+    $database = new Database();
 
     // Voer een SELECT-query uit om alle cadeaubonnen op te halen en sla het resultaat op.
     $result = $database->query("SELECT * FROM cadeaubonnen")->get();
@@ -70,7 +64,7 @@ function queryHaalCadeaubonnenOp() {
  */
 function queryWijzigCadeaubon($cadeaubonId, $nieuweCode, $nieuwBedrag) {
     // Maak een instantie van de DatabaseManager klasse.
-    $database = new application\DatabaseManager();
+    $database = new Database();
     // Voer een UPDATE-query uit om de cadeaubon te wijzigen.
     $database->query(
         "UPDATE cadeaubonnen SET code = ?, bedrag = ? WHERE id = ?",
