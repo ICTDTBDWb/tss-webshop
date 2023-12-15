@@ -3,8 +3,8 @@
 include basePath('/Application/Http/account/services.php');
 print_r($_SESSION);
 
-$klantId=Session::get("id");
-
+$klantId=Session::get('auth')['user_id'];
+//$klantId= 1;
 ?>
 
 <?php include basePath('/Application/Http/account/menu.php'); ?>
