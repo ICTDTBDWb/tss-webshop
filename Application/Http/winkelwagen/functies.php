@@ -25,16 +25,15 @@ function updateSessionCartProducts(\application\DatabaseManager $databaseManager
 
 //        $_SESSION["winkelwagen"]["producten"][100]['id'] = 66;
 
+        //get first image
         $product_ids = array_column($_SESSION["winkelwagen"]["producten"], 'id');
-        $query = "SELECT p.id, p.naam as product_naam, p.prijs, m.naam as media_naam, m.pad as media_pad ".
+        $query = "SELECT p.id, p.naam as product_naam, p.prijs, m.pad as media_pad, m.naam as media_naam ".
             "FROM producten as p ".
-            "JOIN product_media as pm on p.id=pm.product_id ".
-            "JOIN media as m on m.id=pm.media_id ".
+            "JOIN media as m on p.id=m.product_id ".
             "WHERE p.id IN ( ". implode(", ", $product_ids) . " ) ".
-            "GROUP BY pm.product_id ";
+            "GROUP BY p.id ";
 
         $result = $databaseManager->query($query)->get();
-
 
         // Producten in dit array zijn verwijderd in de database tussen cart updates
         $products_deleted_from_database = array_diff_assoc($product_ids, array_column($result, 'id'));
@@ -59,7 +58,7 @@ function updateSessionCartProducts(\application\DatabaseManager $databaseManager
                     $_SESSION["winkelwagen"]["producten"][$key]["product_naam"] = $row['product_naam'];
                     $_SESSION["winkelwagen"]["producten"][$key]["prijs"] = $row['prijs'];
                     $_SESSION["winkelwagen"]["producten"][$key]["media_naam"] = $row['media_naam'];
-                    $_SESSION["winkelwagen"]["producten"][$key]["media_pad"] = $path_media.$row['media_pad'];
+                    $_SESSION["winkelwagen"]["producten"][$key]["media_pad"] = $row['media_pad'];
                 }
             }
         }

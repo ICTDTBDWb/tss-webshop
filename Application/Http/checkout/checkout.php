@@ -5,6 +5,8 @@ include(__DIR__."/../../DatabaseManager.php");
 include(__DIR__."/../winkelwagen/functies.php");
 include(__DIR__."/../checkout/functies.php");
 
+$_SESSION['user']['logged_in'] = true;
+$_SESSION['user']['id'] = 1;
 
 // Redirect to homepage if not logged in.
 $homepage_path = "http://localhost/";
@@ -16,8 +18,7 @@ if(!$_SESSION['user']['logged_in']??false){
 
 $dbm = new \application\DatabaseManager();
 
-$_SESSION['user']['logged_in'] = true;
-$_SESSION['user']['id'] = 1;
+
 $klant_id = $_SESSION['user']['id'];
 $query = "SELECT id, email, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode from klanten where id=:klant_id";
 $klant = $dbm->query($query, ["klant_id" => $klant_id])->first();
@@ -45,35 +46,45 @@ if($_POST??false){
     // Ongevalideerde ChatGPT regular expression voor wachtwoord
     $password_regex = "/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^\w\s]).{8,}$/";
 
-    $voornaam = filter_input(INPUT_POST, 'voornaam', FILTER_SANITIZE_SPECIAL_CHARS);
-    if($voornaam  === false) {
+    $voornaam_filtered = filter_input(INPUT_POST, 'voornaam', FILTER_SANITIZE_SPECIAL_CHARS);
+    if($voornaam_filtered  === false) {
         $validation_error_array['voornaam'] = true;
     }
 
-    $tussenvoegsel = filter_input(INPUT_POST, 'tussenvoegsel', FILTER_SANITIZE_SPECIAL_CHARS);
-    if($tussenvoegsel === false) {
+    $tussenvoegsel_filtered = filter_input(INPUT_POST, 'tussenvoegsel', FILTER_SANITIZE_SPECIAL_CHARS);
+    if($tussenvoegsel_filtered === false) {
         $validation_error_array['tussenvoegsel'] = true;
     }
 
-    $achternaam = filter_input(INPUT_POST, 'achternaam', FILTER_SANITIZE_SPECIAL_CHARS);
-    if($achternaam === false) {
+    $achternaam_filtered = filter_input(INPUT_POST, 'achternaam', FILTER_SANITIZE_SPECIAL_CHARS);
+    if($achternaam_filtered === false) {
         $validation_error_array['achternaam'] = true;
     }
 
 
-    $straat = filter_input(INPUT_POST, 'straat', FILTER_SANITIZE_SPECIAL_CHARS);
-    if($straat === false) {
+    $straat_filtered = filter_input(INPUT_POST, 'straat', FILTER_SANITIZE_SPECIAL_CHARS);
+    if($straat_filtered === false) {
         $validation_error_array['straat'] = true;
     }
 
-    $huisnummer = filter_input(INPUT_POST, 'huisnummer', FILTER_SANITIZE_SPECIAL_CHARS);
-    if($huisnummer === false) {
+    $huisnummer_filtered = filter_input(INPUT_POST, 'huisnummer', FILTER_SANITIZE_SPECIAL_CHARS);
+    if($huisnummer_filtered === false) {
         $validation_error_array['huisnummer'] = true;
     }
 
-    $postcode = filter_input(INPUT_POST, 'postcode', FILTER_SANITIZE_SPECIAL_CHARS);
-    if($postcode === false) {
+    $postcode_filtered = filter_input(INPUT_POST, 'postcode', FILTER_SANITIZE_SPECIAL_CHARS);
+    if($postcode_filtered === false) {
         $validation_error_array['postcode'] = true;
+    }
+
+    $woonplaats_filtered = filter_input(INPUT_POST, 'straat', FILTER_SANITIZE_SPECIAL_CHARS);
+    if($woonplaats_filtered === false) {
+        $validation_error_array['woonplaats'] = true;
+    }
+
+    $land_filtered = filter_input(INPUT_POST, 'straat', FILTER_SANITIZE_SPECIAL_CHARS);
+    if($land_filtered === false) {
+        $validation_error_array['land'] = true;
     }
 
     $betaalmethode_filtered = filter_input(INPUT_POST, 'betaalmethode', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -94,7 +105,22 @@ if($_POST??false){
 
     if(count($validation_error_array) == 0) {
         if(count($cart_changes['removed_products']) == 0 && count($cart_changes['changed_products']) == 0 && $producten) {
-            bestellingOpslaan($klant_id, $verzendmethode_filtered, getTotalFromCurrentCart(), $betaalmethode_filtered, $producten);
+
+            bestellingOpslaan(
+                $klant_id,
+                $verzendmethode_filtered,
+                getTotalFromCurrentCart(),
+                $betaalmethode_filtered,
+                $producten,
+                $voornaam_filtered,
+                $tussenvoegsel_filtered,
+                $achternaam_filtered,
+                $straat_filtered,
+                $huisnummer_filtered,
+                $postcode_filtered,
+                $woonplaats_filtered,
+                $land_filtered
+            );
 
         }
     }
