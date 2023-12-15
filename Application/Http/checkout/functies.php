@@ -96,7 +96,7 @@ function bestellingOpslaan(int $klant_id, int $verzendmethode_id, $totaal, strin
         return true;
 }
 
-function getVerzendmethodes(\application\DatabaseManager $dbm) {
+function getVerzendmethodes(Database $dbm) {
     return $dbm->query("SELECT * FROM verzendmethoden")->get();
 }
 
