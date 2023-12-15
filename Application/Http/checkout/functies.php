@@ -91,7 +91,7 @@ function bestellingOpslaan(int $klant_id, int $verzendmethode_id, $totaal, strin
     $_SESSION['winkelwagen']['producten'] = [];
 
         //redirect login page
-        header("Location: /account/orders/$bestelling_id");
+        header("Location: /account/bestelling_detail?id=$bestelling_id");
 
         return true;
 }

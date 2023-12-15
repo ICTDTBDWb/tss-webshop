@@ -17,7 +17,10 @@ $totaal_prijs = 0;
 $user_logged_in = $_SESSION['user']['logged_in']??true;
 //$_SESSION = [];
 
+//$_SESSION = [];
+
 updateSessionCartProducts($databaseManager);
+
 
 
 
@@ -72,11 +75,14 @@ if ($_GET['addtocart']??false){
 
         $query = "SELECT p.id, p.naam as product_naam, p.prijs, m.naam as media_naam, m.pad as media_pad ".
             "FROM producten as p ".
-            "JOIN media as m on m.product_id=p.id ".
+            "LEFT JOIN media as m ON " .
+            "m.product_id=p.id ".
             "WHERE p.id = :id ".
             "GROUP BY p.id ";
 
         $result = $databaseManager->query($query, ["id" => $id])->first();
+
+
         if(isset($_SESSION["winkelwagen"]["producten"][$id])) {
             $_SESSION["winkelwagen"]["producten"][$id]["hoeveelheid_in_winkelwagen"]++;
         } else {

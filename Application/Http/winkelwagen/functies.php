@@ -24,7 +24,6 @@ function updateSessionCartProducts(Database $databaseManager) {
     if(isset($_SESSION["winkelwagen"]["producten"]) && count($_SESSION["winkelwagen"]["producten"])) {
 
 //        $_SESSION["winkelwagen"]["producten"][100]['id'] = 66;
-
         //get first image
         $product_ids = array_column($_SESSION["winkelwagen"]["producten"], 'id');
         $query = "SELECT p.id, p.naam as product_naam, p.prijs, m.pad as media_pad, m.naam as media_naam ".
@@ -32,7 +31,6 @@ function updateSessionCartProducts(Database $databaseManager) {
             "JOIN media as m on p.id=m.product_id ".
             "WHERE p.id IN ( ". implode(", ", $product_ids) . " ) ".
             "GROUP BY p.id ";
-
         $result = $databaseManager->query($query)->get();
 
         // Producten in dit array zijn verwijderd in de database tussen cart updates

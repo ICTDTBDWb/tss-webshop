@@ -1,4 +1,4 @@
-<?php include basePath("Application/Http/winkelwagen/winkelwagen.php"); ?> <!--Verander example.php naar jouw gewenste file-->
+<?php include basePath("Application/Http/checkout/checkout.php"); ?> <!--Verander example.php naar jouw gewenste file-->
 <!-- Navigatie -->
 <div class="d-flex flex-row justify-content-start navigation py-3">
     <a class="btn btn-outline-primary mx-3" href="/productpagina" role="button">Productpagina</a>
@@ -119,7 +119,7 @@
                     <input
                             class="form-check-input <?php if(isset($validation_error_array["betaalmethode"]))echo"is-invalid";?>"
                             type="radio"
-                    ="betaalmethode"
+                    name="betaalmethode"
                     id="iDeal"
                     value="iDeal"
                     <?php if(isset($betaalmethode_filtered) && $betaalmethode_filtered == "iDeal") echo "checked"; ?>

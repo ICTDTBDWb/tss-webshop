@@ -1,6 +1,6 @@
 <?php
 
-session_start();
+//session_start();
 include(__DIR__."/../winkelwagen/functies.php");
 include(__DIR__."/../checkout/functies.php");
 
@@ -21,6 +21,8 @@ $dbm = new Database();
 $klant_id = $_SESSION['user']['id'];
 $query = "SELECT id, email, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode from klanten where id=:klant_id";
 $klant = $dbm->query($query, ["klant_id" => $klant_id])->first();
+
+//var_dump($klant);exit;
 $verzendmethodes_array = getVerzendmethodes($dbm);
 
 $cart_changes = updateSessionCartProducts($dbm);
