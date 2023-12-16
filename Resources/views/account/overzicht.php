@@ -1,7 +1,7 @@
 <?php
 // Plaats van benodigde PHP-bestanden en sessiebeheer
 include basePath('/Application/Http/account/services.php');
-print_r($_SESSION);
+//print_r($_SESSION);
 
 $klantId=Session::get('auth')['user_id'];
 //$klantId= 1;
@@ -69,7 +69,7 @@ $klantId=Session::get('auth')['user_id'];
                                     <div class="card-body">
                                         <?php
                                         // Ophalen van klantgegevens
-                                        $klant = queryKlant(1);
+                                        $klant = queryKlant(Session::get('auth')['user_id']);
                                         if ($klant) {
                                             echo "<p class='card-text'><strong>Naam:</strong> " . $klant['voornaam'] . " " . $klant['achternaam'] . "</p>";
                                             echo "<p class='card-text'><strong>Adres:</strong> " . $klant['straat'] . " " . $klant['huisnummer'] . "</p>";

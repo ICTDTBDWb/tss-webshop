@@ -2,7 +2,7 @@
 // Plaats van de benodigde PHP-bestanden en sessiebeheer
 include basePath("Application/Http/account/services.php");
 
-$klantId = 1; // Voorbeeld klantID, vervang door $session->getKlantId();
+$klantId=Session::get('auth')['user_id']; // Voorbeeld klantID, vervang door $session->getKlantId();
 $zoekterm = isset($_GET['zoekterm']) ? $_GET['zoekterm'] : '';
 $bestellingen = zoekBestellingen($klantId, $zoekterm);
 ?>

@@ -39,7 +39,7 @@ if ($bestellingId) {
                 <td>
                     <?php if (!empty($detail['mediapad'])): ?>
                         <!-- Weergave van productafbeelding als deze beschikbaar is -->
-                        <img src="<?php echo htmlspecialchars($detail['mediapad']); ?>" alt="Product Afbeelding" style="max-width: 100px; height: auto;">
+                        <img src="<?php echo htmlspecialchars($detail['mediapad']). ".jpg"; ?>" alt="Product Afbeelding" style="max-width: 100px; height: auto;">
                     <?php else: ?>
                         <!-- Als er geen afbeelding beschikbaar is -->
                         Geen afbeelding
