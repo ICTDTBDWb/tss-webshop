@@ -4,7 +4,7 @@ include basePath("Application/Http/account/services.php");
 
 // Bepalen van de huidige pagina voor form actie
 $current_page = basename($_SERVER['PHP_SELF']);
-
+//print $current_page;
 // Initialiseren van variabelen voor cadeaukaart verificatie
 $verificatieResultaat = null;
 $verificatieMelding = '';
@@ -56,8 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Sectie voor het verifiëren van cadeaubonnen -->
     <div class="col-md-6">
         <h2>Cadeaubonnen</h2>
-        <form action="<?= $current_page ?>" method="post">
-            <!-- Veld voor het invoeren van de cadeaukaartcode -->
+        <form action="/account/cadeaubonnen" method="post">
+        <!-- Veld voor het invoeren van de cadeaukaartcode -->
             <div class="mb-3">
                 <label for="cadeaukaartcode" class="form-label">Cadeaukaartcode</label>
                 <input type="text" class="form-control" id="cadeaukaartcode" name="cadeaukaartcode" required>
