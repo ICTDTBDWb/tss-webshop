@@ -38,8 +38,8 @@ if ($bestellingId) {
                 <td><?php echo htmlspecialchars($detail['productnaam']); ?></td>
                 <td>
                     <?php if (!empty($detail['mediapad'])): ?>
-                        <!-- Weergave van productafbeelding als deze beschikbaar is -->
-                        <img src="<?php echo htmlspecialchars($detail['mediapad']). ".jpg"; ?>" alt="Product Afbeelding" style="max-width: 100px; height: auto;">
+                        <!-- Weergave van productafbeelding met de juiste extensie -->
+                        <img src="<?php echo htmlspecialchars($detail['mediapad'] . "." . $detail['mediaextensie']); ?>" alt="Product Afbeelding" style="max-width: 100px; height: auto;">
                     <?php else: ?>
                         <!-- Als er geen afbeelding beschikbaar is -->
                         Geen afbeelding

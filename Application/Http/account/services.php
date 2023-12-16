@@ -13,27 +13,31 @@ function queryKlant($klantId) {
 function queryLaatstebestellingen($klantId) {
     $database = new Database();
     $query = "SELECT 
-    b.id AS bestelling_id, 
-    b.besteldatum, 
-    b.totaal, 
-    p.naam AS productnaam,
-    pm.pad AS mediapad
-FROM 
-    tss.bestellingen AS b
-JOIN tss.bestelling_regels AS br ON b.id = br.bestelling_id
-JOIN tss.producten AS p ON br.product_id = p.id
-JOIN tss.media AS pm ON pm.product_id = p.id
+        b.id AS bestelling_id, 
+        b.besteldatum, 
+        b.totaal, 
+        p.naam AS productnaam,
+        m.pad AS mediapad,
+        m.extensie AS mediaextensie
+    FROM 
+        tss.bestellingen AS b
+    JOIN tss.bestelling_regels AS br ON b.id = br.bestelling_id
+    JOIN tss.producten AS p ON br.product_id = p.id
+    JOIN tss.media AS m ON p.id = m.product_id
+    WHERE 
+        b.klant_id = ?
+    GROUP BY 
+        b.id, 
+        b.besteldatum, 
+        b.totaal,
+        m.pad,
+        m.extensie
+    ORDER BY 
+        b.besteldatum DESC 
+    LIMIT 1";
 
-WHERE 
-    b.klant_id = ? -- Vervang '?' met de specifieke klant_id.
-GROUP BY 
-    b.id, 
-    b.besteldatum, 
-    b.totaal
-ORDER BY 
-    b.besteldatum DESC 
-LIMIT 1
-";
+
+
 
     $resultaat = $database->query($query, [$klantId])->get();
     $database->close();
@@ -117,18 +121,20 @@ function voegGiftboxToeAanBestelling($bestelling_id, $product_id, $aantal, $stuk
 function haalBestellingDetailsOp($bestellingId) {
     $database = new Database();
 
-    // Aangepaste query om bestelling_id, betaalprovider_id, prijs, status, productnaam en mediapad op te halen
-    $query = "SELECT b.id AS bestelling_id, bt.betalingsprovider, b.totaal AS prijs, 
-                     IF(bt.betalingsprovider IS NOT NULL, 'Betaald', 'Niet Betaald') AS status,
-                     (SELECT p.naam FROM tss.producten p 
-                      JOIN tss.bestelling_regels br ON p.id = br.product_id 
-                      WHERE br.bestelling_id = b.id LIMIT 1) AS productnaam,
-                     (SELECT pm.pad FROM tss.media pm 
-                      JOIN tss.media prm ON pm.id = prm.product_id 
-                      JOIN tss.bestelling_regels br ON prm.product_id = br.product_id 
-                      WHERE br.bestelling_id = b.id LIMIT 1) AS mediapad
+    // Aangepaste query om bestelling_id, betalingsprovider, prijs, status, productnaam, mediapad en mediaextensie op te halen
+    $query = "SELECT 
+                  b.id AS bestelling_id, 
+                  bt.betalingsprovider, 
+                  b.totaal AS prijs, 
+                  IF(bt.betalingsprovider IS NOT NULL, 'Betaald', 'Niet Betaald') AS status,
+                  p.naam AS productnaam,
+                  pm.pad AS mediapad,
+                  pm.extensie AS mediaextensie
               FROM tss.bestellingen b 
               LEFT JOIN tss.betalingen bt ON b.id = bt.bestelling_id
+              JOIN tss.bestelling_regels br ON b.id = br.bestelling_id
+              JOIN tss.producten p ON br.product_id = p.id
+              LEFT JOIN tss.media pm ON p.id = pm.product_id
               WHERE b.id = ?";
 
     return $database->query($query, [$bestellingId])->get();

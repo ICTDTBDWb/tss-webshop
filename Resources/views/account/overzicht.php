@@ -24,7 +24,7 @@ $klantId=Session::get('auth')['user_id'];
                         <?php foreach ($laatstebestellingen as $laatstebestelling) { ?>
                             <a href="/account/bestelling_detail?id=<?php echo urlencode($laatstebestelling['bestelling_id']); ?>" class="text-decoration-none text-dark">
                                 <p class="card-text"><strong>Product:</strong> <?php echo $laatstebestelling['productnaam']; ?></p>
-                                <img class="" src="<?php echo $laatstebestelling['mediapad']. ".jpg"; ?>" style="width: 512px; height: auto;"/>
+                                <img class="" src="<?php echo $laatstebestelling['mediapad'] . "." . $laatstebestelling['mediaextensie']; ?>" style="width: 512px; height: auto;"/>
                             </a>
                         <?php } ?>
                     </div>
