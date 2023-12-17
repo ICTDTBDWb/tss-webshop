@@ -16,6 +16,14 @@
     $categorieen = $database->query("SELECT * FROM categorieen ORDER BY id ASC")->get();
 
 
+
+    $product_id = "";
+    $product_naam = "";
+    $product_prijs  = "";
+    $product_aantal = "";
+    $product_beschrijving= "";
+    $product_merk  = "";
+
      //get and post
     if (is_array($_POST) && !empty($_POST))
     {
@@ -105,6 +113,7 @@
              $product_select = filter_input(INPUT_GET, 'Product', FILTER_SANITIZE_SPECIAL_CHARS);
              $product_select = preg_split("/ /", $product_select);
              $_POST['id']  = $product_select[0];
+             $product = $database->query("SELECT * FROM producten where id = ?",[$product_select[0]])->get();
          }
      }
 
@@ -125,13 +134,8 @@
       $producten_categorie['overig']['product'] = $database->query("SELECT * FROM producten WHERE naam like ? and NOT EXISTS ( SELECT * FROM product_categorieen where product_categorieen.product_id = producten.id) ORDER BY naam ASC " , ["%".$filter."%"])->get();
       $producten_categorie['overig']['naam'] = "overig";
 
-      $product = $database->query("SELECT * FROM producten where id = ?",[$product_select[0]])->get();
-      $product_id = "";
-      $product_naam = "";
-      $product_prijs  = "";
-      $product_aantal = "";
-      $product_beschrijving= "";
-      $product_merk  = "";
+
+
 
 
       if (is_array($product) and array_key_exists("0", $product))
@@ -240,7 +244,7 @@
         <!--Pagina content container-->
         <div class="container-lg flex-grow-1 gx-0 py-4" >
             <main>
-                <form method="POST" action=''>
+                <form method="POST" action='' class="hidden">
                     <div class="row  align-items-top ">
                         <!-- Carousel -->
                         <div id="demo" class="carousel slide col " data-bs-ride="carousel" style="max-width:20vh; max-height:20vh; min-height: 20vh; min-width: 20vh; margin-left: 2vh; margin-right: 2vh" data-bs-interval="false">
@@ -275,8 +279,6 @@
                                 <span class="carousel-control-next-icon" ></span>
                             </button>
                         </div>
-
-
 
 
 
@@ -326,7 +328,7 @@
                             <card class="card" style="max-height: 30vh; min-height: 30vh; overflow-y: auto">
                                <?php echo checkbox_constructor($categorieen, $product) ?>
                             </card><br>
-                            <button type="button" class="btn btn-outline-secondary" style="width: 100%">Categorie beheer</button>
+                            <button type="button" class="btn btn-outline-secondary"  style="width: 100%">Categorie beheer</button>
                         </div>
                         <div class="col">
                             <label for="beschrijving" class="form-label">Beschrijving</label>
@@ -368,6 +370,8 @@
 
 
         </div>
+
+
 
         <!--Footer & Scripts-->
     <?php include __DIR__ . "/../../Resources/components/layout/footer.php"; ?>
