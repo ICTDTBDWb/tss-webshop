@@ -13,7 +13,7 @@ function logout() {
 
     // Omleiden naar de inlogpagina
     header("Location:/");
-    exit();
+    exit;
 }
 
 
