@@ -15,6 +15,7 @@
  * ]
  */
 function updateSessionCartProducts(Database $databaseManager) {
+
     $path_media ="/winkelwagen";
 
     $return = [
@@ -29,7 +30,7 @@ function updateSessionCartProducts(Database $databaseManager) {
         $product_ids = array_column($_SESSION["winkelwagen"]["producten"], 'id');
         $query = "SELECT p.id, p.naam as product_naam, p.prijs, m.pad as media_pad, m.naam as media_naam ".
             "FROM producten as p ".
-            "JOIN media as m on p.id=m.product_id ".
+            "left JOIN media as m on p.id=m.product_id ".
             "WHERE p.id IN ( ". implode(", ", $product_ids) . " ) ".
             "GROUP BY p.id ";
 
@@ -51,7 +52,7 @@ function updateSessionCartProducts(Database $databaseManager) {
                 if(
                     $product['id'] == $row['id'] &&
                     //array diff hoger dan 1, omdat hoeveelheid in winkelwagen altijd anders is dan in database
-                    count(array_diff_assoc($product, $row)) > 1
+                    count(array_diff_assoc($product, $row)) > 0
                 ) {
                     $return['changed_products'][] = $_SESSION["winkelwagen"]["producten"][$key];
                     $_SESSION["winkelwagen"]["producten"][$key]["id"] = $row['id'];
