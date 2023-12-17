@@ -29,10 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['giftboxbedrag'], $_POST['aantal_giftboxes'])) {
         // Definiëren van product ID's op basis van giftbox bedragen
         $product_id_map = [
-            '25' => 25,
-            '50' => 50,
-            '75' => 75,
-            '100' => 100
+            '25' => 6,
+            '50' => 7,
+            '75' => 8,
+            '100' => 9
         ];
 
         // Ophalen van de POST data
