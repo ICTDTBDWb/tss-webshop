@@ -1,5 +1,6 @@
 <!-- PHP logica -->
 <?php include basePath("Application/Http/beheer/klanten.php");
+
 $klantId = isset($_GET['id']) ? $_GET['id'] : null;
 $klantDetails = null;
 if ($klantId) {
@@ -57,44 +58,75 @@ if ($klantId) {
 <div class="container">
     <h2>Wijzig klant gegevens</h2>
     <br>
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="<?php print $enkeleKlant['email'];?>" aria-label="<?php print $enkeleKlant['email'];?>" aria-describedby="button-addon2">
-            <button class="btn btn-outline-secondary" type="button" id="button-addon2" value="">Wijzig</button>
+    <style>
+        input {
+            width: 100%;
+        }
+    </style>
+    <br>
+    <form method="post" action="/beheer/klanten_detail">
+        <div class="mb-3">
+            Email: <input type="email" name="email" placeholder="<?php print $enkeleKlant['email'];?>">
         </div>
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="<?php print $enkeleKlant['password'];?>" aria-label="<?php print $enkeleKlant['password'];?>" aria-describedby="button-addon2">
-            <button class="btn btn-outline-secondary" type="button" id="button-addon2" value="">Wijzig</button>
+        <div class="mb-3">
+            Wachtwoord: <input type="password" name="password" placeholder="<?php print $enkeleKlant['password'];?>">
         </div>
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="<?php print $enkeleKlant['voornaam'];?>" aria-label="<?php print $enkeleKlant['voornaam'];?>" aria-describedby="button-addon2">
-            <button class="btn btn-outline-secondary" type="button" id="button-addon2" value="">Wijzig</button>
+        <div class="mb-3">
+            Voornaam: <input type="text" name="voornaam" placeholder="<?php print $enkeleKlant['voornaam'];?>">
         </div>
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="<?php print $enkeleKlant['tussenvoegsel'];?>" aria-label="<?php print $enkeleKlant['tussenvoegsel'];?>" aria-describedby="button-addon2">
-            <button class="btn btn-outline-secondary" type="button" id="button-addon2" value="">Wijzig</button>
+        <div class="mb-3">
+            Tussenvoegsel: <input type="text" name="tussenvoegsel" placeholder="<?php print $enkeleKlant['tussenvoegsel'];?>">
         </div>
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="<?php print $enkeleKlant['achternaam'];?>" aria-label="<?php print $enkeleKlant['achternaam'];?>" aria-describedby="button-addon2">
-            <button class="btn btn-outline-secondary" type="button" id="button-addon2" value="">Wijzig</button>
+        <div class="mb-3">
+            Achternaam: <input type="text" name="achternaam" placeholder="<?php print $enkeleKlant['achternaam'];?>">
         </div>
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="<?php print $enkeleKlant['straat'];?>" aria-label="<?php print $enkeleKlant['straat'];?>" aria-describedby="button-addon2">
-            <button class="btn btn-outline-secondary" type="button" id="button-addon2" value="">Wijzig</button>
+        <div class="mb-3">
+            Straat: <input type="text" name="straat" placeholder="<?php print $enkeleKlant['straat'];?>">
         </div>
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="<?php print $enkeleKlant['huisnummer'];?>" aria-label="<?php print $enkeleKlant['huisnummer'];?>" aria-describedby="button-addon2">
-            <button class="btn btn-outline-secondary" type="button" id="button-addon2" value="">Wijzig</button>
+        <div class="mb-3">
+            Huisnummer: <input type="number" name="huisnummer" placeholder="<?php print $enkeleKlant['huisnummer'];?>">
         </div>
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="<?php print $enkeleKlant['postcode'];?>" aria-label="<?php print $enkeleKlant['postcode'];?>" aria-describedby="button-addon2">
-            <button class="btn btn-outline-secondary" type="button" id="button-addon2" value="">Wijzig</button>
+        <div class="mb-3">
+            Postcode: <input type="text" name="postcode" placeholder="<?php print $enkeleKlant['postcode'];?>">
         </div>
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="<?php print $enkeleKlant['woonplaats'];?>" aria-label="<?php print $enkeleKlant['woonplaats'];?>" aria-describedby="button-addon2">
-        <button class="btn btn-outline-secondary" type="button" id="button-addon2" value="">Wijzig</button>
-    </div>
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="<?php print $enkeleKlant['land'];?>" aria-label="<?php print $enkeleKlant['land'];?>" aria-describedby="button-addon2">
-            <button class="btn btn-outline-secondary" type="button" id="button-addon2" value="">Wijzig</button>
+        <div class="mb-3">
+            Woonplaats: <input type="text" name="woonplaats" placeholder="<?php print $enkeleKlant['woonplaats'];?>">
         </div>
+        <div class="mb-3">
+            Land: <input type="text" name="land" placeholder="<?php print $enkeleKlant['land'];?>">
+        </div>
+        <br>
+        <div class="d-flex justify-content-start mt-2">
+            <!--Voeg klant toe met ingevulde gegevens-->
+            <button class="btn btn-secondary" type="submit" name="submit">Update klant</button>
+        </div>
+    </form>
+</div>
+
+    <!--set $_POST condities-->
+    <?php
+    if ('REQUEST_METHOD' == 'POST') {
+        $database = new Database();
+        $email = ($_POST['email']);
+        $password = ($_POST['password']);
+        $voornaam = ($_POST['voornaam']);
+        $tussenvoegsel = ($_POST['tussenvoegsel']);
+        $achternaam = ($_POST['achternaam']);
+        $straat = ($_POST['straat']);
+        $huisnummer = ($_POST['huisnummer']);
+        $postcode = ($_POST['postcode']);
+        $woonplaats = ($_POST['woonplaats']);
+        $land = ($_POST['land']);
+
+        // Voeg gegevens toe aan de database
+        $result = $database->query(
+            "UPDATE klanten SET (email, password, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode, woonplaats, land) 
+                        values ('" . $email . "','" . $password . "','" . $voornaam . "','" . $tussenvoegsel . "','" . $achternaam . "','" . $straat . "','" . $huisnummer . "',
+                        '" . $postcode . "','" . $woonplaats . "','" . $land . "')");
+
+        $database->close();
+
+        return $result;
+    }
+    ?>
 </div>

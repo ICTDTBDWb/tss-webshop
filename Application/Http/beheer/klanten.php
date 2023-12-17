@@ -46,4 +46,15 @@ function klantVerwijderen($klantId) {
 
 }
 
+function zoekKlanten() {
+    $database = new Database();
+    $result = $database->query(
+        "SELECT * FROM klanten"
+    )->get();
+
+    $database->close();
+
+    return $result;
+}
+
 ?>
