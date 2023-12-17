@@ -1,17 +1,7 @@
 <!-- PHP logica -->
 <?php
-include __DIR__ . '/../Application/Http/producten.php';
+include basePath("Application/Http/producten.php");
 ?>
-
-<!DOCTYPE html>
-
-<html lang="en">
-<!--Head-->
-<?php include __DIR__ . "/../Resources/components/layout/head.php"; ?>
-
-<body class="min-vw-100 min-vh-100 d-flex flex-column bg-white">
-<!--Header-->
-<?php include __DIR__ . "/../Resources/components/layout/header.php"; ?>
 
 <!--Title-->
 <div class="container-lg flex-grow-1 gx-0 py-2">
@@ -67,10 +57,3 @@ include __DIR__ . '/../Application/Http/producten.php';
         </div>
     </div>
 </div>
-
-
-<!--Footer & Scripts-->
-<?php include __DIR__ . "/../Resources/components/layout/footer.php"; ?>
-<?php include __DIR__ . "/../Resources/components/layout/scripts.php"; ?>
-</body>
-</html>
