@@ -1,13 +1,13 @@
 <?php
 // Plaats van de benodigde PHP-bestanden en sessiebeheer
 include basePath("Application/Http/account/services.php");
-
+$klantId=Session::get('auth')['user_id'];
 // Haal de bestelling ID op uit de querystring (indien aanwezig)
 $bestellingId = isset($_GET['id']) ? $_GET['id'] : null;
 $bestellingDetails = null;
 if ($bestellingId) {
     // Haal de bestellingdetails op aan de hand van de bestelling ID
-    $bestellingDetails = haalBestellingDetailsOp($bestellingId);
+    $bestellingDetails = haalBestellingDetailsOp($klantId,$bestellingId);
 }
 ?>
 <!-- Plaats van het navigatiemenu voor de accountsectie -->

@@ -29,22 +29,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['giftboxbedrag'], $_POST['aantal_giftboxes'])) {
         // Definiëren van product ID's op basis van giftbox bedragen
         $product_id_map = [
-            '25' => 6,
-            '50' => 7,
-            '75' => 8,
-            '100' => 9
+            '25' => 25,
+            '50' => 50,
+            '75' => 75,
+            '100' => 100
         ];
 
         // Ophalen van de POST data
         $stukprijs = $_POST['giftboxbedrag'];
         $aantal = $_POST['aantal_giftboxes'];
         $product_id = $product_id_map[$stukprijs];
+        voegGiftboxToeAanBestelling($product_id,$aantal);
 
-        // Aannemen dat bestelling_id elders bepaald wordt
-        $bestelling_id = 1; // Voorbeeld waarde
-
-        // Toevoegen van de giftbox aan de bestelling
-        voegGiftboxToeAanBestelling($bestelling_id, $product_id, $aantal, $stukprijs);
     }
 }
 ?>
@@ -81,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Sectie voor het toevoegen van giftboxes -->
     <div class="col-md-6">
         <h2>Giftbox</h2>
-        <form action="<?= $current_page ?>" method="post">
+        <form action="" method="post">
             <!-- Selectie van giftbox bedrag -->
             <div class="mb-3">
                 <label for="giftboxbedrag" class="form-label">Giftbox bedrag</label>

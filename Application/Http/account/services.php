@@ -105,23 +105,20 @@ function zoekBestellingen($klantId, $zoekterm) {
     return $database->query($query, [$klantId, $zoekterm, $zoekterm])->get();
 }
 
-// Functie om een giftbox toe te voegen aan een bestelling
-function voegGiftboxToeAanBestelling($bestelling_id, $product_id, $aantal, $stukprijs) {
-    $database = new Database();
-    $totaal = $stukprijs * $aantal;
-    $result = $database->query(
-        "INSERT INTO `tss`.`bestelling_regels` (`bestelling_id`, `product_id`, `aantal`, `stukprijs`, `totaal`) VALUES (?, ?, ?, ?, ?)",
-        [$bestelling_id, $product_id, $aantal, $stukprijs, $totaal]
-    );
-    $database->close();
-    return $result;
+// Functie om een giftbox toe te voegen aan een winkelwagen
+function voegGiftboxToeAanBestelling($product_id, $aantal) {
+    $_SESSION["winkelwagen"]["producten"][] = [
+        "id" => $product_id,
+        "hoeveelheid_in_winkelwagen" => $aantal,
+    ];
+//    var_dump($_SESSION);exit();
 }
 
 // Functie om bestellingdetails op te halen op basis van bestellingId
-function haalBestellingDetailsOp($bestellingId) {
+function haalBestellingDetailsOp($klantId,$bestellingId) {
     $database = new Database();
 
-    // Aangepaste query om bestelling_id, betalingsprovider, prijs, status, productnaam, mediapad en mediaextensie op te halen
+    // Aangepaste query om de details van bestellingen op te halen op basis van klant_id
     $query = "SELECT 
                   b.id AS bestelling_id, 
                   bt.betalingsprovider, 
@@ -135,9 +132,10 @@ function haalBestellingDetailsOp($bestellingId) {
               JOIN tss.bestelling_regels br ON b.id = br.bestelling_id
               JOIN tss.producten p ON br.product_id = p.id
               LEFT JOIN tss.media pm ON p.id = pm.product_id
-              WHERE b.id = ?";
+              WHERE b.klant_id = ? and b.id = ?";
 
-    return $database->query($query, [$bestellingId])->get();
+    return $database->query($query, [$klantId,$bestellingId])->get();
 }
+
 
 ?>
