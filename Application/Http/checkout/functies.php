@@ -1,4 +1,6 @@
 <?php
+
+require("fpdf/fpdf.php");
 function bestellingOpslaan(int $klant_id, int $verzendmethode_id, $totaal, string $betaalmethode, array $producten, $voornaam, $tussenvoegsel, $achternaam, $straat, $huisnummer, $postcode, $woonplaats, $land)
 {
     $datum = date('Y-m-d H:i:s');
@@ -81,6 +83,10 @@ function bestellingOpslaan(int $klant_id, int $verzendmethode_id, $totaal, strin
             $dbm->exec($bestelregel_query);
 
         }
+        echo "<pre>";
+        echo "test";
+        genereerPdf($bestelling_id);
+        throw new ErrorException("TESTING");
 
         $dbm->commit();
     } catch (Exception $ex) {
@@ -100,6 +106,28 @@ function getVerzendmethodes(Database $dbm) {
     return $dbm->query("SELECT * FROM verzendmethoden")->get();
 }
 
-function genereerPdf($bestelling_id) {
+function genereerPdf(int $bestelling_id) {
 
+    $datum = "01-01-1001";
+    $order_datum = "01-01-1002";
+    $dbm = new Database();
+
+    $pdf = new FPDF();
+    $pdf->AddPage();
+    $pdf->SetFont(' Arial');
+
+    $pdf->Cell(40,10, 'Bestelling: ' . $bestelling_id );
+
+    $pdf->Output("/","TEST");
+    $bestelling_query = "SELECT * FROM bestelling WHERE id=:id";
+
+    $bestelling = $dbm->query($bestelling_query, ["id"=>$bestelling_id])->first();
+
+    $bedrijf = [
+        "naam" => "The Sixth String",
+        "btw_nummer" => "012345689",
+        "factuurnmmer" => $bestelling_id,
+        "factuurdatum" => $datum,
+        "besteldatum" => $order_datum,
+    ];
 }
