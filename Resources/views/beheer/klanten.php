@@ -52,7 +52,7 @@
         ?>
     </div>
     <?php
-    if ('REQUEST_METHOD' == 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $database = new Database();
 
         // Verwijder klant uit database

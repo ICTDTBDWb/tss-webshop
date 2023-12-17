@@ -105,7 +105,7 @@ if ($klantId) {
 
     <!--set $_POST condities-->
     <?php
-    if ('REQUEST_METHOD' == 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $database = new Database();
         $email = ($_POST['email']);
         $password = ($_POST['password']);
