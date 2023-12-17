@@ -129,4 +129,3 @@ if ($klantId) {
         return $result;
     }
     ?>
-</div>
