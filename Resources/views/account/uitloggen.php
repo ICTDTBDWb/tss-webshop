@@ -7,19 +7,16 @@ function logout() {
     // Start de sessie
     session_start();
 
-    // Wis de sessiegegevens
-    $_SESSION = array();
 
-    // Vernietig de sessie
-    session_destroy();
+    // Authenticatie uit de sessie halen
+    unset($_SESSION['auth']['logged_in'],$_SESSION['auth']['user_id']);
 
     // Omleiden naar de inlogpagina
-    header("Location:/var/www/tss-webshop//public.index.php");
+    header("Location:/");
     exit();
 }
 
 
-
-
+logout();
 
 ?>
