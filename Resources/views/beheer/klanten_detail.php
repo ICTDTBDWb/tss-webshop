@@ -37,7 +37,7 @@ if ($klantId) {
             <tr>
                 <td><?php print $enkeleKlant['id'];?></td>
                 <td><?php print $enkeleKlant['email'];?></td>
-                <td><?php print $enkeleKlant['password']; ?></td>
+                <td></td>
                 <td><?php print $enkeleKlant['voornaam']; ?></td>
                 <td><?php print $enkeleKlant['tussenvoegsel'];?></td>
                 <td><?php print $enkeleKlant['achternaam'];?></td>
@@ -64,36 +64,40 @@ if ($klantId) {
         }
     </style>
     <br>
-    <form method="post" action="/beheer/klanten_detail">
+    <?php foreach ($klantDetails as $enkeleKlant) {?>
+    <form method="post" action="/beheer/klanten_detail?id=<?php echo ($enkeleKlant['id']); ?>" onsubmit="setTimeout(function () { window.location.reload(); }, 10)">
         <div class="mb-3">
-            Email: <input type="email" name="email" placeholder="<?php print $enkeleKlant['email'];?>">
+            Id: <input type="text" name="id" placeholder="id">
         </div>
         <div class="mb-3">
-            Wachtwoord: <input type="password" name="password" placeholder="<?php print $enkeleKlant['password'];?>">
+            Email: <input type="email" name="email" placeholder="email">
         </div>
         <div class="mb-3">
-            Voornaam: <input type="text" name="voornaam" placeholder="<?php print $enkeleKlant['voornaam'];?>">
+            Wachtwoord: <input type="password" name="password" placeholder="password">
         </div>
         <div class="mb-3">
-            Tussenvoegsel: <input type="text" name="tussenvoegsel" placeholder="<?php print $enkeleKlant['tussenvoegsel'];?>">
+            Voornaam: <input type="text" name="voornaam" placeholder="voornaam">
         </div>
         <div class="mb-3">
-            Achternaam: <input type="text" name="achternaam" placeholder="<?php print $enkeleKlant['achternaam'];?>">
+            Tussenvoegsel: <input type="text" name="tussenvoegsel" placeholder="tussenvoegsel">
         </div>
         <div class="mb-3">
-            Straat: <input type="text" name="straat" placeholder="<?php print $enkeleKlant['straat'];?>">
+            Achternaam: <input type="text" name="achternaam" placeholder="achternaam">
         </div>
         <div class="mb-3">
-            Huisnummer: <input type="number" name="huisnummer" placeholder="<?php print $enkeleKlant['huisnummer'];?>">
+            Straat: <input type="text" name="straat" placeholder="straat">
         </div>
         <div class="mb-3">
-            Postcode: <input type="text" name="postcode" placeholder="<?php print $enkeleKlant['postcode'];?>">
+            Huisnummer: <input type="number" name="huisnummer" placeholder="huisnummer">
         </div>
         <div class="mb-3">
-            Woonplaats: <input type="text" name="woonplaats" placeholder="<?php print $enkeleKlant['woonplaats'];?>">
+            Postcode: <input type="text" name="postcode" placeholder="postcode">
         </div>
         <div class="mb-3">
-            Land: <input type="text" name="land" placeholder="<?php print $enkeleKlant['land'];?>">
+            Woonplaats: <input type="text" name="woonplaats" placeholder="woonplaats">
+        </div>
+        <div class="mb-3">
+            Land: <input type="text" name="land" placeholder="land">
         </div>
         <br>
         <div class="d-flex justify-content-start mt-2">
@@ -101,12 +105,14 @@ if ($klantId) {
             <button class="btn btn-secondary" type="submit" name="submit">Update klant</button>
         </div>
     </form>
+    <?php  } ?>
 </div>
 
     <!--set $_POST condities-->
     <?php
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $database = new Database();
+        $id = ($_POST['id']);
         $email = ($_POST['email']);
         $password = ($_POST['password']);
         $voornaam = ($_POST['voornaam']);
@@ -120,12 +126,13 @@ if ($klantId) {
 
         // Voeg gegevens toe aan de database
         $result = $database->query(
-            "UPDATE klanten SET (email, password, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode, woonplaats, land) 
-                        values ('" . $email . "','" . $password . "','" . $voornaam . "','" . $tussenvoegsel . "','" . $achternaam . "','" . $straat . "','" . $huisnummer . "',
-                        '" . $postcode . "','" . $woonplaats . "','" . $land . "')");
+            "UPDATE klanten SET email='$email', password='$password', voornaam='$voornaam', tussenvoegsel='$tussenvoegsel', achternaam='$achternaam',
+                   straat='$straat', huisnummer='$huisnummer', postcode='$postcode', woonplaats='$woonplaats', land='$land'
+                   WHERE id='$id'");
 
         $database->close();
 
         return $result;
     }
     ?>
+
