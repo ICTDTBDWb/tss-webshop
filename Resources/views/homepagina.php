@@ -1,7 +1,7 @@
 <?php
     global $auth;
 
-    $auth->protectPage();
+   $auth->protectPage();
 ?>
 
 <!--Banner-->
