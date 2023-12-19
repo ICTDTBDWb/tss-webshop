@@ -39,18 +39,14 @@
             $product_merk = array_key_exists("product_merk", $_POST) ? $_POST['product_merk'] : "";
             $product_categorie = [];
 
-            foreach($_POST as $key => $value)
-            {
-                if(str_contains($key,"checkbox_"))
-                {
-                   $key = str_replace("checkbox_","", $key);
-                   $product_categorie[$key] = $value;
+            foreach($_POST as $key => $value) {
+                if (str_contains($key, "checkbox_")) {
+                    $key = str_replace("checkbox_", "", $key);
+                    $product_categorie[$key] = $value;
 
                 }
 
             }
-
-            var_dump($product_categorie);
 
 
             if ($opslaan == "opslaan")
@@ -107,7 +103,6 @@
 
          $filter = array_key_exists("filter",$_GET) ? $_GET['filter'] : "";
          $filter = trim($filter);
-         var_dump("filter = ". $filter."$");
 
          if(isset($_GET['Product'])) {
              $product_select = filter_input(INPUT_GET, 'Product', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -127,7 +122,6 @@
           $categorie_id = $categorie['id'];
           $producten_categorie[$categorie_id]['product'] = $database->query("SELECT * FROM producten where naam like ? and id IN (SELECT `product_id` from product_categorieen where categorie_id  = ? ) ORDER BY naam ASC", ["%".$filter."%",$categorie_id] )->get();
           $producten_categorie[$categorie_id]['naam'] = $categorie['naam'];
-          var_dump($categorie_id ."+".$categorie['naam']);
       }
       //var_dump($producten_categorie);
         //filter prodcut with no categorie
@@ -323,7 +317,7 @@
                                 <option>pic2</option>
                                 <option>pic3</option>
                             </select><br>
-                            <button type="button" class="btn btn-outline-secondary" style="width: 100%">Media beheer</button><br><br>
+                            <button type="button" class="btn btn-outline-secondary" style="width: 100%"  data-bs-toggle="modal" data-bs-target="#exampleModal">Media beheer</button><br><br>
                             <label for="categorie" class="form-label">Categorieen </label>
                             <card class="card" style="max-height: 30vh; min-height: 30vh; overflow-y: auto">
                                <?php echo checkbox_constructor($categorieen, $product) ?>
@@ -369,6 +363,58 @@
 
 
 
+        </div>
+
+
+
+
+        <div class="modal fade" tabindex="-1" id="exampleModal" >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Upload Image</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="formFile" class="form-label">Select an image to upload:</label>
+                                <input class="form-control" type="file" id="formFile">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Upload</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="modal fade" tabindex="-1" id="categoriebeheer" >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Categoriebeheer</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="formFile" class="form-label">Select an image to upload:</label>
+                                <input class="form-control" type="file" id="formFile">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Upload</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
