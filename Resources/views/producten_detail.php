@@ -36,7 +36,7 @@ if ($productId) {
         <div>
             <?php print "€" . " " . $enkelProduct['prijs']; ?>
             <br>
-            <form action="/winkelwagen.php">
+            <form action="/winkelwagen">
                 <label for="quantity">Aantal</label>
                 <input type="number" id="quantity" name="quantity" min="1" max="5">
                 <input type="submit" value="In winkelwagen">
