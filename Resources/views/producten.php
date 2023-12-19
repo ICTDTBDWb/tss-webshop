@@ -1,8 +1,3 @@
-<!-- PHP logica -->
-<?php
-include basePath("Application/Http/producten.php");
-?>
-
 <!--Title-->
 <div class="container-lg flex-grow-1 gx-0 py-2">
     <div class="d-flex justify-content-center">
