@@ -221,6 +221,15 @@
 
 </style>
 
+<script>
+    //window.onbeforeunload = closingCode;
+    function closingCode(){
+        alert("u gaat de pagina verlaten");
+        //document.getElementById("categoriebeheer").show()
+        return  "Are you sure you want to leave this page?"; //<-- this prevents the dialog confirm box
+    }
+</script>
+
 
 
 <html lang="en">
@@ -230,7 +239,7 @@
 
 
 
-    <body class="min-vw-100 min-vh-100 d-flex flex-column bg-white">
+    <body class="min-vw-100 min-vh-100 d-flex flex-column bg-white" >
         <!--Header-->
         <?php include __DIR__ . "/../../Resources/components/layout/header.php"; ?>
 
@@ -317,7 +326,8 @@
                                 <option>pic2</option>
                                 <option>pic3</option>
                             </select><br>
-                            <button type="button" class="btn btn-outline-secondary" style="width: 100%"  data-bs-toggle="modal" data-bs-target="#exampleModal">Media beheer</button><br><br>
+                            <a class="btn btn-outline-secondary" href= /http/beheer/mediacategoriebeheer.php" style="width: 100%" role="button">Media beheer</a>
+                           <!-- <button type="button" class="btn btn-outline-secondary" style="width: 100%"  data-bs-toggle="modal" data-bs-target="#exampleModal">Media beheer</button><br><br> -->
                             <label for="categorie" class="form-label">Categorieen </label>
                             <card class="card" style="max-height: 30vh; min-height: 30vh; overflow-y: auto">
                                <?php echo checkbox_constructor($categorieen, $product) ?>
