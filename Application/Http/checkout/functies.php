@@ -129,7 +129,9 @@ function bestellingOpslaan(int $klant_id, int $verzendmethode_id, $totaal, strin
         $mail_headers
     );
 
-    // TODO: Delete PDF after mail
+    // Delete file after mailing
+    unlink($bestandsnaam);
+    
     $_SESSION['winkelwagen']['producten'] = [];
 
         //redirect login page
