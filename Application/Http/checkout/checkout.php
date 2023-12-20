@@ -22,7 +22,7 @@ $klant_id = $_SESSION['user']['id'];
 $query = "SELECT id, email, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode from klanten where id=:klant_id";
 $klant = $dbm->query($query, ["klant_id" => $klant_id])->first();
 
-//var_dump($klant);exit;
+
 $verzendmethodes_array = getVerzendmethodes($dbm);
 
 $cart_changes = updateSessionCartProducts($dbm);
@@ -105,6 +105,7 @@ if($_POST??false){
     }
 
     if(count($validation_error_array) == 0) {
+
         if(count($cart_changes['removed_products']) == 0 && count($cart_changes['changed_products']) == 0 && $producten) {
 
             bestellingOpslaan(

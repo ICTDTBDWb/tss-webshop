@@ -34,7 +34,7 @@
                         <div class="d-flex border flex-grow-1 p-1 product">
                             <div clas="d-flex">
                                     <a href="/product/<?php echo $product['id'] ?>">
-                                        <img class="productimage p-2"  alt="<?php echo $product['media_naam'] ?>" src="<?php echo "/winkelwagen/".$product['media_pad'] ?>"></img>
+                                        <img class="productimage p-2"  alt="<?php echo $product['media_naam'] ?>" src="<?php echo $product['media_pad'].$product['media_extensie'] ?>"></img>
                                     </a>
                                 </div>
                             <div class="d-flex flex-grow-1 flex-column justify-content-between py-2">

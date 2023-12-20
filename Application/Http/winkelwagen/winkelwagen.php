@@ -73,7 +73,7 @@ if(isset($_POST['wijzigingen_opslaan']) && count($_POST) > 1){
 if ($_GET['addtocart']??false){
         $id = $_GET['addtocart'];
 
-        $query = "SELECT p.id, p.naam as product_naam, p.prijs, m.naam as media_naam, m.pad as media_pad ".
+        $query = "SELECT p.id, p.naam as product_naam, p.prijs, m.naam as media_naam, m.pad as media_pad, m.extensie as media_extensie ".
             "FROM producten as p ".
             "LEFT JOIN media as m ON " .
             "m.product_id=p.id ".
@@ -94,6 +94,7 @@ if ($_GET['addtocart']??false){
         $_SESSION["winkelwagen"]["producten"][$id]["prijs"] = $result['prijs'];
         $_SESSION["winkelwagen"]["producten"][$id]["media_naam"] = $result['media_naam'];
         $_SESSION["winkelwagen"]["producten"][$id]["media_pad"] = $result['media_pad'];
+        $_SESSION["winkelwagen"]["producten"][$id]["media_extensie"] = $result['media_extensie'];
 }
 
 //Check winkelwagen of set false
