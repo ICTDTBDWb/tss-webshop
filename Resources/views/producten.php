@@ -12,30 +12,33 @@
                     <h5 class="font-weight-bold d-flex justify-content-start" style="max-width: 25%">Categorieën</h5>
                     <?php foreach (queryCategorieen() as $categorieen) {?>
                         <br>
-                        <li class="list-group-item list-group-item-action" style="max-width: 95%"><?php print $categorieen['naam'];?></li>
+                        <li class="list-group-item list-group-item-action" style="max-width: 95%">
+                            <a style="text-decoration:none; color:black;" href="/categorieen?id=<?php echo ($categorieen['id']); ?>"><?php echo $categorieen['naam'];?></a>
+                        </li>
+
                     <?php  } ?>
                 </ul>
             </div>
             <!--Weergave producten-->
             <div class="col-10">
                 <div class="row">
-                    <?php foreach (queryProducten() as $producten) {?>
+                    <?php foreach (queryProductEnAfbeelding() as $productenEnAfbeelding) {?>
                         <div class="col-md-4 text-right">
                             <h5>
-                                <a href="producten_detail.php?id=<?php echo ($producten['id']); ?>">
-                                    <?php print $producten['naam'];?>
+                                <a style="text-decoration:none; color:black;" href="/producten_detail?id=<?php echo ($productenEnAfbeelding['id']); ?>">
+                                    <?php print $productenEnAfbeelding['naam'];?>
                                 </a>
                             </h5>
                             <div>
                                 <img
-                                        src="https://img.freepik.com/free-photo/guy-playing-acoustic-guitar_169016-2126.jpg?w=1380&t=st=1701540133~exp=1701540733~hmac=7522639adac31beacdcfcb3c31df1aeb3666b4d6547be7ad761153305b7025f8"
+                                        src="<?php print $productenEnAfbeelding['pad'];?>"
                                         alt="Banner"
                                         class="rounded w-50 h-50"
                                         style="object-fit: cover"
                                 >
                             </div>
                             <div>
-                                <?php print "€" . " " . $producten['prijs']; ?>
+                                <?php print "€" . " " . $productenEnAfbeelding['prijs']; ?>
                                 <br>
                                 <form action="/winkelwagen">
                                     <label for="quantity">Aantal</label>

@@ -17,7 +17,7 @@ if ($productId) {
         <h1 class="mt-0 font-weight-bold mb-1">Product details</h1>
     </div>
     <div class="d-flex justify-content-end">
-        <a class="btn btn-secondary" href="producten.php" role="button" >Terug naar productoverzicht</a>
+        <a class="btn btn-secondary" href="/producten" role="button" >Terug naar productoverzicht</a>
     </div>
     <br>
     <?php foreach ($productDetails as $enkelProduct) {?>
@@ -27,10 +27,10 @@ if ($productId) {
         </h5>
         <div>
             <img
-                    src="https://img.freepik.com/free-photo/guy-playing-acoustic-guitar_169016-2126.jpg?w=1380&t=st=1701540133~exp=1701540733~hmac=7522639adac31beacdcfcb3c31df1aeb3666b4d6547be7ad761153305b7025f8"
+                    src="<?php print $enkelProduct['pad'];?>"
                     alt="Banner"
                     class="rounded w-50 h-50"
-                    style="object-fit: cover"
+                    style="max-width: 200px; height: auto;"
             >
         </div>
         <div>
