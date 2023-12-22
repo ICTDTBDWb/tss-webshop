@@ -24,6 +24,13 @@
     $product_beschrijving= "";
     $product_merk  = "";
 
+
+    $verwijder_icon = "<svg xmlns='http://www.w3.org/2000/svg' width='15' height='15' fill='currentColor' class='bi bi-trash' viewBox='0 0 16 16'>
+                               <path d='M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z'></path>
+                               <path d='M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z'></path>
+                       </svg>";
+
+
      //get and post
     if (is_array($_POST) && !empty($_POST))
     {
@@ -33,8 +40,8 @@
             $opslaan = $_POST['opslaan'];
             $product_id = array_key_exists("product_id", $_POST) ? $_POST['product_id'] : "";
             $product_naam = array_key_exists("product_naam", $_POST) ? $_POST['product_naam'] : "";
-            $product_prijs = array_key_exists("product_prijs", $_POST) ? $_POST['product_prijs'] : 0;
-            $product_aantal = array_key_exists("product_aantal", $_POST) ? $_POST['product_aantal'] : 0;
+            $product_prijs = array_key_exists("product_prijs", $_POST) && is_numeric($_POST['product_prijs']) ? $_POST['product_prijs'] : 0.0;
+            $product_aantal = array_key_exists("product_aantal", $_POST) && is_numeric($_POST['product_aantal']) ? $_POST['product_aantal'] : 0.0;
             $product_beschrijving = array_key_exists("product_beschrijving", $_POST) ? $_POST['product_beschrijving'] : "";
             $product_merk = array_key_exists("product_merk", $_POST) ? $_POST['product_merk'] : "";
             $product_categorie = [];
@@ -258,7 +265,13 @@
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
                                     <iframe src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0"  title="YouTube video" class="d-block w-100 h-100" ></iframe>
-                                    <h5 style="color: black; text-align: center">pic 1</h5>
+                                    <div class="row">
+                                        <h5 class="col" style="color: black; text-align: center">pic 1</h5>
+                                        <button type="button" value="verwijderen" class="btn btn-outline-danger col">
+                                            <?php echo $verwijder_icon ?>
+
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="carousel-item">
                                     <img src="https://th.bing.com/th/id/OIP.yllk_6Rnouo_r0aOMnVlTwHaHa?w=176&h=180&c=7&r=0&o=5&pid=1.7" alt="Chicago" class="d-block w-100 h-100" >
@@ -319,15 +332,19 @@
                     </div><br>
                     <div class="row">
                         <div class="container col" style="max-width: 30%; align-content: flex-start" >
-                            <label for="hoofd_afbeelding" class="form-label">Hoofd afbeelding </label>
-                            <select id="hoofd_afbeelding" class="form-select" name="hoofd_afbeelding">
-                                <option selected>pic1</option>
-                                <option>pic1</option>
-                                <option>pic2</option>
-                                <option>pic3</option>
-                            </select><br>
-                            <a class="btn btn-outline-secondary" href= /http/beheer/mediacategoriebeheer.php" style="width: 100%" role="button">Media beheer</a>
-                           <!-- <button type="button" class="btn btn-outline-secondary" style="width: 100%"  data-bs-toggle="modal" data-bs-target="#exampleModal">Media beheer</button><br><br> -->
+                              <div class=" container row ">
+                                <label for="hoofd_afbeelding" class="form-label">Hoofd afbeelding </label>
+                                            <select id="hoofd_afbeelding" class="form-select col" name="hoofd_afbeelding">
+                                                <option selected>pic1</option>
+                                                <option>pic1</option>
+                                                <option>pic2</option>
+                                                <option>pic3</option>
+                                            </select>
+                                <div class="col" >test</div>
+                             </div>
+                            <br>
+                            <!--<a class="btn btn-outline-secondary" href= /http/beheer/mediacategoriebeheer.php" style="width: 100%" role="button">Media beheer</a> --> 
+                            <button type="button" class="btn btn-outline-secondary" style="width: 100%"  data-bs-toggle="modal" data-bs-target="#exampleModal">Media beheer</button><br><br>
                             <label for="categorie" class="form-label">Categorieen </label>
                             <card class="card" style="max-height: 30vh; min-height: 30vh; overflow-y: auto">
                                <?php echo checkbox_constructor($categorieen, $product) ?>
@@ -353,12 +370,16 @@
 
                     </div>
 
+
+
+
+
                 </form>
             </main>
 
              <aside class="" id="aside">
                  <form method="GET" action=''>
-                    <input type="search" value='<?php echo $filter ?> ' class="form-control border" id="test" name="filter"/>
+                     <input type="search" value='<?php echo $filter ?> ' class="form-control border" id="test" name="filter">
 
 
 
