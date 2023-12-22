@@ -307,7 +307,7 @@
 
 
                                 <div class="row">
-                                    <div class="col" style='min-width: 50%'>
+                                    <div class="col" style='min-width: 30%'>
                                         <label for="product_merk" class="form-label" >Product Merk:</label>
                                         <input type="text" class="form-control" id="product_merk" name="product_merk"  list="merknamen" >
                                         <datalist id="merknamen">

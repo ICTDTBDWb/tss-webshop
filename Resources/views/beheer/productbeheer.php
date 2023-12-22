@@ -13,6 +13,8 @@
     $product_beschrijving= "";
     $product_merk  = "";
 
+
+
      //get and post
     if (is_array($_POST) && !empty($_POST))
     {
@@ -22,8 +24,8 @@
             $opslaan = $_POST['opslaan'];
             $product_id = array_key_exists("product_id", $_POST) ? $_POST['product_id'] : "";
             $product_naam = array_key_exists("product_naam", $_POST) ? $_POST['product_naam'] : "";
-            $product_prijs = array_key_exists("product_prijs", $_POST) ? $_POST['product_prijs'] : 0;
-            $product_aantal = array_key_exists("product_aantal", $_POST) ? $_POST['product_aantal'] : 0;
+            $product_prijs = array_key_exists("product_prijs", $_POST) && is_numeric($_POST['product_prijs']) ? $_POST['product_prijs'] : 0.0;
+            $product_aantal = array_key_exists("product_aantal", $_POST) && is_numeric($_POST['product_aantal']) ? $_POST['product_aantal'] : 0;
             $product_beschrijving = array_key_exists("product_beschrijving", $_POST) ? $_POST['product_beschrijving'] : "";
             $product_merk = array_key_exists("product_merk", $_POST) ? $_POST['product_merk'] : "";
             $product_categorie = [];
@@ -124,7 +126,7 @@
       if (is_array($product) and array_key_exists("0", $product))
       {
           $product[0]["categorie"] = $database->query("SELECT * FROM categorieen where id IN (SELECT `categorie_id` from product_categorieen where product_id = ?)",[$product[0]['id']])->get();
-
+          $product[0]["afbeelding"] = $database->query("SELECT * FROM media where id = ?",[$product[0]['id']])->get();
           $product_id = array_key_exists("id", $product[0]) ? $product[0]['id'] : "";
           $product_naam = array_key_exists("naam", $product[0]) ? $product[0]['naam'] : "";
           $product_prijs = array_key_exists("prijs", $product[0]) ? $product[0]['prijs'] : "";
@@ -223,26 +225,52 @@
     <form method="POST" action='' class="hidden">
         <div class="row  align-items-top ">
             <!-- Carousel -->
-            <div id="demo" class="carousel slide col " data-bs-ride="carousel" style="max-width:20vh; max-height:20vh; min-height: 20vh; min-width: 20vh; margin-left: 2vh; margin-right: 2vh" data-bs-interval="false">
+            <div id="demo" class="carousel slide col " data-bs-ride="carousel" style="max-width:25vh; max-height:25vh; min-height: 25vh; min-width: 25vh; margin-left: 2vh; margin-right: 2vh" data-bs-interval="false">
 
                 <!-- Indicators/dots -->
 
                 <!-- The slideshow/carousel -->
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <iframe src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0"  title="YouTube video" class="d-block w-100 h-100" ></iframe>
-                        <h5 style="color: black; text-align: center">pic 1</h5>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="https://th.bing.com/th/id/OIP.yllk_6Rnouo_r0aOMnVlTwHaHa?w=176&h=180&c=7&r=0&o=5&pid=1.7" alt="Chicago" class="d-block w-100 h-100" >
-                        <div class="carousel-caption" style="top:80%; bottom: auto">
-                            <h5 style="color: black">pic 2</h5>
+                    <div class="carousel-item active ">
+                        <iframe src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0"  title="YouTube video" class="img-fluid w-100 h-100 " ></iframe>
+                        <div class="row">
+                        <h5 class='col' style="color: black; text-align: center">pic 1</h5>
+                        <div class='btn-group col' role='group' aria-label='area'>
+                            <button type='button' class='btn btn-outline-primary'>
+                                <?php global $edit_icon; echo $edit_icon?>
+                            </button>
+                            <button type='button' class='btn btn-outline-danger'>
+                                <?php global $verwijder_icon; echo $verwijder_icon ?>
+                            </button>
+                        </div>
                         </div>
                     </div>
-                    <div class="carousel-item">
-                        <img src="https://th.bing.com/th/id/OIP.AfML_m2qzeq-Pmrwh6H5jwHaHa?w=164&h=180&c=7&r=0&o=5&pid=1.7" alt="New York" class="d-block w-100 h-100" >
-                        <div class="carousel-caption " style="top:80%; bottom: auto">
-                            <h5 style="color: black">pic 3</h5>
+                    <div class="carousel-item ">
+                        <img src="https://th.bing.com/th/id/OIP.yllk_6Rnouo_r0aOMnVlTwHaHa?w=176&h=180&c=7&r=0&o=5&pid=1.7" alt="Chicago" class="img-fluid w-100 h-100" style="max-width: 100%; min-width: 100%; min-height: 80%; max-height:80%" >
+                        <div class="row carousel-caption " >
+                            <h5 class='col ' style="color: black; text-align: center">pic 2</h5>
+                            <div class='btn-group col' role='group' aria-label='area'>
+                                <button type='button' class='btn btn-outline-primary'>
+                                    <?php global $edit_icon; echo $edit_icon?>
+                                </button>
+                                <button type='button' class='btn btn-outline-danger'>
+                                    <?php global $verwijder_icon; echo $verwijder_icon ?>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item ">
+                        <img src="https://th.bing.com/th/id/OIP.AfML_m2qzeq-Pmrwh6H5jwHaHa?w=164&h=180&c=7&r=0&o=5&pid=1.7" alt="New York" class="img-fluid w-100 h-80" >
+                        <div class="row">
+                            <h5 class='col' style="color: black; text-align: center">pic 3</h5>
+                            <div class='btn-group col' role='group' aria-label='area'>
+                                <button type='button' class='btn btn-outline-primary'>
+                                    <?php global $edit_icon; echo $edit_icon?>
+                                </button>
+                                <button type='button' class='btn btn-outline-danger'>
+                                    <?php global $verwijder_icon; echo $verwijder_icon ?>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
