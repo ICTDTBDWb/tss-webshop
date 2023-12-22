@@ -11,7 +11,7 @@
     <div class="d-flex justify-content-end mt-3">
         <input class="form-control" list="datalistOptions" id="klantenZoeken" placeholder="Klanten zoeken..." style="max-width: 25%">
         <datalist id="datalistOptions">
-            <option value="<?php print $zoekKlanten['voornaam'];?>"></option>
+            <option value=""></option>
         </datalist>
     </div>
     <div class="d-flex justify-content-start mt-5">
@@ -39,7 +39,7 @@
                 <td><?php print $klanten['achternaam']; ?></td>
                 <td><a class="btn btn-secondary" href="/beheer/klanten_detail?id=<?php echo ($klanten['id']); ?>" role="button">Wijzigen</a></td>
                 <td>
-                    <form method="post" action="/beheer/klanten">
+                    <form method="post" action="/beheer/klanten" onsubmit="setTimeout(function () { window.location.reload(); }, 10)">
                         <input name="klantId" class="d-none" value="<?php echo ($klanten['id']);?>">
                         <button class="btn btn-secondary" role="button" name="klantVerwijderen" value="verwijderen">Verwijderen</button>
                     </form>
