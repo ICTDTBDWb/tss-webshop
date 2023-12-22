@@ -1,42 +1,42 @@
 <?php
 
-namespace application;
-
-use PDO;
-
-class DatabaseManager
+class Database
 {
     const CONFIG = [
         'dsn' => [
             'host' => 'host.docker.internal',
             'port' => 3308,
             'dbname' => 'tss',
-            'charset' => 'utf8mb4'
+            'charset' => 'utf8mb4',
         ],
         'username' => 'root',
-        'password' => 'root'
+        'password' => 'root',
     ];
-    private ?PDO $connection;
-    private \PDOStatement $statement;
+
+    private ?PDO $connection = null;
+    private PDOStatement $statement;
 
     /**
-     * DatabaseManager constructor.
-     * Initializes a new instance of the DatabaseManager class.
+     * Database constructor.
+     * Initializes a new instance of the Database class.
      */
     public function __construct()
     {
-        // Create a dsn string based on the given config.
         $dsn = 'mysql:' . http_build_query(self::CONFIG['dsn'], '', ';');
 
-        // Create a new PDO connection to the database.
-        $this->connection = new PDO(
-            $dsn,
-            self::CONFIG['username'],
-            self::CONFIG['password'],
-            [
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-            ]
-        );
+        try {
+            $this->connection = new PDO(
+                $dsn,
+                self::CONFIG['username'],
+                self::CONFIG['password'],
+                [
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                ]
+            );
+        } catch (PDOException $e) {
+            $this->connection = null;
+            error_log('PDOException in Database constructor: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -47,10 +47,9 @@ class DatabaseManager
      *
      * @return $this
      */
-    public function query(string $query, array $params = []): DatabaseManager
+    public function query(string $query, array $params = []): self
     {
         $this->statement = $this->connection->prepare($query);
-
         $this->statement->execute($params);
 
         return $this;
@@ -61,7 +60,7 @@ class DatabaseManager
      *
      * @return array|false Returns an array of values on success and false on failure.
      */
-    public function get(): false|array
+    public function get(): array|false
     {
         return $this->statement->fetchAll();
     }
@@ -90,15 +89,10 @@ class DatabaseManager
     }
 
     /**
-     * Destruct the current class instance. This get called automatically.
+     * Destruct the current class instance. This gets called automatically.
      */
-    public function __destruct() {
-        try {
-            // Close the PDO connection
-            $this->connection = null;
-        } catch (\PDOException $e) {
-            // Log or handle the exception appropriately
-            error_log('PDOException in DatabaseManager __destruct: ' . $e->getMessage());
-        }
+    public function __destruct()
+    {
+        $this->connection = null;
     }
 }
