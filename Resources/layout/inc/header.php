@@ -21,6 +21,8 @@
                        aria-label="Product zoeken."
                        aria-describedby="addon-wrapping"
                        class="form-control border"
+                       formmethod="post"
+
                 >
                 <button class="btn btn-outline-light border text-dark" type="button">
                     <i class="fa fa-search"></i>
