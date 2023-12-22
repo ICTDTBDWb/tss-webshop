@@ -1,13 +1,11 @@
 <?php
-include_once __DIR__ . '/../../application/DatabaseManager.php';
-
 // Initial variables
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 $condition = $searchTerm ? "WHERE id LIKE '%$searchTerm%'" : '';
 
 // Haal alle bestellingen op
 try {
-    $db = new \application\DatabaseManager();
+    $db = new Database();
     $query = "SELECT * FROM tss.bestellingen $condition";
     $db->query($query);
     $bestellingen = $db->get();
@@ -21,23 +19,16 @@ try {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<?php include __DIR__ . "/../../application/components/layout/head.php"; ?>
-<body class="min-vw-100 min-vh-100 d-flex flex-column bg-white">
-<?php include __DIR__ . "/../../application/components/layout/header.php"; ?>
-
-<div class="container-lg flex-grow-1 gx-0 py-4">
     <p class="d-flex justify-content-center fs-1 fw-bolder">Beheerdersportaal</p>
 
 
 
     <p class="d-flex justify-content-evenly">
-        <a href="beheeroverzicht.php" class="btn btn-secondary">Beheeroverzicht</a>
-        <a href="accountgegevens.php" class="btn btn-secondary">Accountgegevens</a>
-        <a href="productbeheer.php" class="btn btn-secondary">Productbeheer</a>
-        <a href="overzichtbestellingen.php" class="btn btn-secondary active">Overzicht bestellingen</a>
-        <a href="klantbeheer.php" class="btn btn-secondary">Klantbeheer</a>
+        <a href="/beheer/overzicht" class="btn btn-secondary active">Beheeroverzicht</a>
+        <a href="/beheer/accountgegevens" class="btn btn-secondary">Accountgegevens</a>
+        <a href="/beheer/productbeheer" class="btn btn-secondary">Productbeheer</a>
+        <a href="/beheer/overzichtbestellingen" class="btn btn-secondary">Overzicht bestellingen</a>
+        <a href="/beheer/klantbeheer" class="btn btn-secondary">Klantbeheer</a>
     </p>
     <br>
     <!-- Search bar -->
@@ -66,9 +57,3 @@ try {
             </ul>
         </div>
     </div>
-</div>
-
-<?php include __DIR__ . "/../../application/components/layout/footer.php"; ?>
-<?php include __DIR__ . "/../../application/components/layout/scripts.php"; ?>
-</body>
-</html>

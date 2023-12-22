@@ -1,10 +1,8 @@
 <?php
-include_once __DIR__ . '/../../application/DatabaseManager.php';
-
 header('Content-Type: application/json');
 
 try {
-    $db = new \application\DatabaseManager();
+    $db = new Database();
 
     $query = "SELECT MONTH(besteldatum) AS maand, COUNT(*) AS aantalBestellingen 
           FROM tss.bestellingen 

@@ -1,8 +1,4 @@
-<!-- PHP logica -->
-<?php include __DIR__ . '/../../application/beheer/overzicht.php'; ?>
-
 <?php
-include_once __DIR__ . '/../../application/DatabaseManager.php';
 
 $errorMessage = '';
 
@@ -21,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             // Verbinding maken met de database
-            $db = new \application\DatabaseManager();
+            $db = new Database();
 
 
             // Wachtwoord hashen
@@ -56,24 +52,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<!--Head-->
-<?php include __DIR__ . "/../../application/components/layout/head.php"; ?>
-
-<body class="min-vw-250 min-vh-200 d-flex flex-column bg-white">
-<!--Header-->
-<?php include __DIR__ . "/../../application/components/layout/header.php"; ?>
-
-<!--Pagina content container-->
-<div class="container-lg flex-grow-1 gx-0 py-4">
     <p class="d-flex justify-content-center fs-1 fw-bolder">Beheerdersportaal</p>
     <p class="d-flex justify-content-evenly">
-        <a href="beheeroverzicht.php" class="btn btn-secondary active">Beheeroverzicht</a>
-        <a href="accountgegevens.php" class="btn btn-secondary">Accountgegevens</a>
-        <a href="productbeheer.php" class="btn btn-secondary">Productbeheer</a>
-        <a href="overzichtbestellingen.php" class="btn btn-secondary">Overzicht bestellingen</a>
-        <a href="klantbeheer.php" class="btn btn-secondary">Klantbeheer</a>
+        <a href="/beheer/overzicht" class="btn btn-secondary active">Beheeroverzicht</a>
+        <a href="/beheer/accountgegevens" class="btn btn-secondary">Accountgegevens</a>
+        <a href="/beheer/productbeheer" class="btn btn-secondary">Productbeheer</a>
+        <a href="/beheer/overzichtbestellingen" class="btn btn-secondary">Overzicht bestellingen</a>
+        <a href="/beheer/klantbeheer" class="btn btn-secondary">Klantbeheer</a>
     </p>
 
     <div class="row justify-content-start">
@@ -118,7 +103,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </div>
-</div>
 
 <!-- JavaScript en Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -177,9 +161,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             });
     }
 </script>
-
-<!--Footer & Scripts-->
-<?php include __DIR__ . "/../../application/components/layout/footer.php"; ?>
-<?php include __DIR__ . "/../../application/components/layout/scripts.php"; ?>
-</body>
-</html>
