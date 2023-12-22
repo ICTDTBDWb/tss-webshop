@@ -108,11 +108,11 @@
              $product_select = filter_input(INPUT_GET, 'Product', FILTER_SANITIZE_SPECIAL_CHARS);
              $product_select = preg_split("/ /", $product_select);
              $_POST['id']  = $product_select[0];
-             $product = $database->query("SELECT * FROM producten where id = ?",[$product_select[0]])->get();
+
          }
      }
 
-
+      $product = $database->query("SELECT * FROM producten where id = ?",[$product_select[0]])->get();
 
 
         // filter products in categories
