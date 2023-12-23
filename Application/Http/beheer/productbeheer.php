@@ -106,10 +106,10 @@ function checkbox_constructor($categorie, $product)
                             </label>
                            
                          <div class='btn-group' role='group' aria-label='area_$categorie_id' style='height: 4vh; width:2vh' >
-                                <button type='button' class='btn btn-outline-primary '>
+                                <button type='button' class='btn btn-outline-primary '  data-bs-toggle='modal' data-bs-target='#categorieaanpassen_$categorie_id'>
                                    $edit_icon
                                 </button>
-                                <button type='button' class='btn btn-outline-danger'>
+                                <button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#categorieverwijder_$categorie_id'>
                                    $verwijder_icon
                                 </button>
                             </div>
@@ -123,10 +123,90 @@ function checkbox_constructor($categorie, $product)
 
 }
 
+function modal_verwijder_categorie($categorie)
+{
+    $begin_modal= "
+                        <div class='modal-dialog'>
+                            <div class='modal-content'>
+                                <div class='modal-header'>
+                                    <h5 class='modal-title'>Categorie Verwijderen</h5>
+                                    <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='sluiten'></button>
+                                </div>
+                             <div class='modal-body'>";
+   $einde_modal = "          </div>
+                             <div class='modal-footer'>
+                                <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Annuleren</button>
+                                <button type='button' class='btn btn-danger'>verwijderen</button>
+                            </div>
+                         </div>
+                      </div>
+                 </div>";
+
+   $construct = "";
+   foreach($categorie as $key => $item)
+   {
+       $producten = "";
+       foreach ($item['product'] as $value)
+       {
+           $naam = $value['naam'];
+           $producten .= "<p class='text-center' class> $naam </p> ";
+       }
+
+
+       $inner_text = $producten != "" ? "de volgende producten zijn gelinkt aan de categorie" : "";
+
+       $text = " <div class='mb-3'> 
+                    <p class='text-center fw-bold'> weet u zeker dat u categorie wilt verwijderen? $inner_text</p><br>
+                    $producten
+                </div>";
 
 
 
+       $title = "<div class='modal fade' tabindex='-1' id='categorieverwijder_$key' >";
 
+
+
+       $construct .= $title.$begin_modal.$text.$einde_modal;
+   }
+     return $construct;
+}
+
+
+function modal_edit_categorie($categorie)
+{
+    $begin_modal= "
+                        <div class='modal-dialog'>
+                            <div class='modal-content'>
+                                <div class='modal-header'>
+                                    <h5 class='modal-title'>Categorie Aanpassen</h5>
+                                    <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='sluiten'></button>
+                                </div>
+                             <div class='modal-body'>";
+    $einde_modal = "          </div>
+                             <div class='modal-footer'>
+                                <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Annuleren</button>
+                                <button type='button' class='btn btn-primary'>OK</button>
+                            </div>
+                         </div>
+                      </div>
+                 </div>";
+    $construct = "";
+    foreach($categorie as $key => $item) {
+        $categorie_naam = $item['naam'];
+        $categorie_beschrijving = $item['beschrijving'];
+        $title = "<div class='modal fade' tabindex='-1' id='categorieaanpassen_$key' >";
+        $body = "<div class='mb-3'>
+                    <label for='categorie_naam' class='form-label'>Categorie Naam</label>
+                    <input type='text' class='form-control' id='categorie_naam' name='categorie_naam'  value='$categorie_naam'>
+                    <label for='categorie_beschrijving' class='form-label'>Categorie beschrijving</label>
+                    <textarea class='form-control' id='categorie_beschrijving' aria-label='With textarea' name='categorie_beschrijving' style='resize: none; height: 10vh' > $categorie_beschrijving </textarea>
+                 </div> ";
+
+        $construct .= $title.$begin_modal.$body.$einde_modal;
+    }
+
+    return $construct;
+}
 
 
 

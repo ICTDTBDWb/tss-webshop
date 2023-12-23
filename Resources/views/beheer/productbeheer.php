@@ -113,12 +113,13 @@
           $categorie_id = $categorie['id'];
           $producten_categorie[$categorie_id]['product'] = $database->query("SELECT * FROM producten where naam like ? and id IN (SELECT `product_id` from product_categorieen where categorie_id  = ? ) ORDER BY naam ASC", ["%".$filter."%",$categorie_id] )->get();
           $producten_categorie[$categorie_id]['naam'] = $categorie['naam'];
+          $producten_categorie[$categorie_id]['beschrijving'] = $categorie['beschrijving'];
       }
       //var_dump($producten_categorie);
         //filter prodcut with no categorie
       $producten_categorie['overig']['product'] = $database->query("SELECT * FROM producten WHERE naam like ? and NOT EXISTS ( SELECT * FROM product_categorieen where product_categorieen.product_id = producten.id) ORDER BY naam ASC " , ["%".$filter."%"])->get();
       $producten_categorie['overig']['naam'] = "overig";
-
+      $producten_categorie['overig']['beschrijving'] = "";
 
 
 
@@ -126,7 +127,7 @@
       if (is_array($product) and array_key_exists("0", $product))
       {
           $product[0]["categorie"] = $database->query("SELECT * FROM categorieen where id IN (SELECT `categorie_id` from product_categorieen where product_id = ?)",[$product[0]['id']])->get();
-          $product[0]["afbeelding"] = $database->query("SELECT * FROM media where id = ?",[$product[0]['id']])->get();
+          //$product[0]["afbeelding"] = $database->query("SELECT * FROM media where id = ?",[$product[0]['id']])->get();
           $product_id = array_key_exists("id", $product[0]) ? $product[0]['id'] : "";
           $product_naam = array_key_exists("naam", $product[0]) ? $product[0]['naam'] : "";
           $product_prijs = array_key_exists("prijs", $product[0]) ? $product[0]['prijs'] : "";
@@ -327,8 +328,8 @@
                     <option>pic2</option>
                     <option>pic3</option>
                 </select><br>
-                <a class="btn btn-outline-secondary" href= /beheer/mediacategoriebeheer" style="width: 100%" role="button">Media beheer</a>
-               <!-- <button type="button" class="btn btn-outline-secondary" style="width: 100%"  data-bs-toggle="modal" data-bs-target="#exampleModal">Media beheer</button><br><br> -->
+                <!--<a class="btn btn-outline-secondary" href= /beheer/mediacategoriebeheer" style="width: 100%" role="button">Media beheer</a> -->
+                <button type="button" class="btn btn-outline-secondary" style="width: 100%"  data-bs-toggle="modal" data-bs-target="#categoriebeheer">Media beheer</button><br><br>
                 <label for="categorie" class="form-label">Categorieen </label>
                 <card class="card" style="max-height: 30vh; min-height: 30vh; overflow-y: auto">
                    <?php echo checkbox_constructor($categorieen, $product) ?>
@@ -354,6 +355,9 @@
 
         </div>
 
+
+        <?php echo modal_verwijder_categorie($producten_categorie);
+              echo modal_edit_categorie($producten_categorie); ?>
     </form>
 </main>
 
@@ -404,6 +408,7 @@
         <div class="modal-header">
             <h5 class="modal-title">Categoriebeheer</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="OK"></button>
         </div>
         <div class="modal-body">
             <form>
