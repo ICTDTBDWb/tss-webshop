@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Sectie voor het toevoegen van giftboxes -->
     <div class="col-md-6">
         <h2>Giftbox</h2>
-        <form method="post" onsubmit="setTimeout(function () { window.location.reload(); }, 10)">
+        <form action="" method="post">
             <!-- Selectie van giftbox bedrag -->
             <div class="mb-3">
                 <label for="giftboxbedrag" class="form-label">Giftbox bedrag</label>
