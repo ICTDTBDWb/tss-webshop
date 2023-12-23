@@ -125,7 +125,7 @@ function checkbox_constructor($categorie, $product)
 
 function modal_verwijder_categorie($categorie)
 {
-    $begin_modal= "
+    $begin_modal= "    <form method='POST' ACTION=''>
                         <div class='modal-dialog'>
                             <div class='modal-content'>
                                 <div class='modal-header'>
@@ -136,10 +136,11 @@ function modal_verwijder_categorie($categorie)
    $einde_modal = "          </div>
                              <div class='modal-footer'>
                                 <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Annuleren</button>
-                                <button type='button' class='btn btn-danger'>verwijderen</button>
+                                <button type='submit' class='btn btn-danger' name='opslaan' value='categorie_verwijderen' >verwijderen</button>
                             </div>
                          </div>
                       </div>
+                      </form>
                  </div>";
 
    $construct = "";
@@ -155,7 +156,8 @@ function modal_verwijder_categorie($categorie)
 
        $inner_text = $producten != "" ? "de volgende producten zijn gelinkt aan de categorie" : "";
 
-       $text = " <div class='mb-3'> 
+       $text = " <div class='mb-3'>
+                    <input type='hidden' value='$key' name='categorie_id'> 
                     <p class='text-center fw-bold'> weet u zeker dat u categorie wilt verwijderen? $inner_text</p><br>
                     $producten
                 </div>";
@@ -174,7 +176,7 @@ function modal_verwijder_categorie($categorie)
 
 function modal_edit_categorie($categorie)
 {
-    $begin_modal= "
+    $begin_modal= "    <form method='POST' ACTION=''>
                         <div class='modal-dialog'>
                             <div class='modal-content'>
                                 <div class='modal-header'>
@@ -185,10 +187,11 @@ function modal_edit_categorie($categorie)
     $einde_modal = "          </div>
                              <div class='modal-footer'>
                                 <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Annuleren</button>
-                                <button type='button' class='btn btn-primary'>OK</button>
+                                <button type='submit' class='btn btn-primary' name='opslaan' value='wijzig_categorie'>OK</button>
                             </div>
                          </div>
                       </div>
+                      </form>
                  </div>";
     $construct = "";
     foreach($categorie as $key => $item) {
@@ -196,10 +199,11 @@ function modal_edit_categorie($categorie)
         $categorie_beschrijving = $item['beschrijving'];
         $title = "<div class='modal fade' tabindex='-1' id='categorieaanpassen_$key' >";
         $body = "<div class='mb-3'>
+                    <input type='hidden' value='$key' name='categorie_id'>
                     <label for='categorie_naam' class='form-label'>Categorie Naam</label>
                     <input type='text' class='form-control' id='categorie_naam' name='categorie_naam'  value='$categorie_naam'>
                     <label for='categorie_beschrijving' class='form-label'>Categorie beschrijving</label>
-                    <textarea class='form-control' id='categorie_beschrijving' aria-label='With textarea' name='categorie_beschrijving' style='resize: none; height: 10vh' > $categorie_beschrijving </textarea>
+                    <textarea class='form-control' id='categorie_beschrijving' aria-label='With textarea' name='categorie_beschrijving' style='resize: none; height: 10vh' >$categorie_beschrijving</textarea>
                  </div> ";
 
         $construct .= $title.$begin_modal.$body.$einde_modal;
