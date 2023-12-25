@@ -101,6 +101,12 @@
 
                     break;
 
+                case "categorie_toevoegen":
+
+                    $database->query("INSERT INTO categorieen (`naam`, `beschrijving`) VALUES(?,?)",[$categorie_naam, $categorie_beschrijving]);
+
+                break;
+
             }
            /*
             if ($opslaan == "opslaan")
@@ -165,11 +171,11 @@
              $product_select = filter_input(INPUT_GET, 'Product', FILTER_SANITIZE_SPECIAL_CHARS);
              $product_select = preg_split("/ /", $product_select);
              //$_POST['id']  = $product_select[0];
-             $product = $database->query("SELECT * FROM producten where id = ?",[$product_select[0]])->get();
+
 
          }
      }
-
+      $product = $database->query("SELECT * FROM producten where id = ?",[$product_select[0]])->get();
 
      // get categorien
      $categorieen = $database->query("SELECT * FROM categorieen ORDER BY id ASC")->get();
@@ -403,7 +409,7 @@
                 <card class="card" style="max-height: 30vh; min-height: 30vh; overflow-y: auto">
                    <?php echo checkbox_constructor($categorieen, $product) ?>
                 </card><br>
-                <button type="button" class="btn btn-outline-secondary"  style="width: 100%">Categorie beheer</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#categorietoevoegen" style="width: 100%">Categorie toevoegen</button>
             </div>
             <div class="col">
                 <label for="beschrijving" class="form-label">Beschrijving</label>
@@ -427,6 +433,32 @@
 
         <?php echo modal_verwijder_categorie($producten_categorie);
               echo modal_edit_categorie($producten_categorie); ?>
+
+
+        <div class="modal fade" tabindex="-1" id="categorietoevoegen" >
+            <form method='POST' ACTION=''>
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Categorie Toevoegen</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+                        </div>
+                        <div class="modal-body">
+                            <label for='categorie_naam' class='form-label'>Categorie Naam</label>
+                            <input type='text' class='form-control' id='categorie_naam' name='categorie_naam'  value=''>
+                            <label for='categorie_beschrijving' class='form-label'>Categorie beschrijving</label>
+                            <textarea class='form-control' id='categorie_beschrijving' aria-label='With textarea' name='categorie_beschrijving' style='resize: none; height: 10vh' ></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Annuleren</button>
+                            <button type='submit' class='btn btn-primary' name='opslaan' value='categorie_toevoegen'>Opslaan</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
     </form>
 </main>
 
