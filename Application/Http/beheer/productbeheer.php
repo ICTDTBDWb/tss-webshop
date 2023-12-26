@@ -212,5 +212,16 @@ function modal_edit_categorie($categorie)
     return $construct;
 }
 
+function make_option_list($options)
+{
+    $construct = "";
+    foreach($options as $item)
+    {
+        $merk = $item["merk"];
+        $construct .= "<option value='$merk'>";
+    }
+   return $construct;
+}
+
 
 

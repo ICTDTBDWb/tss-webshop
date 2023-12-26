@@ -50,9 +50,9 @@
             {
                 case "opslaan":
                     if ($product_id == "")
-                        $product_id = $database->query("INSERT INTO producten (`naam`, `prijs`, `aantal`) VALUES (?,?,?) ", [$product_naam, $product_prijs, $product_aantal])->insert();
+                        $product_id = $database->query("INSERT INTO producten (`naam`,`beschrijving`, `merk`, `prijs`, `aantal`) VALUES (?,?,?,?,?) ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal])->insert();
                     else
-                        $database->query("UPDATE producten SET naam = ? , prijs = ? , aantal = ? WHERE id = ? ", [$product_naam, $product_prijs, $product_aantal, $product_id]);
+                        $database->query("UPDATE producten SET naam = ?, beschrijving = ?, merk = ? , prijs = ? , aantal = ? WHERE id = ? ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal, $product_id]);
 
 
                     $database->query("DELETE FROM product_categorieen where product_id = ?",[$product_id]);
@@ -71,7 +71,7 @@
 
 
                 case "toevoegen":
-                    $product_id = $database->query("INSERT INTO producten (`naam`, `prijs`, `aantal`) VALUES (?,?,?) ", [$product_naam, $product_prijs, $product_aantal])->insert();
+                    $product_id = $database->query("INSERT INTO producten (`naam`,`beschrijving`, `merk`, `prijs`, `aantal`) VALUES (?,?,?,?,?) ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal])->insert();
                     foreach ($product_categorie as $key => $value) {
                         $database->query("INSERT INTO product_categorieen (`product_id`, `categorie_id` ) VALUES (?,?) ", [$product_id, $key])->get();
 
@@ -108,51 +108,6 @@
                 break;
 
             }
-           /*
-            if ($opslaan == "opslaan")
-            {
-                if ($product_id == "")
-                   $product_id = $database->query("INSERT INTO producten (`naam`, `prijs`, `aantal`) VALUES (?,?,?) ", [$product_naam, $product_prijs, $product_aantal])->insert();
-                else
-                    $database->query("UPDATE producten SET naam = ? , prijs = ? , aantal = ? WHERE id = ? ", [$product_naam, $product_prijs, $product_aantal, $product_id]);
-
-
-                $database->query("DELETE FROM product_categorieen where product_id = ?",[$product_id]);
-                if(count($product_categorie)> 0) {
-                   // $query = "INSERT INTO product_categorieen ('product_id', 'categorie_id' ) VALUES "
-                   // $values ="[";
-
-                    foreach ($product_categorie as $key => $value) {
-                       $database->query("INSERT INTO product_categorieen (`product_id`, `categorie_id` ) VALUES (?,?) ", [$product_id, $key])->get();
-
-                    }
-
-                }
-
-            }
-            elseif ($opslaan == "toevoegen")
-            {
-
-                $product_id = $database->query("INSERT INTO producten (`naam`, `prijs`, `aantal`) VALUES (?,?,?) ", [$product_naam, $product_prijs, $product_aantal])->insert();
-                foreach ($product_categorie as $key => $value) {
-                    $database->query("INSERT INTO product_categorieen (`product_id`, `categorie_id` ) VALUES (?,?) ", [$product_id, $key])->get();
-
-                }
-
-            }
-            elseif ($opslaan == "verwijderen")
-            {
-                if ($product_id != "")
-                {
-                    $database->query("DELETE FROM product_categorieen where product_id = ?",[$product_id]);
-                    $database->query("DELETE FROM producten where id = ?",[$product_id]);
-
-                }
-
-
-
-            }
-           */
         }
     }
 
@@ -202,13 +157,15 @@
       if (is_array($product) and array_key_exists("0", $product))
       {
           $product[0]["categorie"] = $database->query("SELECT * FROM categorieen where id IN (SELECT `categorie_id` from product_categorieen where product_id = ?)",[$product[0]['id']])->get();
-          //$product[0]["afbeelding"] = $database->query("SELECT * FROM media where id = ?",[$product[0]['id']])->get();
+          $product[0]["media"] = $database->query("SELECT * FROM media where id = ?",[$product[0]['id']])->get();
+          $product[0]["merken"] = $database->query("SELECT DISTINCT merk FROM producten")->get();
           $product_id = array_key_exists("id", $product[0]) ? $product[0]['id'] : "";
           $product_naam = array_key_exists("naam", $product[0])  ? $product[0]['naam'] : "";
           $product_prijs = array_key_exists("prijs", $product[0])  ? $product[0]['prijs'] : "";
           $product_aantal = array_key_exists("aantal", $product[0]) ? $product[0]['aantal'] : "";
           $product_beschrijving = array_key_exists("beschrijving", $product[0]) ? $product[0]['beschrijving'] : "";
           $product_merk = array_key_exists("merk", $product[0]) ? $product[0]['merk']  : "";
+          var_dump($product[0]["merken"][0]);
 
       }
 
@@ -373,10 +330,11 @@
                     <div class="row">
                         <div class="col" style='min-width: 50%'>
                             <label for="product_merk" class="form-label" >Product Merk:</label>
-                            <input type="text" class="form-control" id="product_merk" name="product_merk"  list="merknamen" >
+                            <input type="text" class="form-control" id="product_merk" name="product_merk"  value='<?php echo $product_merk ?>'  list="merknamen" >
                             <datalist id="merknamen">
-                                <option value="Boston">
-                                <option value="Cambridge">
+                                <?php
+                                echo make_option_list($product[0]["merken"]);
+                                ?>
                             </datalist>
                         </div>
                         <div class="col" >
