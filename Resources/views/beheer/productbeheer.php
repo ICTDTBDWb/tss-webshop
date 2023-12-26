@@ -44,8 +44,6 @@
             $categorie_beschrijving = array_key_exists("categorie_beschrijving", $_POST) ? $_POST['categorie_beschrijving'] : "";
             $categorie_naam = array_key_exists("categorie_naam",  $_POST) ? $_POST['categorie_naam'] : "";
 
-            var_dump($_POST);
-
             switch ($opslaan)
             {
                 case "opslaan":
@@ -165,8 +163,6 @@
           $product_aantal = array_key_exists("aantal", $product[0]) ? $product[0]['aantal'] : "";
           $product_beschrijving = array_key_exists("beschrijving", $product[0]) ? $product[0]['beschrijving'] : "";
           $product_merk = array_key_exists("merk", $product[0]) ? $product[0]['merk']  : "";
-          var_dump($product[0]["merken"][0]);
-
       }
 
       //close database;
