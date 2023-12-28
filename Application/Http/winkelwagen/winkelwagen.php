@@ -1,11 +1,9 @@
 <?php
 include("functies.php");
 $databaseManager = new Database();
-
 // hard coded true for testing
-$path = "http://localhost/tss/public/winkelwagen";
-$path_product = "http://localhost/tss/public/product";
-//$path_media ="http://localhost/tss/public/winkelwagen";
+$path = "/assets/afbeeldingen/";
+$path_product = "/product";
 
 
 $placeholder = "/gitaar1.jpg";
@@ -14,15 +12,9 @@ $placeholder = "/gitaar1.jpg";
 $totaal_prijs = 0;
 
 //hardcode logged in
-$user_logged_in = $_SESSION['user']['logged_in']??true;
-//$_SESSION = [];
-
-//$_SESSION = [];
+$user_logged_in = $_SESSION['auth']['logged_in']??false;
 
 updateSessionCartProducts($databaseManager);
-
-
-
 
 // Checkt als verwijderknop is gesubmit en verwijderd bijbehorende product
 if(isset($_POST['remove_product'])){

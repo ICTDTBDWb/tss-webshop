@@ -7,7 +7,9 @@ function bestellingOpslaan(int $klant_id, int $verzendmethode_id, $totaal, strin
 
     $dbm = new PDO("mysql:host=host.docker.internal;port=3308;dbname=tss;charset=utf8mb4", "root", "root");
 
-//    $klant = $dbm->exec("SELECT");
+    // Valideer voor opslaan
+    $cadeaubonnen = $_SESSION['winkelwagen']['cadeaubonnen']??false;
+
     try{
     // Bestelling toevoegen
         $bestelling_query =
@@ -83,10 +85,45 @@ function bestellingOpslaan(int $klant_id, int $verzendmethode_id, $totaal, strin
             $dbm->exec($bestelregel_query);
 
         }
+        if($cadeaubonnen) {
+            foreach($cadeaubonnen as $cadeaubon) {
+                $bon_id_huidige_bedrag = $dbm->query("SELECT id, bedrag FROM cadeaubonnen WHERE code='". $cadeaubon['code'] . "';")
+                    ->fetchAll(PDO::FETCH_ASSOC)[0];
 
+                // Voeg cadeaubon toe aan bestelling
+                $cadeaubon_query =
+                    "INSERT INTO " .
+                        "bestelling_regels ( " .
+                        "bestelling_id, " .
+                        "product_id, " .
+                        "cadeaubon_id, " .
+                        "aantal, " .
+                        "stukprijs, " .
+                        "totaal ) " .
+                    "VALUES ( " .
+                        $bestelling_id . ", " .
+                        'NULL' . ", " .
+                    $bon_id_huidige_bedrag['id'] . ", " .
+                        '1' . ", " .
+                        $cadeaubon['bedrag'] . ", " .
+                        -$cadeaubon['bedrag'] . ") ";
+                $dbm->exec($cadeaubon_query);
+
+                // Update het overgebleven bedrag van de cadeaubon
+
+                $nieuwe_bedrag = $bon_id_huidige_bedrag['bedrag'] - $cadeaubon['bedrag'];
+
+                $cadeaubon_update_query = "UPDATE cadeaubonnen " .
+                    "SET bedrag =" . $nieuwe_bedrag . " " .
+                    "WHERE code=" . $cadeaubon['code'] . ";";
+
+                $dbm->exec($cadeaubon_update_query);
+            }
+        }
 
         $dbm->commit();
     } catch (Exception $ex) {
+        var_dump($ex);exit;
         $dbm->rollBack();
         return false;
     }
@@ -96,10 +133,7 @@ function bestellingOpslaan(int $klant_id, int $verzendmethode_id, $totaal, strin
     $bestandsnaam = genereerPdf($bestelling_id);
     $klant = $dbm->query("SELECT voornaam, email FROM klanten WHERE id=$klant_id")->fetchAll(PDO::FETCH_ASSOC)[0];
 
-
-
     // TODO: Test en zet in functie
-
     $mail_email = $klant['email'];
     $mail_subject = "Bestelling: ". $bestelling_id;
     $mail_message =
@@ -130,8 +164,8 @@ function bestellingOpslaan(int $klant_id, int $verzendmethode_id, $totaal, strin
     );
 
     // Delete file after mailing
-    unlink($bestandsnaam);
-    
+//    unlink($bestandsnaam);
+
     $_SESSION['winkelwagen']['producten'] = [];
 
         //redirect login page
@@ -358,5 +392,93 @@ function genereerPdf(int $bestelling_id) {
 
     $pdf->Output("F",$bestandsnaam);
 
+    $dbm->close();
     return $bestandsnaam;
+}
+function validateCartCadeaubonnen($dbm)
+{
+    // Als er geen cadeaubonnen in de winkelwagen zitten, zijn ze automatisch valide
+    if(
+        !isset($_SESSION['winkelwagen']['cadeaubonnen']) || count($_SESSION['winkelwagen']['cadeaubonnen']) == 0
+    ){
+        return true;
+    }
+//    $_SESSION['winkelwagen']['cadeaubonnen']  = [];
+
+
+//    $filter_cart_cadeaubonnen = filter_var_array($_SESSION['winkelwagen']['cadeaubonnen'], [
+//        "code" => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
+//        "pin" => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
+//        "bedrag" => FILTER_SANITIZE_NUMBER_FLOAT,
+//    ]);
+    $filter_cart_cadeaubonnen = [];
+    foreach ($_SESSION['winkelwagen']['cadeaubonnen'] as $cadeaubon) {
+        $filtered_cadeaubon = [
+            "code" => filter_var($cadeaubon['code'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+            "pin" => filter_var($cadeaubon['pin'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+            "bedrag" => filter_var($cadeaubon['bedrag'], FILTER_VALIDATE_FLOAT),
+        ];
+
+        if($filtered_cadeaubon['code'] === false || $filtered_cadeaubon['pin'] === false || $filtered_cadeaubon['bedrag'] === false) {
+            return false;
+        }
+
+        $filter_cart_cadeaubonnen[] = $filtered_cadeaubon;
+    }
+
+
+
+    $prepared = "";
+    $count = count($filter_cart_cadeaubonnen);
+
+
+    for ($i = 0;  $i < $count; $i++) {
+        $prepared .= "?, ";
+    }
+
+    $prepared = trim($prepared, ", ");
+
+    $query =
+        "SELECT code, pin, bedrag " .
+        "FROM cadeaubonnen " .
+        "WHERE code IN (" . $prepared . ");";
+
+    $codes = array_column($filter_cart_cadeaubonnen, "code");
+    $database_cadeaubonnen = $dbm->query($query, $codes)->get();
+
+    // Als de hoeveelheid cadeaubnnen niet hetzelfde is tussendatabase en sessie it er een fout tussen.
+    if (count($database_cadeaubonnen) != count($filter_cart_cadeaubonnen)) {
+        return false;
+    }
+
+    foreach ($database_cadeaubonnen as $database_cadeaubon) {
+        foreach ($filter_cart_cadeaubonnen as $filter_cart_cadeaubon) {
+            if ($filter_cart_cadeaubon['code'] == $database_cadeaubon['code']) {
+
+                // Als de pin van een code niet matched,  zijn cadeaubonnen invalid.
+                if ($filter_cart_cadeaubon['pin'] != $filter_cart_cadeaubon['pin']) {
+                    return false;
+                }
+
+                // Als het bedrag van de cadeaubon in de winkelwagen hoger is dan die in de database is de cadeaubon invalid
+                if ($filter_cart_cadeaubon['bedrag'] > $database_cadeaubon['bedrag']) {
+                    return false;
+                }
+            }
+
+        }
+    }
+
+    // Coupons in sessie zijn valid
+    return true;
+}
+
+function getCouponBedrag(){
+    $return = 0;
+    if (isset($_SESSION['winkelwagen']['cadeaubonnen']) && count($_SESSION['winkelwagen']['cadeaubonnen']) > 0) {
+        foreach ($_SESSION['winkelwagen']['cadeaubonnen'] as $cadeaubonnen) {
+            $return += $cadeaubonnen['bedrag'];
+        }
+    }
+    return $return;
 }

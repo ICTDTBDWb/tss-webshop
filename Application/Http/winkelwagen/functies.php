@@ -65,7 +65,7 @@ function updateSessionCartProducts(Database $databaseManager) {
 
 }
 
-function getTotalFromCurrentCart(){
+function getTotalFromCurrentCart() {
     $totaal = 0;
     if( isset($_SESSION['winkelwagen']['producten']) &&
         count($_SESSION['winkelwagen']['producten'])
@@ -74,5 +74,9 @@ function getTotalFromCurrentCart(){
                 $totaal += $_SESSION["winkelwagen"]["producten"][$key]["prijs"]*$_SESSION["winkelwagen"]["producten"][$key]["hoeveelheid_in_winkelwagen"];
         }
     }
+
+
+
     return $totaal;
 }
+
