@@ -1,9 +1,3 @@
-<?php
-    global $auth;
-
-    $auth->protectPage();
-?>
-
 <!--Banner-->
 <section class="row gx-0 mb-5">
     <a href="/" class="col-8 pe-2 bg-image">

@@ -50,6 +50,7 @@ class Database
     public function query(string $query, array $params = []): self
     {
         $this->statement = $this->connection->prepare($query);
+
         $this->statement->execute($params);
 
         return $this;
@@ -75,6 +76,11 @@ class Database
         return $this->statement->fetch();
     }
 
+    public function insert(): mixed
+    {
+        return  $this->connection->lastInsertId();
+    }
+
     /**
      * Close the PDO connection.
      */
@@ -88,6 +94,12 @@ class Database
      */
     public function __destruct()
     {
-        $this->connection = null;
+        try {
+            // Close the PDO connection
+            $this->connection = null;
+        } catch (\PDOException $e) {
+            // Log or handle the exception appropriately
+            error_log('PDOException in DatabaseManager __destruct: ' . $e->getMessage());
+        }
     }
 }

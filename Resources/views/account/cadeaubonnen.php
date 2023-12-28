@@ -4,7 +4,7 @@ include basePath("Application/Http/account/services.php");
 
 // Bepalen van de huidige pagina voor form actie
 $current_page = basename($_SERVER['PHP_SELF']);
-
+//print $current_page;
 // Initialiseren van variabelen voor cadeaukaart verificatie
 $verificatieResultaat = null;
 $verificatieMelding = '';
@@ -39,12 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stukprijs = $_POST['giftboxbedrag'];
         $aantal = $_POST['aantal_giftboxes'];
         $product_id = $product_id_map[$stukprijs];
+        voegGiftboxToeAanBestelling($product_id,$aantal);
 
-        // Aannemen dat bestelling_id elders bepaald wordt
-        $bestelling_id = 1; // Voorbeeld waarde
-
-        // Toevoegen van de giftbox aan de bestelling
-        voegGiftboxToeAanBestelling($bestelling_id, $product_id, $aantal, $stukprijs);
     }
 }
 ?>
@@ -56,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Sectie voor het verifiëren van cadeaubonnen -->
     <div class="col-md-6">
         <h2>Cadeaubonnen</h2>
-        <form action="<?= $current_page ?>" method="post">
-            <!-- Veld voor het invoeren van de cadeaukaartcode -->
+        <form action="/account/cadeaubonnen" method="post">
+        <!-- Veld voor het invoeren van de cadeaukaartcode -->
             <div class="mb-3">
                 <label for="cadeaukaartcode" class="form-label">Cadeaukaartcode</label>
                 <input type="text" class="form-control" id="cadeaukaartcode" name="cadeaukaartcode" required>
@@ -81,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Sectie voor het toevoegen van giftboxes -->
     <div class="col-md-6">
         <h2>Giftbox</h2>
-        <form action="<?= $current_page ?>" method="post">
+        <form action="" method="post">
             <!-- Selectie van giftbox bedrag -->
             <div class="mb-3">
                 <label for="giftboxbedrag" class="form-label">Giftbox bedrag</label>
@@ -104,6 +100,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <!-- Beschrijving van de giftbox -->
         <p>De TSS Giftbox, een cadeaukaart die de ontvanger zelf kan inwisselen bij TSS voor een tegoed in de webwinkel, wordt sfeervol verpakt en kosteloos thuisbezorgd.</p>
         <!-- Afbeelding van een cadeaubon -->
-        <img src="../../../public/assets/afbeeldingen/cadeaubon.jpg" alt="Cadeaubon Afbeelding" style="max-width: 100%; height: auto;">
+        <img src="/assets/afbeeldingen/cadeaubon.jpg" alt="Cadeaubon Afbeelding" style="max-width: 100%; height: auto;">
     </div>
 </div>

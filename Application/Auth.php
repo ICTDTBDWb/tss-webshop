@@ -1,5 +1,7 @@
 <?php
 
+use JetBrains\PhpStorm\NoReturn;
+
 class Auth
 {
     private static ?self $instance = null;
@@ -62,7 +64,7 @@ class Auth
     {
         $table = $is_admin ? 'beheerders' : 'klanten';
         $result = $this->db->query(
-            "SELECT email, password FROM $table WHERE email = ?",
+            "SELECT id, email, password FROM $table WHERE email = ?",
             [$credentials[0]]
         )->first();
 
@@ -81,6 +83,23 @@ class Auth
         $this->db->close();
 
         return true;
+    }
+
+    /**
+     * Log out the current user and clear its details from the session.
+     *
+     * @return void
+     */
+    #[NoReturn] public function logout(): void
+    {
+        Session::set('auth', [
+            'logged_in' => false
+        ]);
+
+        session_regenerate_id();
+
+        header("Location: /");
+        exit;
     }
 
     /**

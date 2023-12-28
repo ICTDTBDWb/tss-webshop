@@ -1,13 +1,13 @@
 <?php
 // Plaats van de benodigde PHP-bestanden en sessiebeheer
 include basePath("Application/Http/account/services.php");
-
+$klantId=Session::get('auth')['user_id'];
 // Haal de bestelling ID op uit de querystring (indien aanwezig)
 $bestellingId = isset($_GET['id']) ? $_GET['id'] : null;
 $bestellingDetails = null;
 if ($bestellingId) {
     // Haal de bestellingdetails op aan de hand van de bestelling ID
-    $bestellingDetails = haalBestellingDetailsOp($bestellingId);
+    $bestellingDetails = haalBestellingDetailsOp($klantId,$bestellingId);
 }
 ?>
 <!-- Plaats van het navigatiemenu voor de accountsectie -->
@@ -38,8 +38,8 @@ if ($bestellingId) {
                 <td><?php echo htmlspecialchars($detail['productnaam']); ?></td>
                 <td>
                     <?php if (!empty($detail['mediapad'])): ?>
-                        <!-- Weergave van productafbeelding als deze beschikbaar is -->
-                        <img src="<?php echo htmlspecialchars($detail['mediapad']); ?>" alt="Product Afbeelding" style="max-width: 100px; height: auto;">
+                        <!-- Weergave van productafbeelding met de juiste extensie -->
+                        <img src="<?php echo htmlspecialchars($detail['mediapad'] . "." . $detail['mediaextensie']); ?>" alt="Product Afbeelding" style="max-width: 100px; height: auto;">
                     <?php else: ?>
                         <!-- Als er geen afbeelding beschikbaar is -->
                         Geen afbeelding

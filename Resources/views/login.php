@@ -16,15 +16,13 @@
         if ($auth->attempt([$email, $password])){
             header("Location: /"); // If the credentials match we redirect back to the homepage.
         }
-
-        // TODO: Handle errors.
     }
 ?>
 
 <div class="d-flex flex-grow-1 justify-content-center">
     <form
             id="user-loginForm" method="POST" action="/login"
-            class="d-flex flex-column gap-4"
+            class="w-75 w-lg-50 d-flex flex-column gap-4"
     >
         <div>
             <label for="user-emailInput">E-mail</label>
