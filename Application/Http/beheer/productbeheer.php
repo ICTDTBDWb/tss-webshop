@@ -10,7 +10,10 @@ $edit_icon  = "<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fi
                         <path d='M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z'/>
                     </svg>";
 
-
+global $_validExtensions;
+$_validExtensions['image'] = ["jpg", "bmp", "gif", "png"];
+$_validExtensions['video'] = ["mp4"];
+$_validExtensions['iframe'] = ["youtube"];
 
 
 
@@ -83,7 +86,7 @@ function checkbox_constructor($categorie, $product)
 
 
         $checked = "";
-        if (array_key_exists("0", $product))
+        if (array_key_exists("0", $product) and array_key_exists("categorie", $product[0] ))
         {
             foreach ($product[0]['categorie'] as $value)
             {
@@ -99,13 +102,15 @@ function checkbox_constructor($categorie, $product)
         $categorie_id = $item['id'];
         $categorie_naam = $item['naam'];
         $construct.= "
-                        <div class='form-check'>
-                            <input class='form-check-input' type='checkbox' name='checkbox_$categorie_id'  id='checkbox_$categorie_id' $checked>
-                                <label class='form-check-label' for='checkbox_$categorie_id' style='max-width: 60%; min-width:60%'>
+                        <div class='form-check'  style='min-height: 4vh'>
+                          <div class = 'row'>
+                            <div class = 'col'>
+                            <input class='form-check-input' type='checkbox' name='checkbox_$categorie_id' id='checkbox_$categorie_id' $checked >
+                                <label class='form-check-label' for='checkbox_$categorie_id' >
                                 $categorie_naam
                             </label>
-                           
-                         <div class='btn-group' role='group' aria-label='area_$categorie_id' style='height: 4vh; width:2vh' >
+                        </div>
+                         <div class='btn-group col ' role='group' aria-label='area_$categorie_id' style='height: 4vh; width:2vh; align-items: start'  >
                                 <button type='button' class='btn btn-outline-primary '  data-bs-toggle='modal' data-bs-target='#categorieaanpassen_$categorie_id'>
                                    $edit_icon
                                 </button>
@@ -113,6 +118,7 @@ function checkbox_constructor($categorie, $product)
                                    $verwijder_icon
                                 </button>
                             </div>
+                           </div>
                       </div>";
 
 
@@ -125,7 +131,13 @@ function checkbox_constructor($categorie, $product)
 
 function modal_verwijder_categorie($categorie)
 {
-    $begin_modal= "    <form method='POST' ACTION=''>
+
+
+   $construct = "";
+   foreach($categorie as $key => $item)
+   {
+       $form = "categorie_form_verwijderen_".$key;
+       $begin_modal= "   <form method='POST' action='' id='$form'>  
                         <div class='modal-dialog'>
                             <div class='modal-content'>
                                 <div class='modal-header'>
@@ -133,19 +145,18 @@ function modal_verwijder_categorie($categorie)
                                     <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='sluiten'></button>
                                 </div>
                              <div class='modal-body'>";
-   $einde_modal = "          </div>
+       $einde_modal = "          </div>
                              <div class='modal-footer'>
                                 <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Annuleren</button>
-                                <button type='submit' class='btn btn-danger' name='opslaan' value='categorie_verwijderen' >verwijderen</button>
+                                <button type='submit' class='btn btn-danger' name='opslaan' value='categorie_verwijderen' onclick='insert_input(\"$form\")' >verwijderen</button>
                             </div>
                          </div>
                       </div>
-                      </form>
+                     </form>
                  </div>";
 
-   $construct = "";
-   foreach($categorie as $key => $item)
-   {
+
+
        $producten = "";
        foreach ($item['product'] as $value)
        {
@@ -153,13 +164,14 @@ function modal_verwijder_categorie($categorie)
            $producten .= "<p class='text-center' class> $naam </p> ";
        }
 
-
+       $categorie_naam = $item["naam"];
        $inner_text = $producten != "" ? "de volgende producten zijn gelinkt aan de categorie" : "";
 
        $text = " <div class='mb-3'>
                     <input type='hidden' value='$key' name='categorie_id'> 
-                    <p class='text-center fw-bold'> weet u zeker dat u categorie wilt verwijderen? $inner_text</p><br>
+                    <p class='text-center fw-bold'> weet u zeker dat u categorie $categorie_naam wilt verwijderen? $inner_text</p><br>
                     $producten
+                    <h6 style='color: red' class='text-center'>LET OP, wijzigingen aan product worden niet opgeslagen </h6>
                 </div>";
 
 
@@ -176,7 +188,12 @@ function modal_verwijder_categorie($categorie)
 
 function modal_edit_categorie($categorie)
 {
-    $begin_modal= "    <form method='POST' ACTION=''>
+
+    $construct = "";
+    foreach($categorie as $key => $item) {
+
+        $form = "categorie_form_wijzig_".$key;
+        $begin_modal= "<form method='POST' action='' id='$form'>
                         <div class='modal-dialog'>
                             <div class='modal-content'>
                                 <div class='modal-header'>
@@ -184,26 +201,28 @@ function modal_edit_categorie($categorie)
                                     <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='sluiten'></button>
                                 </div>
                              <div class='modal-body'>";
-    $einde_modal = "          </div>
+        $einde_modal = "          </div>
                              <div class='modal-footer'>
                                 <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Annuleren</button>
-                                <button type='submit' class='btn btn-primary' name='opslaan' value='wijzig_categorie'>OK</button>
+                                <button type='submit' class='btn btn-primary' name='opslaan' value='wijzig_categorie' onclick='insert_input(\"$form\")' >opslaan</button>
                             </div>
                          </div>
                       </div>
-                      </form>
+                     </form>
                  </div>";
-    $construct = "";
-    foreach($categorie as $key => $item) {
+
+
+
         $categorie_naam = $item['naam'];
         $categorie_beschrijving = $item['beschrijving'];
         $title = "<div class='modal fade' tabindex='-1' id='categorieaanpassen_$key' >";
         $body = "<div class='mb-3'>
                     <input type='hidden' value='$key' name='categorie_id'>
                     <label for='categorie_naam' class='form-label'>Categorie Naam</label>
-                    <input type='text' class='form-control' id='categorie_naam' name='categorie_naam'  value='$categorie_naam'>
+                    <input type='text' class='form-control' name='categorie_naam'  value='$categorie_naam'>
                     <label for='categorie_beschrijving' class='form-label'>Categorie beschrijving</label>
                     <textarea class='form-control' id='categorie_beschrijving' aria-label='With textarea' name='categorie_beschrijving' style='resize: none; height: 10vh' >$categorie_beschrijving</textarea>
+                    <h6 style='color: red' class='text-center'>LET OP, wijzigingen aan product worden niet opgeslagen </h6>
                  </div> ";
 
         $construct .= $title.$begin_modal.$body.$einde_modal;
@@ -221,6 +240,67 @@ function make_option_list($options)
         $construct .= "<option value='$merk'>";
     }
    return $construct;
+}
+
+
+
+function make_media_carousel($product, $root_path)
+{
+    global $_validExtensions;
+    global $verwijder_icon;
+    global $edit_icon;
+
+    $einde = "</div>";
+    $link = "http://tss.localhost/assets";
+    $active = "active";
+
+     $construct = "";
+    foreach ($product as $key => $item)
+    {
+
+
+        $begin = "<div class='carousel-item $active' style='height: 100%; width: 100%' >";
+        $media = $link.htmlspecialchars($item['pad']);
+        $naam =  $item['naam'];
+        $inner =   "    <div class='row' >
+                            <h5 class='col ' style='color: black; text-align: center'>pic $key</h5>
+                            <div class='btn-group col' role='group' aria-label='area'>
+                                <button type='button' class='btn btn-outline-primary'>
+                                   $edit_icon
+                                </button>
+                                <button type='button' class='btn btn-outline-danger'>
+                                   $verwijder_icon
+                                </button>
+                            </div>
+                        </div>";
+
+
+
+
+        if (in_array($item['extensie'], $_validExtensions['image']))
+        {
+          $source = "<img src='$media' alt='$naam'  class='d-block' >";
+
+        }
+        elseif (in_array($item['extensie'], $_validExtensions['video']))
+        {
+            $source ="";
+        }
+        elseif (in_array($item['extensie'], $_validExtensions['iframe']))
+        {
+            $source ="";
+        }
+        else
+        {
+            $source ="$naam";
+        }
+
+        $active ="";
+        $construct .= $begin.$source.$inner.$einde;
+
+    }
+
+       return $construct;
 }
 
 

@@ -1,7 +1,10 @@
 <?php
     //database
     $database = new Database();
-
+    $rootPath = $_SERVER['DOCUMENT_ROOT'];
+    $media_link = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]/assets";
+    $afbeelding_path = $rootPath."/assets/afbeeldingen/";
+    $product_categorie_post = [];
 
 
     $product_id = "";
@@ -13,15 +16,20 @@
     $categorie_id = "";
     $categorie_beschrijving = "";
     $categorie_naam = "";
-
+    $POST_GEWEEST = false;
 
 
      //get and post
     if (is_array($_POST) && !empty($_POST))
     {
 
+
+        //var_dump($_POST);
+
         if(isset($_POST['opslaan']))
         {
+
+            $POST_GEWEEST = true;
             $opslaan = $_POST['opslaan'];
             $product_id = array_key_exists("product_id", $_POST) ? $_POST['product_id'] : "";
             $product_naam = array_key_exists("product_naam", $_POST) ? $_POST['product_naam'] : "";
@@ -29,12 +37,30 @@
             $product_aantal = array_key_exists("product_aantal", $_POST) && is_numeric($_POST['product_aantal']) ? $_POST['product_aantal'] : 0;
             $product_beschrijving = array_key_exists("product_beschrijving", $_POST) ? $_POST['product_beschrijving'] : "";
             $product_merk = array_key_exists("product_merk", $_POST) ? $_POST['product_merk'] : "";
+            $afbeelding = array_key_exists("picture_upload", $_POST) ? $_POST['picture_upload'] : "";
             $product_categorie = [];
+
+
+
+            $file = array_key_exists("upload_picture",$_FILES) ? $_FILES['upload_picture'] : [];
+            $filename = array_key_exists("name",$file) ? $file['name'] : "";
+            $filetype = array_key_exists("type",$file) ? $file['type']: "";
+            $filesize = array_key_exists("size",$file) ? $file['size']: "";
+            $filetmp_name = array_key_exists("tmp_name",$file) ? $file['tmp_name'] : "";
+            $fileerror = array_key_exists("error",$file) ? $file['error'] : "";
+
+
+
+
+            var_dump($_FILES);
+            //var_dump($_FILES);
+            //var_dump($afbeelding_path);
 
             foreach($_POST as $key => $value) {
                 if (str_contains($key, "checkbox_")) {
                     $key = str_replace("checkbox_", "", $key);
-                    $product_categorie[$key] = $value;
+                    var_dump($value);
+                    $product_categorie_post[$key] = $value;
 
                 }
 
@@ -44,6 +70,7 @@
             $categorie_beschrijving = array_key_exists("categorie_beschrijving", $_POST) ? $_POST['categorie_beschrijving'] : "";
             $categorie_naam = array_key_exists("categorie_naam",  $_POST) ? $_POST['categorie_naam'] : "";
 
+            var_dump($categorie_id);
             switch ($opslaan)
             {
                 case "opslaan":
@@ -54,11 +81,11 @@
 
 
                     $database->query("DELETE FROM product_categorieen where product_id = ?",[$product_id]);
-                    if(count($product_categorie)> 0) {
+                    if(count($product_categorie_post)> 0) {
                         // $query = "INSERT INTO product_categorieen ('product_id', 'categorie_id' ) VALUES "
                         // $values ="[";
 
-                        foreach ($product_categorie as $key => $value) {
+                        foreach ($product_categorie_post as $key => $value) {
                             $database->query("INSERT INTO product_categorieen (`product_id`, `categorie_id` ) VALUES (?,?) ", [$product_id, $key])->get();
 
                         }
@@ -82,6 +109,7 @@
                     {
                         $database->query("DELETE FROM product_categorieen where product_id = ?",[$product_id]);
                         $database->query("DELETE FROM producten where id = ?",[$product_id]);
+                        $POST_GEWEEST = false;
 
                     }
 
@@ -103,6 +131,17 @@
 
                     $database->query("INSERT INTO categorieen (`naam`, `beschrijving`) VALUES(?,?)",[$categorie_naam, $categorie_beschrijving]);
 
+                break;
+
+                case "upload_media" :
+
+                   //  if( isset($_FILES) and $product_id != "")
+                    // {
+                         var_dump($afbeelding_path.$filename);
+                        $gelukt = move_uploaded_file($filetmp_name, $afbeelding_path.$filename);
+
+
+                    // }
                 break;
 
             }
@@ -151,19 +190,91 @@
 
 
 
+       var_dump(is_array($product) and array_key_exists("0", $product));
+      if (is_array($product) and array_key_exists("0", $product)) {
 
-      if (is_array($product) and array_key_exists("0", $product))
-      {
+          $product[0]["media"] = $database->query("SELECT * FROM media where id = ?", [$product[0]['id']])->get();
           $product[0]["categorie"] = $database->query("SELECT * FROM categorieen where id IN (SELECT `categorie_id` from product_categorieen where product_id = ?)",[$product[0]['id']])->get();
-          $product[0]["media"] = $database->query("SELECT * FROM media where id = ?",[$product[0]['id']])->get();
-          $product[0]["merken"] = $database->query("SELECT DISTINCT merk FROM producten")->get();
-          $product_id = array_key_exists("id", $product[0]) ? $product[0]['id'] : "";
-          $product_naam = array_key_exists("naam", $product[0])  ? $product[0]['naam'] : "";
-          $product_prijs = array_key_exists("prijs", $product[0])  ? $product[0]['prijs'] : "";
-          $product_aantal = array_key_exists("aantal", $product[0]) ? $product[0]['aantal'] : "";
-          $product_beschrijving = array_key_exists("beschrijving", $product[0]) ? $product[0]['beschrijving'] : "";
-          $product_merk = array_key_exists("merk", $product[0]) ? $product[0]['merk']  : "";
       }
+          $product[0]["merken"] = $database->query("SELECT DISTINCT merk FROM producten")->get();
+          if( !$POST_GEWEEST ) {
+              $product_id = array_key_exists("id", $product[0]) ? $product[0]['id'] : "";
+              $product_naam = array_key_exists("naam", $product[0]) ? $product[0]['naam'] : "";
+              $product_prijs = array_key_exists("prijs", $product[0]) ? $product[0]['prijs'] : "";
+              $product_aantal = array_key_exists("aantal", $product[0]) ? $product[0]['aantal'] : "";
+              $product_beschrijving = array_key_exists("beschrijving", $product[0]) ? $product[0]['beschrijving'] : "";
+              $product_merk = array_key_exists("merk", $product[0]) ? $product[0]['merk'] : "";
+          }
+          else
+          {
+              $query = "(";
+              $query_items ="(";
+              $gevonden_items = false;
+              var_dump($product_categorie_post);
+              foreach ($product_categorie_post as $key => $item)
+              {
+                  if ($item == "true" or $item == "on"){
+                      $query .= "?,";
+                      $query_items .= "$key".",";
+                      $gevonden_items = true;
+                  }
+              }
+
+              $query = trim($query,',');
+              $query_items = trim($query_items,',');
+              $query .= ")";
+              $query_items .=")";
+              var_dump($query);
+              var_dump($query_items);
+
+              if ($gevonden_items)
+                $product[0]["categorie"] = $database->query("SELECT * FROM categorieen where id IN " . $query_items)->get();
+
+          }
+
+
+
+
+
+
+     // }
+      if ($product_id == "")
+      {
+          $media = $database->query("SELECT * FROM media")->get();
+          $uploaded_files = [];
+          $media_files =[];
+          foreach ($media as &$item)
+          {
+              $media_files[]= substr($item['pad'],strripos($item['pad'],'/') + 1);
+
+          }
+
+          foreach (new DirectoryIterator($afbeelding_path) as $key => $file) {
+              if($file->isDot()) continue;
+              if(! in_array($file->getFilename(),$media_files)) {
+                  $uploaded_files[$key]['naam'] = $file->getFilename();
+                  $uploaded_files[$key]['pad'] = "/afbeeldingen/".$file->getFilename();
+                  $uploaded_files[$key]['extensie'] = $file->getExtension();
+
+              }
+
+          }
+
+
+          $product[0]["media"] = $uploaded_files;
+
+
+
+
+
+
+
+      }
+
+
+
+
+
 
       //close database;
       $database->close();
@@ -222,17 +333,14 @@
 
 
 
+    .d-block{
+        width: 100%;
+        height: 80%;
 
-    .button
-    {
-        font-size: 16px;
-        text-align: center;
-        white-space: normal;
-        width:95%;
-        margin-top: 1%;
-        margin-bottom: 1%;
-        border-radius: 15px;
-        align-content: center;
+
+    }
+
+
     }
     .button:hover
     {
@@ -248,62 +356,102 @@
         //document.getElementById("categoriebeheer").show()
         return  "Are you sure you want to leave this page?"; //<-- this prevents the dialog confirm box
     }
+
+    function afbeelding()
+    {
+        document.getElementById('selectimage').className = "btn btn-outline-secondary active"
+        document.getElementById('selecturl').className = "btn btn-outline-secondary "
+        //var mymodal = $('#upload_picture')
+        //var selectimage = mymodal.getElementById('selectimage')
+        //selectimage.class = "btn btn-outline-secondary"
+
+        document.getElementById('formFile').type = "file"
+        document.getElementById('formurl').type = "hidden"
+        document.getElementById("labelurl").style.display = 'none';
+        document.getElementById("labelfile").style.display = 'block';
+
+
+
+    }
+
+    function youtube()
+    {
+        document.getElementById('selectimage').className = "btn btn-outline-secondary"
+        document.getElementById('selecturl').className =  "btn btn-outline-secondary active"
+
+        document.getElementById('formFile').type = "hidden"
+        document.getElementById('formurl').type = "text"
+        document.getElementById("labelurl").style.display = 'block';
+        document.getElementById("labelfile").style.display = 'none';
+
+    }
+
+
+    function insert_input(form_id)
+    {
+
+
+        const input = []
+        input.push(["input", "hidden", "product_id", document.getElementsByName('product_id')[0].value])
+        input.push(["input", "hidden", "product_naam", document.getElementsByName('product_naam')[0].value])
+        input.push(["input", "hidden", "product_aantal", document.getElementsByName('product_aantal')[0].value])
+        input.push(["input", "hidden", "product_beschrijving", document.getElementsByName('product_beschrijving')[0].value])
+        input.push(["input", "hidden", "product_merk", document.getElementsByName('product_merk')[0].value] )
+        input.push(["input", "hidden", "product_prijs", document.getElementsByName('product_prijs')[0].value])
+
+        var checkbox = document.querySelectorAll('[name^="checkbox_"]');
+
+        checkbox.forEach((item) =>
+        {
+
+            input.push(["input", "hidden", item.name, item.checked])
+
+
+        })
+
+        input.forEach((item)=>
+        {
+
+            var a = document.createElement("input")
+
+            a.setAttribute("type", "hidden")
+
+            a.setAttribute("name", item[2])
+
+            a.setAttribute("value", item[3])
+
+            //append to form element that you want .
+            document.getElementById(form_id).appendChild(a)
+        })
+
+
+
+
+    }
+
+
+
+
+
+
 </script>
+
 
 <main>
     <form method="POST" action='' class="hidden">
         <div class="row  align-items-top ">
             <!-- Carousel -->
-            <div id="demo" class="carousel slide col " data-bs-ride="carousel" style="max-width:25vh; max-height:25vh; min-height: 25vh; min-width: 25vh; margin-left: 2vh; margin-right: 2vh" data-bs-interval="false">
+            <div id="demo" class="carousel slide col " data-bs-ride="carousel" style="max-width:20vh; max-height:20vh; min-height: 20vh; min-width: 20vh; margin-left: 2vh; margin-right: 2vh" data-bs-interval="false">
 
                 <!-- Indicators/dots -->
 
                 <!-- The slideshow/carousel -->
-                <div class="carousel-inner">
-                    <div class="carousel-item active ">
-                        <iframe src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0"  title="YouTube video" class="img-fluid w-100 h-100 " ></iframe>
-                        <div class="row">
-                        <h5 class='col' style="color: black; text-align: center">pic 1</h5>
-                        <div class='btn-group col' role='group' aria-label='area'>
-                            <button type='button' class='btn btn-outline-primary'>
-                                <?php global $edit_icon; echo $edit_icon?>
-                            </button>
-                            <button type='button' class='btn btn-outline-danger'>
-                                <?php global $verwijder_icon; echo $verwijder_icon ?>
-                            </button>
-                        </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item ">
-                        <img src="https://th.bing.com/th/id/OIP.yllk_6Rnouo_r0aOMnVlTwHaHa?w=176&h=180&c=7&r=0&o=5&pid=1.7" alt="Chicago" class="img-fluid w-100 h-100" style="max-width: 100%; min-width: 100%; min-height: 80%; max-height:80%" >
-                        <div class="row carousel-caption " >
-                            <h5 class='col ' style="color: black; text-align: center">pic 2</h5>
-                            <div class='btn-group col' role='group' aria-label='area'>
-                                <button type='button' class='btn btn-outline-primary'>
-                                    <?php global $edit_icon; echo $edit_icon?>
-                                </button>
-                                <button type='button' class='btn btn-outline-danger'>
-                                    <?php global $verwijder_icon; echo $verwijder_icon ?>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item ">
-                        <img src="https://th.bing.com/th/id/OIP.AfML_m2qzeq-Pmrwh6H5jwHaHa?w=164&h=180&c=7&r=0&o=5&pid=1.7" alt="New York" class="img-fluid w-100 h-80" >
-                        <div class="row">
-                            <h5 class='col' style="color: black; text-align: center">pic 3</h5>
-                            <div class='btn-group col' role='group' aria-label='area'>
-                                <button type='button' class='btn btn-outline-primary'>
-                                    <?php global $edit_icon; echo $edit_icon?>
-                                </button>
-                                <button type='button' class='btn btn-outline-danger'>
-                                    <?php global $verwijder_icon; echo $verwijder_icon ?>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="carousel-inner"  style="height: 100%; width: 100%" data-bs-interval="false"  >
 
+
+                <?php echo make_media_carousel($product[0]["media"], $media_link) ?>
+
+                </div>
                 <!-- Left and right controls/icons -->
                 <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev" style="opacity: 50%; background-color: lightgray; margin-left: -2vh" >
                     <span class="carousel-control-prev-icon" ></span>
@@ -311,7 +459,11 @@
                 <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next" style="opacity: 50%; background-color: lightgray; margin-right: -2vh">
                     <span class="carousel-control-next-icon" ></span>
                 </button>
+
+
             </div>
+
+
 
 
 
@@ -358,9 +510,10 @@
                     <option>pic3</option>
                 </select><br>
                 <!--<a class="btn btn-outline-secondary" href= /beheer/mediacategoriebeheer" style="width: 100%" role="button">Media beheer</a> -->
-                <button type="button" class="btn btn-outline-secondary" style="width: 100%"  data-bs-toggle="modal" data-bs-target="#categoriebeheer">Media beheer</button><br><br>
+                <button type="button" class="btn btn-outline-secondary" style="width: 100%"  data-bs-toggle="modal" data-bs-target="#upload_picture">Media toevoegen</button><br><br>
+
                 <label for="categorie" class="form-label">Categorieen </label>
-                <card class="card" style="max-height: 30vh; min-height: 30vh; overflow-y: auto">
+                <card class="card" style="max-height: 30vh; min-height: 30vh; overflow-y: auto; overflow-x: hidden">
                    <?php echo checkbox_constructor($categorieen, $product) ?>
                 </card><br>
                 <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#categorietoevoegen" style="width: 100%">Categorie toevoegen</button>
@@ -385,12 +538,8 @@
         </div>
 
 
-        <?php echo modal_verwijder_categorie($producten_categorie);
-              echo modal_edit_categorie($producten_categorie); ?>
-
-
         <div class="modal fade" tabindex="-1" id="categorietoevoegen" >
-            <form method='POST' ACTION=''>
+
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -409,11 +558,51 @@
                         </div>
                     </div>
                 </div>
-            </form>
+
+        </div>
+
+        <div class="modal fade" tabindex="-1" id="upload_picture" >
+
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Media Uploaden</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="mb-3">
+                                <div class='btn-group' role='group'>
+                                    <button type="button" class="btn btn-outline-secondary active" id="selectimage" onclick="afbeelding()">afbeelding/video</button>
+                                    <button type="button" class="btn btn-outline-secondary" id="selecturl" onclick="youtube()">youtube</button>
+                                </div>
+                                <label for="formFile" class="form-label" id="labelfile">Selecteer een afbeelding of video:</label>
+                                <input class="form-control" type="file" accept="image/png, image/gif, image/jpeg" id="formFile" name="upload_picture">
+                                <label for="formurl" class="form-label" id="labelurl" style="display: none">Geef URL van video op</label>
+                                <input class="form-control" type="hidden"  id="formurl" name="upload_url">
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+                            <button type="submit" class="btn btn-primary" name="opslaan" value="upload_media">Upload</button>
+                        </div>
+                    </div>
+                </div>
+
+
         </div>
 
 
     </form>
+
+
+        <?php echo modal_verwijder_categorie($producten_categorie);
+              echo modal_edit_categorie($producten_categorie);
+              ?>
+
+
+
 </main>
 
  <aside class="" id="aside">
@@ -431,52 +620,8 @@
 
  </aside>
 
-<div class="modal fade" tabindex="-1" id="exampleModal" >
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title">Upload Image</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form>
-                <div class="mb-3">
-                    <label for="formFile" class="form-label">Select an image to upload:</label>
-                    <input class="form-control" type="file" id="formFile">
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Upload</button>
-        </div>
-    </div>
-</div>
-</div>
 
 
 
 
-<div class="modal fade" tabindex="-1" id="categoriebeheer" >
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title">Categoriebeheer</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="OK"></button>
-        </div>
-        <div class="modal-body">
-            <form>
-                <div class="mb-3">
-                    <label for="formFile" class="form-label">Select an image to upload:</label>
-                    <input class="form-control" type="file" id="formFile">
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Upload</button>
-        </div>
-    </div>
-</div>
-</div>
+
