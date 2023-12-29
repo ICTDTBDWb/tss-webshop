@@ -1,5 +1,4 @@
 <?php
-$auth->protectAdminPage(['webredacteur']);
 
 $errorMessage = '';
 
