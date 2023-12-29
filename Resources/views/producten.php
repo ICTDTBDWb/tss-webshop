@@ -1,3 +1,19 @@
+<!--POST informatie ophalen-->
+<?php
+
+// Verwerken van productgegevens
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['id'], $_POST['productaantal'])) {
+
+        // Ophalen van de POST data
+        $productId = $_POST['id'];
+        $productaantal = $_POST['productaantal'];
+
+        voegProductToeAanBestelling($productId, $productaantal);
+
+    }
+}
+?>
 <!--Title-->
 <div class="container-lg flex-grow-1 gx-0 py-2">
     <div class="d-flex justify-content-center">
@@ -37,12 +53,19 @@
                                         style="object-fit: cover"
                                 >
                             </div>
+                            <br>
                             <div>
                                 <?php print "€" . " " . $productenEnAfbeelding['prijs']; ?>
                                 <br>
-                                <form action="/winkelwagen">
-                                    <label for="quantity">Aantal</label>
-                                    <input type="number" id="quantity" name="quantity" min="1" max="5">
+                                <!--Producten toevoegen aan winkelwagen en refresh window-->
+                                <form method="post" onsubmit="setTimeout(function () { window.location.reload(); }, 10)">
+                                    <label for="productaantal">Aantal</label>
+
+                                    <input type="number" id="productaantal" name="productaantal" min="1">
+                                    <label for="productprijs"></label>
+                                    <input type="hidden" id="id" name="id" value="<?php echo ($productenEnAfbeelding['id']); ?>">
+                                    <br>
+                                    <br>
                                     <input type="submit" value="In winkelwagen">
                                 </form>
                             </div>
