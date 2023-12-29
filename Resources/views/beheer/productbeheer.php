@@ -135,13 +135,13 @@
 
                 case "upload_media" :
 
-                   //  if( isset($_FILES) and $product_id != "")
-                    // {
-                         var_dump($afbeelding_path.$filename);
+                     if( isset($_FILES) and $product_id != "")
+                     {
+                         //var_dump($afbeelding_path.$filename);
                         $gelukt = move_uploaded_file($filetmp_name, $afbeelding_path.$filename);
 
 
-                    // }
+                     }
                 break;
 
             }
