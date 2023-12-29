@@ -583,7 +583,7 @@
 
         <div class="row">
             <div class="col">
-                <button type="submit" class="btn btn-outline-secondary" id="opslaan" name="opslaan" value="toevoegen" style="width: 100%">Toevoegen als nieuw</button>
+                <button type='button' <?php echo $product_id == ""? "hidden" : "" ?> class="btn btn-outline-secondary" id="opslaan" name="opslaan" value="toevoegen" style="width: 100%">Toevoegen als nieuw</button>
             </div>
             <div class="col">
                 <button type="submit" class="btn btn-outline-secondary" id="opslaan"  name="opslaan" value='opslaan'  style="width: 100%">Opslaan</button>
