@@ -113,8 +113,6 @@
                 var totalPrice = parseFloat($('#totalPrice').text());
                 var couponValue = parseFloat(bedrag);
 
-                console.log(totalPrice);
-                console.log(couponValue);
                 $('#totalPrice').text(totalPrice - couponValue);
             },
             error: function(xhr, status, error) {
