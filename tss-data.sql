@@ -53,9 +53,9 @@ VALUES
 -- Dummy data voor bestellingen
 INSERT INTO `tss`.`bestellingen` (`klant_id`, `verzendmethode_id`, `besteldatum`, `totaal`)
 VALUES
-    (1, 1, NOW(), 999.99),
-    (2, 2, NOW(), 2499.98),
-    (1, 3, NOW(), 399.97);
+    (1, 1, '2023-12-17 14:18:21', 999.99),
+    (2, 2, '2023-12-17 14:18:22', 2499.98),
+    (1, 3, '2023-12-17 14:18:23', 399.97);
 
 -- Dummy data voor cadeaubonnen
 INSERT INTO `tss`.`cadeaubonnen` (`code`, `pin`, `bedrag`)
