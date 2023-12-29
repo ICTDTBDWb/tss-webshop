@@ -15,6 +15,7 @@
     $product_aantal = "";
     $product_beschrijving= "";
     $product_merk  = "";
+    $product_actief = "";
     $categorie_id = "";
     $categorie_beschrijving = "";
     $categorie_naam = "";
@@ -39,6 +40,7 @@
             $product_aantal = array_key_exists("product_aantal", $_POST) && is_numeric($_POST['product_aantal']) ? $_POST['product_aantal'] : 0;
             $product_beschrijving = array_key_exists("product_beschrijving", $_POST) ? $_POST['product_beschrijving'] : "";
             $product_merk = array_key_exists("product_merk", $_POST) ? $_POST['product_merk'] : "";
+            $product_actief = array_key_exists("product_actief", $_POST) ? $_POST['product_actief'] : "";
             $afbeelding = array_key_exists("picture_upload", $_POST) ? $_POST['picture_upload'] : "";
             $product_categorie = [];
 
@@ -75,9 +77,9 @@
             {
                 case "opslaan":
                     if ($product_id == "")
-                        $product_id = $database->query("INSERT INTO producten (`naam`,`beschrijving`, `merk`, `prijs`, `aantal`) VALUES (?,?,?,?,?) ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal])->insert();
+                        $product_id = $database->query("INSERT INTO producten (`naam`,`beschrijving`, `merk`, `prijs`, `aantal`, `is_actief`) VALUES (?,?,?,?,?,?) ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal, $product_actief])->insert();
                     else
-                        $database->query("UPDATE producten SET naam = ?, beschrijving = ?, merk = ? , prijs = ? , aantal = ? WHERE id = ? ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal, $product_id]);
+                        $database->query("UPDATE producten SET naam = ?, beschrijving = ?, merk = ? , prijs = ? , aantal = ?, is_actief = ? WHERE id = ? ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal, $product_id, $product_actief]);
 
 
                     $database->query("DELETE FROM product_categorieen where product_id = ?",[$product_id]);
@@ -96,7 +98,7 @@
 
 
                 case "toevoegen":
-                    $product_id = $database->query("INSERT INTO producten (`naam`,`beschrijving`, `merk`, `prijs`, `aantal`) VALUES (?,?,?,?,?) ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal])->insert();
+                    $product_id = $database->query("INSERT INTO producten (`naam`,`beschrijving`, `merk`, `prijs`, `aantal`, `is_actief`) VALUES (?,?,?,?,?,?) ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal, $product_actief])->insert();
                     foreach ($product_categorie as $key => $value) {
                         $database->query("INSERT INTO product_categorieen (`product_id`, `categorie_id` ) VALUES (?,?) ", [$product_id, $key])->get();
 
@@ -107,8 +109,9 @@
                 case "verwijderen":
                     if ($product_id != "")
                     {
-                        $database->query("DELETE FROM product_categorieen where product_id = ?",[$product_id]);
-                        $database->query("DELETE FROM producten where id = ?",[$product_id]);
+                        $database->query("UPDATE producten SET is_verijderd = ? where id = ?",[1,$product_id]);
+                        //$database->query("DELETE FROM product_categorieen where product_id = ?",[$product_id]);
+                        //$database->query("DELETE FROM producten where id = ?",[$product_id]);
                         $POST_GEWEEST = false;
 
                     }
@@ -182,7 +185,7 @@
 
          }
      }
-      $product = $database->query("SELECT * FROM producten where id = ?",[$product_select[0]])->get();
+      $product = $database->query("SELECT * FROM producten where id = ? and not is_verijderd = ? ",[$product_select[0], 1])->get();
 
      // get categorien
      $categorieen = $database->query("SELECT * FROM categorieen ORDER BY id ASC")->get();
@@ -193,15 +196,16 @@
       foreach ($categorieen as $categorie)
       {
           $categorie_id = $categorie['id'];
-          $producten_categorie[$categorie_id]['product'] = $database->query("SELECT * FROM producten where naam like ? and id IN (SELECT `product_id` from product_categorieen where categorie_id  = ? ) ORDER BY naam ASC", ["%".$filter."%",$categorie_id] )->get();
+          $producten_categorie[$categorie_id]['product'] = $database->query("SELECT * FROM producten where naam like ? and not is_verijderd = ? and id IN (SELECT `product_id` from product_categorieen where categorie_id  = ? ) ORDER BY naam ASC", ["%".$filter."%",1,$categorie_id] )->get();
           $producten_categorie[$categorie_id]['naam'] = $categorie['naam'];
           $producten_categorie[$categorie_id]['beschrijving'] = $categorie['beschrijving'];
       }
       //var_dump($producten_categorie);
         //filter prodcut with no categorie
-      $producten_categorie['overig']['product'] = $database->query("SELECT * FROM producten WHERE naam like ? and NOT EXISTS ( SELECT * FROM product_categorieen where product_categorieen.product_id = producten.id) ORDER BY naam ASC " , ["%".$filter."%"])->get();
+      $producten_categorie['overig']['product'] = $database->query("SELECT * FROM producten WHERE naam like ? and not is_verijderd = ? and NOT EXISTS ( SELECT * FROM product_categorieen where product_categorieen.product_id = producten.id) ORDER BY naam ASC " , ["%".$filter."%",1])->get();
       $producten_categorie['overig']['naam'] = "overig";
       $producten_categorie['overig']['beschrijving'] = "";
+
 
 
 
@@ -219,6 +223,7 @@
               $product_aantal = array_key_exists("aantal", $product[0]) ? $product[0]['aantal'] : "";
               $product_beschrijving = array_key_exists("beschrijving", $product[0]) ? $product[0]['beschrijving'] : "";
               $product_merk = array_key_exists("merk", $product[0]) ? $product[0]['merk'] : "";
+              $product_actief = array_key_exists("product_actief", $_POST) ? $_POST['product_actief'] : 0;
           }
           else
           {
@@ -410,6 +415,7 @@
         input.push(["input", "hidden", "product_beschrijving", document.getElementsByName('product_beschrijving')[0].value])
         input.push(["input", "hidden", "product_merk", document.getElementsByName('product_merk')[0].value] )
         input.push(["input", "hidden", "product_prijs", document.getElementsByName('product_prijs')[0].value])
+        input.push(["input", "hidden", "product_actief", document.getElementsByName('product_actief')[0].value])
 
         var checkbox = document.querySelectorAll('[name^="checkbox_"]');
 
@@ -481,11 +487,34 @@
 
             <div class="col">
                 <div class="mb-3" >
-                    <label for="product_naam" class="form-label">Product Naam:</label>
-                    <input type="text" class="form-control" id="product_naam" name="product_naam" aria-describedby="product_help" value='<?php echo $product_naam ?>'>
-                    <input type="hidden" class="form-control" id="product_id" name="product_id"   value='<?php echo $product_id ?>'>
-                    <div id="product_help" class="form-text">verander of geef naam van product op.</div><br>
+                    <div class="row">
+                        <div class="col" style='min-width: 70%'>
+                            <label for="product_naam" class="form-label">Product Naam:</label>
+                            <input type="text" class="form-control" id="product_naam" name="product_naam" aria-describedby="product_help" value='<?php echo $product_naam ?>'>
+                            <input type="hidden" class="form-control" id="product_id" name="product_id"   value='<?php echo $product_id ?>'>
+                            <div id="product_help" class="form-text">verander of geef naam van product op.</div><br>
+                        </div>
+                        <div class="col">
+                            <label for="product_actief" class="form-label">Product zichtbaar </label>
+                            <select id="product_actief" class="form-select" name="product_actief">
+                                <?php
 
+                                  if ( $product_actief == 0 )
+                                  {
+                                      echo  "<option value='1'>Ja</option>";
+                                      echo  "<option value='0' selected>Nee</option>";
+                                  }
+                                  else
+                                  {
+                                      echo  "<option value='1' selected>Ja</option>";
+                                      echo  "<option value='0' >Nee</option>";
+                                  }
+                                ?>
+
+
+                            </select>
+                        </div>
+                    </div>
 
                     <div class="row">
                         <div class="col" style='min-width: 50%'>
