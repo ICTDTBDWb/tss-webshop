@@ -1,10 +1,12 @@
 <?php
+    include basePath("Application/Http/beheer/menu.php");
     //database
     $database = new Database();
     $rootPath = $_SERVER['DOCUMENT_ROOT'];
-    $media_link = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]/assets";
+    $media_link = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
     $afbeelding_path = $rootPath."/assets/afbeeldingen/";
     $product_categorie_post = [];
+
 
 
     $product_id = "";
@@ -52,14 +54,12 @@
 
 
 
-            var_dump($_FILES);
             //var_dump($_FILES);
             //var_dump($afbeelding_path);
 
             foreach($_POST as $key => $value) {
                 if (str_contains($key, "checkbox_")) {
                     $key = str_replace("checkbox_", "", $key);
-                    var_dump($value);
                     $product_categorie_post[$key] = $value;
 
                 }
@@ -70,7 +70,7 @@
             $categorie_beschrijving = array_key_exists("categorie_beschrijving", $_POST) ? $_POST['categorie_beschrijving'] : "";
             $categorie_naam = array_key_exists("categorie_naam",  $_POST) ? $_POST['categorie_naam'] : "";
 
-            var_dump($categorie_id);
+
             switch ($opslaan)
             {
                 case "opslaan":
@@ -190,10 +190,10 @@
 
 
 
-       var_dump(is_array($product) and array_key_exists("0", $product));
+
       if (is_array($product) and array_key_exists("0", $product)) {
 
-          $product[0]["media"] = $database->query("SELECT * FROM media where id = ?", [$product[0]['id']])->get();
+          $product[0]["media"] = $database->query("SELECT * FROM media where product_id = ?", [$product[0]['id']])->get();
           $product[0]["categorie"] = $database->query("SELECT * FROM categorieen where id IN (SELECT `categorie_id` from product_categorieen where product_id = ?)",[$product[0]['id']])->get();
       }
           $product[0]["merken"] = $database->query("SELECT DISTINCT merk FROM producten")->get();
@@ -210,7 +210,6 @@
               $query = "(";
               $query_items ="(";
               $gevonden_items = false;
-              var_dump($product_categorie_post);
               foreach ($product_categorie_post as $key => $item)
               {
                   if ($item == "true" or $item == "on"){
@@ -224,8 +223,6 @@
               $query_items = trim($query_items,',');
               $query .= ")";
               $query_items .=")";
-              var_dump($query);
-              var_dump($query_items);
 
               if ($gevonden_items)
                 $product[0]["categorie"] = $database->query("SELECT * FROM categorieen where id IN " . $query_items)->get();
@@ -260,8 +257,8 @@
 
           }
 
-
           $product[0]["media"] = $uploaded_files;
+
 
 
 

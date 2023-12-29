@@ -102,7 +102,7 @@ function checkbox_constructor($categorie, $product)
         $categorie_id = $item['id'];
         $categorie_naam = $item['naam'];
         $construct.= "
-                        <div class='form-check'  style='min-height: 4vh'>
+                        <div class='form-check'  style='min-height: 5vh'>
                           <div class = 'row'>
                             <div class = 'col'>
                             <input class='form-check-input' type='checkbox' name='checkbox_$categorie_id' id='checkbox_$categorie_id' $checked >
@@ -171,7 +171,6 @@ function modal_verwijder_categorie($categorie)
                     <input type='hidden' value='$key' name='categorie_id'> 
                     <p class='text-center fw-bold'> weet u zeker dat u categorie $categorie_naam wilt verwijderen? $inner_text</p><br>
                     $producten
-                    <h6 style='color: red' class='text-center'>LET OP, wijzigingen aan product worden niet opgeslagen </h6>
                 </div>";
 
 
@@ -222,7 +221,6 @@ function modal_edit_categorie($categorie)
                     <input type='text' class='form-control' name='categorie_naam'  value='$categorie_naam'>
                     <label for='categorie_beschrijving' class='form-label'>Categorie beschrijving</label>
                     <textarea class='form-control' id='categorie_beschrijving' aria-label='With textarea' name='categorie_beschrijving' style='resize: none; height: 10vh' >$categorie_beschrijving</textarea>
-                    <h6 style='color: red' class='text-center'>LET OP, wijzigingen aan product worden niet opgeslagen </h6>
                  </div> ";
 
         $construct .= $title.$begin_modal.$body.$einde_modal;
@@ -251,18 +249,18 @@ function make_media_carousel($product, $root_path)
     global $edit_icon;
 
     $einde = "</div>";
-    $link = "http://tss.localhost/assets";
+    $link = $root_path;
     $active = "active";
 
      $construct = "";
-    foreach ($product as $key => $item)
-    {
+
+    foreach ($product as $key => $item) {
 
 
         $begin = "<div class='carousel-item $active' style='height: 100%; width: 100%' >";
-        $media = $link.htmlspecialchars($item['pad']);
-        $naam =  $item['naam'];
-        $inner =   "    <div class='row' >
+        $media = $link . htmlspecialchars($item['pad']).".".htmlspecialchars($item['extensie']);
+        $naam = $item['naam'];
+        $inner = "    <div class='row' >
                             <h5 class='col ' style='color: black; text-align: center'>pic $key</h5>
                             <div class='btn-group col' role='group' aria-label='area'>
                                 <button type='button' class='btn btn-outline-primary'>
@@ -275,30 +273,22 @@ function make_media_carousel($product, $root_path)
                         </div>";
 
 
+        if (in_array($item['extensie'], $_validExtensions['image'])) {
+            $source = "<img src='$media' alt='$naam'  class='d-block' >";
 
-
-        if (in_array($item['extensie'], $_validExtensions['image']))
-        {
-          $source = "<img src='$media' alt='$naam'  class='d-block' >";
-
-        }
-        elseif (in_array($item['extensie'], $_validExtensions['video']))
-        {
-            $source ="";
-        }
-        elseif (in_array($item['extensie'], $_validExtensions['iframe']))
-        {
-            $source ="";
-        }
-        else
-        {
-            $source ="$naam";
+        } elseif (in_array($item['extensie'], $_validExtensions['video'])) {
+            $source = "";
+        } elseif (in_array($item['extensie'], $_validExtensions['iframe'])) {
+            $source = "";
+        } else {
+            $source = "$naam";
         }
 
-        $active ="";
-        $construct .= $begin.$source.$inner.$einde;
-
+        $active = "";
+        $construct .= $begin . $source . $inner . $einde;
     }
+
+
 
        return $construct;
 }
