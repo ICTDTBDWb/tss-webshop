@@ -136,7 +136,7 @@ class Auth
             !$this->isLoggedIn()
             || (!$is_admin && isset($is_admin))
         ) {
-            header("Location: " . ($is_admin ? '/' : 'beheer/login'));
+            header("Location: " . ($is_admin ? '/' : '/beheer/login'));
             exit();
         }
 
@@ -144,7 +144,7 @@ class Auth
             !empty($accepted_roles)
             && !in_array($this->user()['role'], $accepted_roles)
         ) {
-            header("Location: beheer/");
+            header("Location: /beheer/");
             exit();
         }
     }
