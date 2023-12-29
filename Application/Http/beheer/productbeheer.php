@@ -279,7 +279,8 @@ function make_media_carousel($product, $root_path)
         } elseif (in_array($item['extensie'], $_validExtensions['video'])) {
             $source = "";
         } elseif (in_array($item['extensie'], $_validExtensions['iframe'])) {
-            $source = "";
+            $media = htmlspecialchars($item['pad']);
+            $source = "<iframe src='$media'  title='$naam'  class='d-block'></iframe>";
         } else {
             $source = "$naam";
         }

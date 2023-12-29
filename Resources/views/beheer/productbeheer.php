@@ -42,6 +42,7 @@
             $product_merk = array_key_exists("product_merk", $_POST) ? $_POST['product_merk'] : "";
             $product_actief = array_key_exists("product_actief", $_POST) ? $_POST['product_actief'] : "";
             $afbeelding = array_key_exists("picture_upload", $_POST) ? $_POST['picture_upload'] : "";
+            $youtube_url = array_key_exists('upload_url' , $_POST)  ? $_POST['upload_url'] : "";
             $product_categorie = [];
 
 
@@ -57,7 +58,7 @@
 
 
 
-            //var_dump($afbeelding_path);
+            var_dump($_FILES);
 
             foreach($_POST as $key => $value) {
                 if (str_contains($key, "checkbox_")) {
@@ -139,7 +140,7 @@
 
                 case "upload_media" :
 
-                     if( isset($_FILES) and $product_id != "")
+                     if( $product_id != "" and $filename != "")
                      {
 
                          $path_parts = pathinfo($afbeelding_path.$product_id."/".$filename);
@@ -158,8 +159,15 @@
                            // $database->query("INSERT INTO media (`product_id`,`naam`,`pad`,`extensie`) VALUES(?,?,?,?)",[$product_id,$filename,"/assets/afbeeldingen/".$product_id."/".$filename,$extensie]);
 
 
-
                      }
+
+                     if ($product_id != "" and $youtube_url != "")
+                         $youtube_url = str_replace("watch?v=", "embed/", $youtube_url);
+                         $database->query("INSERT INTO media (`product_id`,`naam`,`pad`,`extensie`) VALUES(?,?,?,?)",[$product_id,"youtube video",$youtube_url, "youtube"]);
+
+
+
+
                 break;
 
             }
@@ -253,7 +261,7 @@
                 $product[0]["categorie"] = $database->query("SELECT * FROM categorieen where id IN " . $query_items)->get();
 
           }
-          
+
 
 
 
@@ -391,6 +399,8 @@
         document.getElementById("labelurl").style.display = 'none';
         document.getElementById("labelfile").style.display = 'block';
 
+        document.getElementById('formurl').value = "";
+
 
 
     }
@@ -404,6 +414,8 @@
         document.getElementById('formurl').type = "text"
         document.getElementById("labelurl").style.display = 'block';
         document.getElementById("labelfile").style.display = 'none';
+
+        document.getElementById('formFile').value = "";
 
     }
 
