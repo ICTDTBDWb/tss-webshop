@@ -35,23 +35,27 @@
             <button class="btn btn-link text-dark d-block d-md-none" type="button">
                 <i class="fa fa-search"></i>
             </button>
-            <?php if (!$auth->isLoggedIn()) { ?>
-                <a href="/login" class="btn btn-link me-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Inloggen">
-                    <i class="fa fa-arrow-right-to-bracket fa-lg text-dark"></i>
-                </a>
-            <?php } else { ?>
-                <a href="/account/overzicht" class="btn btn-link me-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Profiel">
-                    <i class="fa fa-user fa-lg text-dark"></i>
+            <?php
+            $is_admin = Session::get('auth')['is_admin'] ?? false;
+            if (!$is_admin && !str_contains($_SERVER["REQUEST_URI"], 'beheer')) { ?>
+                <?php if (!$auth->isLoggedIn()) { ?>
+                    <a href="/login" class="btn btn-link me-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Inloggen">
+                        <i class="fa fa-arrow-right-to-bracket fa-lg text-dark"></i>
+                    </a>
+                <?php } else { ?>
+                    <a href="/account/overzicht" class="btn btn-link me-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Profiel">
+                        <i class="fa fa-user fa-lg text-dark"></i>
+                    </a>
+                <?php } ?>
+                <a href="/winkelwagen" class="btn btn-link position-relative" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Winkelwagen">
+                    <i class="fa fa-cart-shopping fa-lg text-dark"></i>
+                    <?php if (Session::exists('winkelwagen')) { ?>
+                            <span class="position-absolute start-100 translate-middle badge rounded-pill bg-light text-dark border" style="top: 5px;">
+                                <?php echo count(Session::get('winkelwagen')['producten']); ?>
+                            </span>
+                    <?php } ?>
                 </a>
             <?php } ?>
-            <a href="/winkelwagen" class="btn btn-link position-relative" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Winkelwagen">
-                <i class="fa fa-cart-shopping fa-lg text-dark"></i>
-                <?php if (Session::exists('winkelwagen')) { ?>
-                        <span class="position-absolute start-100 translate-middle badge rounded-pill bg-light text-dark border" style="top: 5px;">
-                            <?php echo count(Session::get('winkelwagen')['producten']); ?>
-                        </span>
-                <?php } ?>
-            </a>
         </div>
     </div>
 </header>

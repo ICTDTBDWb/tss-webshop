@@ -3,8 +3,12 @@ $auth->protectAdminPage([Auth::WEBREDACTEUR_ROLE]);
 include basePath('Application/Http/beheer/services.php');
 include basePath("Application/Http/beheer/menu.php");
 
+<<<<<<< HEAD
 //$auth->protectAdminPage([Auth::ADMIN_ROLE]);
 //$current_page = basename($_SERVER['PHP_SELF']);
+=======
+$current_page = basename($_SERVER['PHP_SELF']);
+>>>>>>> master
 
 // Verwerk het toevoegen van een cadeaubon
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['toevoegen'])) {
