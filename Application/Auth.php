@@ -48,7 +48,7 @@ class Auth
     {
         if (!$this->isLoggedIn()) return false;
 
-        $table = Session::get('auth')['is_admin'] ? 'beheerders' : 'klanten';
+        $table = Session::get('auth')['is_admin'] ? 'medewerkers' : 'klanten';
         $result = $this->db->query(
             "SELECT * FROM $table WHERE id = ?",
             [Session::get('auth')['user_id']]
@@ -68,7 +68,7 @@ class Auth
      */
     public function attempt(array $credentials, bool $is_admin = false): bool
     {
-        $table = $is_admin ? 'beheerders' : 'klanten';
+        $table = $is_admin ? 'medewerkers' : 'klanten';
         $result = $this->db->query(
             "SELECT id, email, password FROM $table WHERE email = ?",
             [$credentials[0]]
@@ -144,7 +144,7 @@ class Auth
             !empty($accepted_roles)
             && !in_array($this->user()['role'], $accepted_roles)
         ) {
-            header("Location: /beheer/");
+            header("Location: /beheer");
             exit();
         }
     }
