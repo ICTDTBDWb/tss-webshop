@@ -1,4 +1,5 @@
 <?php
+//$auth->protectAdminPage([Auth::webredacteur]);
 include basePath('Application/Http/beheer/services.php');
 include basePath("Application/Http/beheer/menu.php");
 $current_page = basename($_SERVER['PHP_SELF']);

@@ -1,5 +1,5 @@
 <?php
-
+$auth->protectPage();
 
 $connection = new Database();
 

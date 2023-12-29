@@ -1,4 +1,5 @@
 <?php
+$auth->protectPage();
 // Inclusie van de services voor accountbeheer
 include basePath("Application/Http/account/services.php");
 
