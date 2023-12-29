@@ -1,7 +1,12 @@
 <?php
 
+
+$connection = new Database();
+
+
 //TODO: PHP en HTML scheiden
 //TODO: Automatisch aanvullen addressgegevens op woonplaats en postcode
+
 
 // Redirect to homepage if not logged in.
 if(!$_SESSION['auth']['logged_in']??false){
@@ -11,8 +16,6 @@ if(!$_SESSION['auth']['logged_in']??false){
 }
 
 $db = new Database();
-
-
 $klant_id = $_SESSION['auth']['user_id'];
 
 //Assume form is valid until a validation fails
@@ -41,6 +44,7 @@ if(isset($_POST) && count($_POST)){
         $validation_error_array['achternaam'] = true;
     }
 
+
     $wachtwoord_filtered = filter_input(INPUT_POST, 'wachtwoord', FILTER_SANITIZE_SPECIAL_CHARS);
     // Wachtwoord 2 stage. Eerst checken of special chars er in zitten, daarna reg-ex
     if($wachtwoord_filtered !== false) {
@@ -58,6 +62,7 @@ if(isset($_POST) && count($_POST)){
 
     // Als wachtwoord niet leeg is maar regex failed, zet error
     if($wachtwoord_filtered !== "" && $wachtwoord_regex === false) {
+
         $validation_error_array['wachtwoord'] = true;
     }
 
@@ -92,6 +97,7 @@ if(isset($_POST) && count($_POST)){
     }
 //    $validation_error_array['email'] = true;
     if(count($validation_error_array) == 0){
+
         $_partial_query_wachtwoord = "";
 
         // Als wachtwoord gezet is voeg deze ook toe aan de query
@@ -102,10 +108,12 @@ if(isset($_POST) && count($_POST)){
         $query =
             "UPDATE klanten SET " .
             "voornaam=:voornaam ," .
+
             "tussenvoegsel=:tussenvoegsel, " .
             "achternaam=:achternaam, " .
             "straat=:straat, " .
             "huisnummer=:huisnummer, " .
+
             "woonplaats=:woonplaats, " .
             "postcode=:postcode, " .
             "land=:land, " .
@@ -132,11 +140,13 @@ if(isset($_POST) && count($_POST)){
         }
         $result = $db->query($query, $query_variables);
 
+
         if(!$result) {
             //Something went wrong
         }
     }
 }
+
 
 $query = "SELECT id, email, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode, woonplaats, land from klanten where id=:klant_id";
 
@@ -166,12 +176,13 @@ $klant = $db->query($query,["klant_id" => $klant_id])->first();
         <div class="form-group">
             <label for="wachtwoord">Wachtwoord</label>
             <input
-                type="text"
-                class="form-control <?php if(isset($validation_error_array["wachtwoord"]))echo"is-invalid";?>"
-                id="wachtwoord"
-                name="wachtwoord"
-                placeholder="*********"
-                aria-describedby="wachtwoordFeedback"/>
+                    type="text"
+                    class="form-control <?php if(isset($validation_error_array["wachtwoord"]))echo"is-invalid";?>"
+                    id="wachtwoord"
+                    name="wachtwoord"
+                    placeholder="*********"
+                    aria-describedby="wachtwoordFeedback"
+            />
             <div id="wachtwoordFeedback" class="invalid-feedback">
                 <ul>
                     <li>Het wachtwoord moet minimaal 8 tekens lang zijn.</li>
@@ -203,13 +214,13 @@ $klant = $db->query($query,["klant_id" => $klant_id])->first();
         <div class="form-group">
             <label for="email">Email</label>
             <input
-                type="text"
-                class="form-control <?php if(isset($validation_error_array["email"]))echo"is-invalid";?> "
-                id="email"
-                name="email"
-                placeholder="<email@domein.nl>"
-                value="<?php echo $klant['email']; ?>"
-                aria-describedby="emailFeedback"/>
+                    type="text"
+                    class="form-control <?php if(isset($validation_error_array["email"]))echo"is-invalid";?> "
+                    id="email"
+                    name="email"
+                    placeholder="<email@domein.nl>"
+                    value="<?php echo $klant['email']; ?>"
+                    aria-describedby="emailFeedback"/>
             <div id="emailFeedback" class="invalid-feedback">
                 Vul alstublief een geldig e-mail in.
             </div>

@@ -1,11 +1,9 @@
 <?php
 include("functies.php");
 $databaseManager = new Database();
-
 // hard coded true for testing
-$path = "http://localhost/tss/public/winkelwagen";
-$path_product = "http://localhost/tss/public/product";
-//$path_media ="http://localhost/tss/public/winkelwagen";
+$path = "/assets/afbeeldingen/";
+$path_product = "/product";
 
 
 $placeholder = "/gitaar1.jpg";
@@ -14,12 +12,9 @@ $placeholder = "/gitaar1.jpg";
 $totaal_prijs = 0;
 
 //hardcode logged in
-$user_logged_in = $_SESSION['user']['logged_in']??true;
-//$_SESSION = [];
+$user_logged_in = $_SESSION['auth']['logged_in']??false;
 
 updateSessionCartProducts($databaseManager);
-
-
 
 // Checkt als verwijderknop is gesubmit en verwijderd bijbehorende product
 if(isset($_POST['remove_product'])){
@@ -70,13 +65,16 @@ if(isset($_POST['wijzigingen_opslaan']) && count($_POST) > 1){
 if ($_GET['addtocart']??false){
         $id = $_GET['addtocart'];
 
-        $query = "SELECT p.id, p.naam as product_naam, p.prijs, m.naam as media_naam, m.pad as media_pad ".
+        $query = "SELECT p.id, p.naam as product_naam, p.prijs, m.naam as media_naam, m.pad as media_pad, m.extensie as media_extensie ".
             "FROM producten as p ".
-            "JOIN media as m on m.product_id=p.id ".
+            "LEFT JOIN media as m ON " .
+            "m.product_id=p.id ".
             "WHERE p.id = :id ".
             "GROUP BY p.id ";
 
         $result = $databaseManager->query($query, ["id" => $id])->first();
+
+
         if(isset($_SESSION["winkelwagen"]["producten"][$id])) {
             $_SESSION["winkelwagen"]["producten"][$id]["hoeveelheid_in_winkelwagen"]++;
         } else {
@@ -88,6 +86,7 @@ if ($_GET['addtocart']??false){
         $_SESSION["winkelwagen"]["producten"][$id]["prijs"] = $result['prijs'];
         $_SESSION["winkelwagen"]["producten"][$id]["media_naam"] = $result['media_naam'];
         $_SESSION["winkelwagen"]["producten"][$id]["media_pad"] = $result['media_pad'];
+        $_SESSION["winkelwagen"]["producten"][$id]["media_extensie"] = $result['media_extensie'];
 }
 
 //Check winkelwagen of set false

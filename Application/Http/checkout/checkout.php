@@ -1,11 +1,14 @@
 <?php
 
-session_start();
+$dbm = new Database();
+
+
+//session_start();
 include(__DIR__."/../winkelwagen/functies.php");
 include(__DIR__."/../checkout/functies.php");
-
 $_SESSION['user']['logged_in'] = true;
 $_SESSION['user']['id'] = 1;
+
 
 // Redirect to homepage if not logged in.
 $homepage_path = "http://localhost/";
@@ -15,15 +18,16 @@ if(!$_SESSION['user']['logged_in']??false){
     exit;
 }
 
-$dbm = new Database();
-
 
 $klant_id = $_SESSION['user']['id'];
 $query = "SELECT id, email, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode from klanten where id=:klant_id";
 $klant = $dbm->query($query, ["klant_id" => $klant_id])->first();
+
+
 $verzendmethodes_array = getVerzendmethodes($dbm);
 
 $cart_changes = updateSessionCartProducts($dbm);
+
 if(
     ($_SESSION["winkelwagen"]['producten']??false)
     && count($_SESSION["winkelwagen"]['producten'])
@@ -103,12 +107,18 @@ if($_POST??false){
     }
 
     if(count($validation_error_array) == 0) {
-        if(count($cart_changes['removed_products']) == 0 && count($cart_changes['changed_products']) == 0 && $producten) {
+
+        if(
+            count($cart_changes['removed_products']) == 0 &&
+            count($cart_changes['changed_products']) == 0 &&
+            $producten &&
+            validateCartCadeaubonnen($dbm)
+        ) {
 
             bestellingOpslaan(
                 $klant_id,
                 $verzendmethode_filtered,
-                getTotalFromCurrentCart(),
+                getTotalFromCurrentCart() - getCouponBedrag(),
                 $betaalmethode_filtered,
                 $producten,
                 $voornaam_filtered,
@@ -124,6 +134,5 @@ if($_POST??false){
         }
     }
 }
-
 
 
