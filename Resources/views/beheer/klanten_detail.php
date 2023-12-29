@@ -22,7 +22,6 @@ if ($klantId) {
             <tr>
                 <th scope="col">id</th>
                 <th scope="col">Email</th>
-                <th scope="col">Wachtwoord</th>
                 <th scope="col">Voornaam</th>
                 <th scope="col">Tussenvoegsel</th>
                 <th scope="col">Achternaam</th>
@@ -37,7 +36,6 @@ if ($klantId) {
             <tr>
                 <td><?php print $enkeleKlant['id'];?></td>
                 <td><?php print $enkeleKlant['email'];?></td>
-                <td></td>
                 <td><?php print $enkeleKlant['voornaam']; ?></td>
                 <td><?php print $enkeleKlant['tussenvoegsel'];?></td>
                 <td><?php print $enkeleKlant['achternaam'];?></td>
@@ -71,9 +69,6 @@ if ($klantId) {
         </div>
         <div class="mb-3">
             Email: <input type="email" name="email" placeholder="email">
-        </div>
-        <div class="mb-3">
-            Wachtwoord: <input type="password" name="password" placeholder="password">
         </div>
         <div class="mb-3">
             Voornaam: <input type="text" name="voornaam" placeholder="voornaam">
@@ -114,7 +109,6 @@ if ($klantId) {
         $database = new Database();
         $id = ($_POST['id']);
         $email = ($_POST['email']);
-        $password = ($_POST['password']);
         $voornaam = ($_POST['voornaam']);
         $tussenvoegsel = ($_POST['tussenvoegsel']);
         $achternaam = ($_POST['achternaam']);
@@ -126,7 +120,7 @@ if ($klantId) {
 
         // Voeg gegevens toe aan de database
         $result = $database->query(
-            "UPDATE klanten SET email='$email', password='$password', voornaam='$voornaam', tussenvoegsel='$tussenvoegsel', achternaam='$achternaam',
+            "UPDATE klanten SET email='$email', voornaam='$voornaam', tussenvoegsel='$tussenvoegsel', achternaam='$achternaam',
                    straat='$straat', huisnummer='$huisnummer', postcode='$postcode', woonplaats='$woonplaats', land='$land'
                    WHERE id='$id'");
 
