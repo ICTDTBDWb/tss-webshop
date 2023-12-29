@@ -36,7 +36,10 @@ function updateSessionCartProducts(Database $databaseManager) {
         foreach($result as $row) {
             foreach ($_SESSION["winkelwagen"]["producten"] as $key => $product) {
                 if(
-                    $product['id'] == $row['id']
+                    $product['id'] == $row['id'] &&
+                    //array diff hoger dan 1, omdat hoeveelheid in winkelwagen altijd anders is dan in database
+
+                    count(array_diff_assoc($product, $row)) > 1
                 ) {
                     $_SESSION["winkelwagen"]["producten"][$key]["id"] = $row['id'];
                     $_SESSION["winkelwagen"]["producten"][$key]["product_naam"] = $row['product_naam'];
