@@ -3,7 +3,8 @@
 // Functie om klantgegevens op te halen op basis van klantId
 function queryKlant($klantId) {
     $database = new Database();
-    $klanten = $database->query("SELECT * FROM klanten WHERE id = $klantId")->get();
+    // Query met prepared statement om SQL injection te voorkomen
+    $klanten = $database->query("SELECT * FROM klanten WHERE id = ?", [$klantId])->get();
 
     // Controleer of er resultaten zijn en retourneer de eerste klant als een array
     return (count($klanten) > 0) ? $klanten[0] : null;
