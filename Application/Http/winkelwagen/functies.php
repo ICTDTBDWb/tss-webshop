@@ -33,27 +33,14 @@ function updateSessionCartProducts(Database $databaseManager) {
             "GROUP BY p.id ";
         $result = $databaseManager->query($query)->get();
 
-        // Producten in dit array zijn verwijderd in de database tussen cart updates
-        $products_deleted_from_database = array_diff_assoc($product_ids, array_column($result, 'id'));
-
         foreach($result as $row) {
             foreach ($_SESSION["winkelwagen"]["producten"] as $key => $product) {
-                if (in_array($product['id'],$products_deleted_from_database)) {
-                    $return['removed_products'][] = $product;
-                    unset($_SESSION["winkelwagen"]["producten"][$key]);
-                    continue;
-                }
-                // TODO: Fix differences assoc check
                 if(
                     $product['id'] == $row['id'] &&
                     //array diff hoger dan 1, omdat hoeveelheid in winkelwagen altijd anders is dan in database
 
                     count(array_diff_assoc($product, $row)) > 1
-
-
                 ) {
-
-                    $return['changed_products'][] = $_SESSION["winkelwagen"]["producten"][$key];
                     $_SESSION["winkelwagen"]["producten"][$key]["id"] = $row['id'];
                     $_SESSION["winkelwagen"]["producten"][$key]["product_naam"] = $row['product_naam'];
                     $_SESSION["winkelwagen"]["producten"][$key]["prijs"] = $row['prijs'];
@@ -77,8 +64,6 @@ function getTotalFromCurrentCart() {
                 $totaal += $_SESSION["winkelwagen"]["producten"][$key]["prijs"]*$_SESSION["winkelwagen"]["producten"][$key]["hoeveelheid_in_winkelwagen"];
         }
     }
-
-
 
     return $totaal;
 }
