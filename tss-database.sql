@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `tss`.`bestelling_regels` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `bestelling_id` BIGINT UNSIGNED NOT NULL,
   `product_id` BIGINT UNSIGNED NOT NULL,
-  `product_naam` VARCHAR(255) NOT NULL
+  `product_naam` VARCHAR(255) NOT NULL,
   `aantal` INT(11) NOT NULL,
   `stukprijs` DOUBLE(12,2) NOT NULL,
   `totaal` DOUBLE(12,2) NOT NULL,
