@@ -1,6 +1,7 @@
 <?php
 include basePath('Application/Http/beheer/services.php');
 include basePath("Application/Http/beheer/menu.php");
+
 $current_page = basename($_SERVER['PHP_SELF']);
 
 // Verwerk het toevoegen van een cadeaubon
