@@ -117,7 +117,7 @@ class Auth
     {
         $is_admin = Session::get('auth')['is_admin'] ?? false;
         if (!$this->isLoggedIn() && (!$is_admin || !isset($is_admin))) {
-            header("Location: login");
+            header("Location: /login");
             exit();
         }
     }
