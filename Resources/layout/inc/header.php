@@ -1,7 +1,5 @@
 <?php
     global $auth;
-
-    $is_admin = Session::get('auth')['is_admin'] ?? false;
 ?>
 
 <header class="container-fluid h-fit px-4 d-flex justify-content-center shadow-sm bg-white">
@@ -15,7 +13,7 @@
             </a>
         </div>
 
-        <?php if (!$is_admin || !str_contains($_SERVER["REQUEST_URI"], 'beheer')) { ?>
+        <?php if (!str_contains($_SERVER["REQUEST_URI"], 'beheer')) { ?>
             <!--Zoekbalk-->
             <div class="col-6 d-flex justify-content-center d-none d-md-block">
                 <div class="input-group">
