@@ -54,7 +54,7 @@
 
 
 
-            //var_dump($_FILES);
+
             //var_dump($afbeelding_path);
 
             foreach($_POST as $key => $value) {
@@ -137,8 +137,22 @@
 
                      if( isset($_FILES) and $product_id != "")
                      {
-                         //var_dump($afbeelding_path.$filename);
-                        $gelukt = move_uploaded_file($filetmp_name, $afbeelding_path.$filename);
+
+                         $path_parts = pathinfo($afbeelding_path.$product_id."/".$filename);
+                         $gelukt = move_uploaded_file($filetmp_name, $afbeelding_path.$product_id."/".$filename);
+                        //var_dump($path_parts);
+                         $filename = $path_parts['filename'];
+                         $extensie = $path_parts['extension'];
+                         if ($gelukt) {
+                             $data = $database->query("SELECT COUNT(*) FROM media WHERE product_id = ? and pad = ?", [$product_id, "/assets/afbeeldingen/" . $product_id . "/" . $filename])->get();
+
+                             if ($data[0]['COUNT(*)'] = 0)
+                                 $database->query("INSERT INTO media (`product_id`,`naam`,`pad`,`extensie`) VALUES(?,?,?,?)",[$product_id,$filename,"/assets/afbeeldingen/".$product_id."/".$filename,$extensie]);
+                             else
+                                 var_dump("afbeelding bestaat al");
+                         }
+                           // $database->query("INSERT INTO media (`product_id`,`naam`,`pad`,`extensie`) VALUES(?,?,?,?)",[$product_id,$filename,"/assets/afbeeldingen/".$product_id."/".$filename,$extensie]);
+
 
 
                      }
@@ -163,7 +177,8 @@
              $product_select = filter_input(INPUT_GET, 'Product', FILTER_SANITIZE_SPECIAL_CHARS);
              $product_select = preg_split("/ /", $product_select);
              //$_POST['id']  = $product_select[0];
-
+             if(!file_exists($afbeelding_path.$product_select[0]))
+                 mkdir($afbeelding_path.$product_select[0],0755);
 
          }
      }
@@ -435,7 +450,7 @@
 
 
 <main>
-    <form method="POST" action='' class="hidden">
+    <form method="POST" action='' class="hidden"  enctype="multipart/form-data">
         <div class="row  align-items-top ">
             <!-- Carousel -->
             <div id="demo" class="carousel slide col " data-bs-ride="carousel" style="max-width:20vh; max-height:20vh; min-height: 20vh; min-width: 20vh; margin-left: 2vh; margin-right: 2vh" data-bs-interval="false">
