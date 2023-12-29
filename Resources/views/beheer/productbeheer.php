@@ -313,8 +313,8 @@
          #padding-right: 30px;
          float: left;
          overflow-y: auto;
-         min-height: 100vh;
-         max-height: 100vh;
+         min-height: 80vh;
+         max-height: 80vh;
          background-color:  lightgray;
          border-radius: 15px;
          text-align: center;
