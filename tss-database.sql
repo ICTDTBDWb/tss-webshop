@@ -130,7 +130,6 @@ CREATE TABLE IF NOT EXISTS `tss`.`bestellingen` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `klant_id` BIGINT UNSIGNED NOT NULL,
   `verzendmethode_id` BIGINT UNSIGNED NOT NULL,
-  `cadeaubon_id` BIGINT UNSIGNED NULL DEFAULT NULL,
   `besteldatum` DATETIME NOT NULL,
   `totaal` DOUBLE(12,2) NOT NULL,
   `voornaam` VARCHAR(255) NULL,
@@ -145,7 +144,6 @@ CREATE TABLE IF NOT EXISTS `tss`.`bestellingen` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `klant_id_idx` (`klant_id` ASC) VISIBLE,
   INDEX `verzendmethode_id_idx` (`verzendmethode_id` ASC) VISIBLE,
-  INDEX `cadeaubon_id_idx` (`cadeaubon_id` ASC) VISIBLE,
   CONSTRAINT `fk_klant_id_bestellingen`
     FOREIGN KEY (`klant_id`)
     REFERENCES `tss`.`klanten` (`id`)
@@ -154,11 +152,6 @@ CREATE TABLE IF NOT EXISTS `tss`.`bestellingen` (
   CONSTRAINT `fk_verzendmethode_id_bestellingen`
     FOREIGN KEY (`verzendmethode_id`)
     REFERENCES `tss`.`verzendmethoden` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_cadeaubon_id_bestellingen`
-    FOREIGN KEY (`cadeaubon_id`)
-    REFERENCES `tss`.`cadeaubonnen` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -183,14 +176,13 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `tss`.`bestelling_regels` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `bestelling_id` BIGINT UNSIGNED NOT NULL,
-  `product_id` BIGINT UNSIGNED NOT NULL,
-  `product_naam` VARCHAR(255) NOT NULL,
+  `product_id` BIGINT UNSIGNED NULL DEFAULT NULL,
+  `cadeaubon_id` BIGINT UNSIGNED NULL DEFAULT NULL,
+  `product_naam` VARCHAR(255) NULL DEFAULT NULL,
   `aantal` INT(11) NOT NULL,
   `stukprijs` DOUBLE(12,2) NOT NULL,
   `totaal` DOUBLE(12,2) NOT NULL,
-  PRIMARY KEY (`id`, `bestelling_id`, `product_id`),
-  INDEX `bestelling_id_idx` (`bestelling_id` ASC) VISIBLE,
-  INDEX `product_id_idx` (`product_id` ASC) VISIBLE,
+  PRIMARY KEY (`id`),
   CONSTRAINT `fk_bestelling_id_bestelling_regels`
     FOREIGN KEY (`bestelling_id`)
     REFERENCES `tss`.`bestellingen` (`id`)
@@ -199,6 +191,11 @@ CREATE TABLE IF NOT EXISTS `tss`.`bestelling_regels` (
   CONSTRAINT `fk_product_id_bestelling_regels`
     FOREIGN KEY (`product_id`)
     REFERENCES `tss`.`producten` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_cadeaubon_id_bestelling_regels`
+    FOREIGN KEY (`cadeaubon_id`)
+    REFERENCES `tss`.`cadeaubonnen` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -220,7 +217,6 @@ CREATE TABLE IF NOT EXISTS `tss`.`facturen` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `tss`.`betalingen`
