@@ -40,6 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $aantal = $_POST['aantal_giftboxes'];
         $product_id = $product_id_map[$stukprijs];
         voegGiftboxToeAanBestelling($product_id,$aantal);
+        header('Location: /account/cadeaubonnen');
+        exit();
 
     }
 }
@@ -68,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </form>
         <!-- Toon bericht na verificatie -->
         <?php if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cadeaukaartcode'])): ?>
+
             <p class="alert <?= $verificatieResultaat ? 'alert-success' : 'alert-danger' ?>">
                 <?= $verificatieMelding ?>
             </p>

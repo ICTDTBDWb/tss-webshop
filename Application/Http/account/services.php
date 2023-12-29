@@ -108,11 +108,16 @@ function zoekBestellingen($klantId, $zoekterm) {
 
 // Functie om een giftbox toe te voegen aan een winkelwagen
 function voegGiftboxToeAanBestelling($product_id, $aantal) {
-    $_SESSION["winkelwagen"]["producten"][] = [
-        "id" => $product_id,
-        "hoeveelheid_in_winkelwagen" => $aantal,
-    ];
-//    var_dump($_SESSION);exit();
+
+    if(isset($_SESSION['winkelwagen']['producten'][$product_id])) {
+        $_SESSION['winkelwagen']['producten'][$product_id]['hoeveelheid_in_winkelwagen'] += $aantal;
+    } else {
+        $_SESSION['winkelwagen']['producten'][$product_id] = [
+            'id' => $product_id,
+            'hoeveelheid_in_winkelwagen' => $aantal,
+        ];
+    }
+
 }
 
 // Functie om bestellingdetails op te halen op basis van bestellingId

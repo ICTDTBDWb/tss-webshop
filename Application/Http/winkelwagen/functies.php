@@ -47,12 +47,10 @@ function updateSessionCartProducts(Database $databaseManager) {
                 if(
                     $product['id'] == $row['id'] &&
                     //array diff hoger dan 1, omdat hoeveelheid in winkelwagen altijd anders is dan in database
-<<<<<<< HEAD
+
                     count(array_diff_assoc($product, $row)) > 1
 
-=======
-                    count(array_diff_assoc($product, $row)) > 0
->>>>>>> 8475f7418531cfd39035881515e6c71e3a49a482
+
                 ) {
 
                     $return['changed_products'][] = $_SESSION["winkelwagen"]["producten"][$key];
