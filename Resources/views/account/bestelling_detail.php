@@ -1,4 +1,5 @@
 <?php
+$auth->protectPage();
 // Plaats van de benodigde PHP-bestanden en sessiebeheer
 include basePath("Application/Http/account/services.php");
 $klantId=Session::get('auth')['user_id'];

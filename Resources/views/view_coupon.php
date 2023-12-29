@@ -15,7 +15,7 @@
         <input type="number" class="form-control" id="bedrag" name="bedrag" step="0.01" >
         <div class="invalid-feedback" id="bedragValidationMsg">Bedrag is verplicht.</div>
     </div>
-    <button type="button" class="btn btn-primary" id="validateCoupon">Valideren</button>
+    <button type="button" class="btn btn-primary" id="validateCoupon">Cadeaubon toevoegen</button>
     <div id="couponResultMessage"></div>
 </div>
 
@@ -84,6 +84,11 @@
                         var totalPrice = parseFloat($('#totalPrice').text());
                         var couponValue = parseFloat(bedrag);
                         $('#totalPrice').text(totalPrice - couponValue);
+
+
+                        $('#code').val("");
+                        $('#pin').val("");
+                        $('#bedrag').val("");
                     },
                     error: function(xhr, status, error) {
                         $('#couponResultMessage').html( xhr.responseText );
@@ -113,8 +118,6 @@
                 var totalPrice = parseFloat($('#totalPrice').text());
                 var couponValue = parseFloat(bedrag);
 
-                console.log(totalPrice);
-                console.log(couponValue);
                 $('#totalPrice').text(totalPrice - couponValue);
             },
             error: function(xhr, status, error) {

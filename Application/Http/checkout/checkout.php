@@ -6,9 +6,6 @@ $dbm = new Database();
 //session_start();
 include(__DIR__."/../winkelwagen/functies.php");
 include(__DIR__."/../checkout/functies.php");
-$_SESSION['user']['logged_in'] = true;
-$_SESSION['user']['id'] = 1;
-
 
 // Redirect to homepage if not logged in.
 $homepage_path = "http://localhost/";
