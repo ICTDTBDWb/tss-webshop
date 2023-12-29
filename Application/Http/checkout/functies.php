@@ -45,7 +45,7 @@ function bestellingOpslaan(int $klant_id, int $verzendmethode_id, $totaal, strin
         $dbm->exec($bestelling_query);
         $bestelling_id = $dbm->lastInsertId();
 
-    // Betalijng toevoegen
+    // Betaling toevoegen
         $betaling_query =
             "INSERT INTO " .
             "betalingen ( " .
@@ -60,26 +60,23 @@ function bestellingOpslaan(int $klant_id, int $verzendmethode_id, $totaal, strin
             '0' . " ) ";
 
         $dbm->exec($betaling_query);
-
-
     // Producten toevoegen
         foreach ($producten as $product) {
-            $cadeaubon_id = 'NULL';
             $bestelregel_query =
                 "INSERT INTO " .
                 "bestelling_regels ( " .
                 "bestelling_id, " .
                 "product_id, " .
-                "cadeaubon_id, " .
                 "aantal, " .
                 "stukprijs, " .
+                "product_naam, " .
                 "totaal ) " .
                 "VALUES ( " .
                 $bestelling_id . ", " .
                 $product['id'] . ", " .
-                $cadeaubon_id . ", " .
                 $product['hoeveelheid_in_winkelwagen'] . ", " .
                 $product['prijs'] . ", " .
+                "'".filter_var($product['product_naam'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) . "', " .
                 $product['hoeveelheid_in_winkelwagen'] * $product['prijs'] . ") ";
 
             $dbm->exec($bestelregel_query);
@@ -95,18 +92,18 @@ function bestellingOpslaan(int $klant_id, int $verzendmethode_id, $totaal, strin
                     "INSERT INTO " .
                         "bestelling_regels ( " .
                         "bestelling_id, " .
-                        "product_id, " .
                         "cadeaubon_id, " .
                         "aantal, " .
                         "stukprijs, " .
+                        "product_naam, " .
                         "totaal ) " .
                     "VALUES ( " .
                         $bestelling_id . ", " .
-                        'NULL' . ", " .
                     $bon_id_huidige_bedrag['id'] . ", " .
                         '1' . ", " .
                         $cadeaubon['bedrag'] . ", " .
-                        -$cadeaubon['bedrag'] . ") ";
+                        "'".$cadeaubon['code'] . "', " .
+                        $cadeaubon['bedrag'] . ") ";
                 $dbm->exec($cadeaubon_query);
 
                 // Update het overgebleven bedrag van de cadeaubon
@@ -114,8 +111,8 @@ function bestellingOpslaan(int $klant_id, int $verzendmethode_id, $totaal, strin
                 $nieuwe_bedrag = $bon_id_huidige_bedrag['bedrag'] - $cadeaubon['bedrag'];
 
                 $cadeaubon_update_query = "UPDATE cadeaubonnen " .
-                    "SET bedrag =" . $nieuwe_bedrag . " " .
-                    "WHERE code=" . $cadeaubon['code'] . ";";
+                    "SET bedrag=" . $nieuwe_bedrag . " " .
+                    "WHERE code='" . $cadeaubon['code'] . "';";
 
                 $dbm->exec($cadeaubon_update_query);
             }
@@ -123,12 +120,13 @@ function bestellingOpslaan(int $klant_id, int $verzendmethode_id, $totaal, strin
 
         $dbm->commit();
     } catch (Exception $ex) {
-        var_dump($ex);exit;
+//        echo"<pre>";
+//        var_dump($ex);
+//        echo "</pre>";
+//        exit;
         $dbm->rollBack();
         return false;
     }
-
-
 
     $bestandsnaam = genereerPdf($bestelling_id);
     $klant = $dbm->query("SELECT voornaam, email FROM klanten WHERE id=$klant_id")->fetchAll(PDO::FETCH_ASSOC)[0];
@@ -164,9 +162,11 @@ function bestellingOpslaan(int $klant_id, int $verzendmethode_id, $totaal, strin
     );
 
     // Delete file after mailing
+    // Is disabled om pdf te kunnen zien voor testen.
 //    unlink($bestandsnaam);
 
     $_SESSION['winkelwagen']['producten'] = [];
+    $_SESSION['winkelwagen']['cadeaubonnen'] = [];
 
         //redirect login page
         header("Location: /account/bestelling_detail?id=$bestelling_id");
@@ -182,7 +182,6 @@ function getVerzendmethodes(Database $dbm) {
 function genereerPdf(int $bestelling_id) {
 
     $datum = "01-01-1001";
-    $order_datum = "01-01-1002";
     $bestandsnaam = "Factuur_".$bestelling_id.".pdf";
     $dbm = new Database();
 
@@ -205,11 +204,9 @@ function genereerPdf(int $bestelling_id) {
 
     $bestelling = $dbm->query($bestelling_query, ["id"=>$bestelling_id])->first();
 
-    $bestelregels_query = "SELECT br.bestelling_id, br.product_id, br.cadeaubon_id, br.aantal, br.stukprijs, br.totaal, p.naam FROM bestelling_regels as br LEFT JOIN producten as p on br.product_id=p.id WHERE bestelling_id=:id";
+    $bestelregels_query = "SELECT br.bestelling_id, br.product_id, br.cadeaubon_id, br.aantal, br.stukprijs, br.totaal, br.product_naam FROM bestelling_regels as br LEFT JOIN producten as p on br.product_id=p.id WHERE bestelling_id=:id";
     $bestelregels = $dbm->query($bestelregels_query, ["id"=>$bestelling_id])->get();
 
-
-//    var_dump($bestelregels);exit;
     $klant_query = "SELECT voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode, woonplaats FROM klanten WHERE id=:id";
 
     $klant = $dbm->query($klant_query, ["id"=>$bestelling["klant_id"]])->first();
@@ -223,10 +220,8 @@ function genereerPdf(int $bestelling_id) {
         "btw_nummer" => "012345689",
         "factuurnmmer" => "Factuur_".$bestelling_id,
         "factuurdatum" => $datum,
-        "besteldatum" => $order_datum,
+        "besteldatum" => $bestelling['besteldatum'],
     ];
-//    $pdf->SetFont("Arial", "", 14);
-//    $pdf->Cell(40,10, "Bestelling: " . $bestelling_id );
 
     $pdf->SetFont("Arial", "", 24);
     $pdf->Cell(150,10, "The Sixth String ",0,0, "R" );
@@ -355,16 +350,24 @@ function genereerPdf(int $bestelling_id) {
 
         $pdf->Cell($product_margin_left ,$product_line_height, "" );
 
-        $pdf->Cell(60,$product_line_height, $bestelregel['naam']);
+        $pdf->Cell(60,$product_line_height, $bestelregel['product_naam']);
         $pdf->Cell($product_space_between ,$product_line_height, "" );
 
-        $pdf->Cell($product_cell_width,$product_line_height, $bestelregel['stukprijs']);
+        // Zet een - voor de prijs als het een cadeaubon is
+        if($bestelregel['cadeaubon_id'] != false) {
+            $negative_prefix = "-";
+        } else {
+            $negative_prefix = "";
+        }
+
+        $pdf->Cell($product_cell_width,$product_line_height, $negative_prefix.$bestelregel['stukprijs']);
         $pdf->Cell($product_space_between ,$product_line_height, "" );
+
 
         $pdf->Cell($product_cell_width,$product_line_height, $bestelregel['aantal']);
         $pdf->Cell($product_space_between ,$product_line_height, "" );
 
-        $pdf->Cell($product_cell_width,$product_line_height, $bestelregel['totaal']);
+        $pdf->Cell($product_cell_width,$product_line_height, $negative_prefix.$bestelregel['totaal']);
         $pdf->Cell($product_space_between ,$product_line_height, "" );
         $pdf->Ln();
     }
@@ -403,14 +406,7 @@ function validateCartCadeaubonnen($dbm)
     ){
         return true;
     }
-//    $_SESSION['winkelwagen']['cadeaubonnen']  = [];
 
-
-//    $filter_cart_cadeaubonnen = filter_var_array($_SESSION['winkelwagen']['cadeaubonnen'], [
-//        "code" => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
-//        "pin" => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
-//        "bedrag" => FILTER_SANITIZE_NUMBER_FLOAT,
-//    ]);
     $filter_cart_cadeaubonnen = [];
     foreach ($_SESSION['winkelwagen']['cadeaubonnen'] as $cadeaubon) {
         $filtered_cadeaubon = [
