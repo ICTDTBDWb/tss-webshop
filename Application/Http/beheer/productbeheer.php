@@ -260,13 +260,12 @@ function make_media_carousel($product, $root_path)
         $begin = "<div class='carousel-item $active' style='height: 100%; width: 100%' >";
         $media = $link . htmlspecialchars($item['pad']).".".htmlspecialchars($item['extensie']);
         $naam = $item['naam'];
+        $id = $item['id'];
         $inner = "    <div class='row' >
                             <h5 class='col ' style='color: black; text-align: center'>pic $key</h5>
                             <div class='btn-group col' role='group' aria-label='area'>
-                                <button type='button' class='btn btn-outline-primary'>
-                                   $edit_icon
-                                </button>
-                                <button type='button' class='btn btn-outline-danger'>
+   
+                                <button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#mediaverwijder_$id'>
                                    $verwijder_icon
                                 </button>
                             </div>
@@ -294,5 +293,55 @@ function make_media_carousel($product, $root_path)
        return $construct;
 }
 
+
+function modal_verwijder_media($media)
+{
+    if (!is_array($media)) return "";
+
+    $construct = "";
+    foreach($media as $key => $item)
+    {
+        $id = $item['id'];
+        $form = "media_form_verwijder_".$id ;
+        $begin_modal= "   <form method='POST' action='' id='$form'>  
+                        <div class='modal-dialog'>
+                            <div class='modal-content'>
+                                <div class='modal-header'>
+                                    <h5 class='modal-title'>Categorie Verwijderen</h5>
+                                    <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='sluiten'></button>
+                                </div>
+                             <div class='modal-body'>";
+        $einde_modal = "          </div>
+                             <div class='modal-footer'>
+                                <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Annuleren</button>
+                                <button type='submit' class='btn btn-danger' name='opslaan' value='media_verwijderen' onclick='insert_input(\"$form\")' >verwijderen</button>
+                            </div>
+                         </div>
+                      </div>
+                     </form>
+                 </div>";
+
+
+
+
+
+        $media_naam = $item["naam"];
+
+
+        $text = " <div class='mb-3'>
+                    <input type='hidden' value='$id ' name='media_id'> 
+                    <p class='text-center fw-bold'> weet u zeker dat u categorie $media_naam wilt verwijderen? </p><br>
+                </div>";
+
+
+
+        $title = "<div class='modal fade' tabindex='-1' id='mediaverwijder_$id' >";
+
+
+
+        $construct .= $title.$begin_modal.$text.$einde_modal;
+    }
+    return $construct;
+}
 
 

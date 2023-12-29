@@ -290,7 +290,7 @@
           }
 
           $product[0]["media"] = $uploaded_files;
-
+          $product[0]["media"] = "";
 
 
 
@@ -656,6 +656,7 @@
 
         <?php echo modal_verwijder_categorie($producten_categorie);
               echo modal_edit_categorie($producten_categorie);
+              echo modal_verwijder_media($product[0]["media"])
               ?>
 
 
