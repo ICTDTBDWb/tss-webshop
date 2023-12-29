@@ -142,7 +142,7 @@ class Auth
 
         if (
             !empty($accepted_roles)
-            && !in_array($this->user()['role'], $accepted_roles)
+            && !in_array($this->user()['rol'], $accepted_roles)
         ) {
             header("Location: /beheer");
             exit();
