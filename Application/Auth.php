@@ -4,7 +4,11 @@ use JetBrains\PhpStorm\NoReturn;
 
 class Auth
 {
-    const BEHEERDER_ROLES = ['admin', 'webredacteur', 'seospecialist', 'klantenservice'];
+    const ADMIN_ROLE = 'admin';
+    const WEBREDACTEUR_ROLE = 'webredacteur';
+    const SEOSPECIALIST_ROLE = 'seospecialist';
+    const KLANTENSERVICE_ROLE = 'klantenservice';
+    const BEHEERDER_ROLES = [self::ADMIN_ROLE, self::WEBREDACTEUR_ROLE, self::SEOSPECIALIST_ROLE, self::KLANTENSERVICE_ROLE];
 
     private static ?self $instance = null;
     private Database|null $db = null;
@@ -113,7 +117,7 @@ class Auth
     {
         $is_admin = Session::get('auth')['is_admin'] ?? false;
         if (!$this->isLoggedIn() && (!$is_admin || !isset($is_admin))) {
-            header("Location: login");
+            header("Location: /login");
             exit();
         }
     }
@@ -124,7 +128,7 @@ class Auth
      * @param array $accepted_roles
      * @return void
      */
-    public function protectAdminPage(array $accepted_roles): void
+    public function protectAdminPage(array $accepted_roles = []): void
     {
         $is_admin = Session::get('auth')['is_admin'] ?? false;
 
@@ -137,8 +141,8 @@ class Auth
         }
 
         if (
-            !in_array($this->user()['role'], self::BEHEERDER_ROLES)
-            || !in_array($this->user()['role'], $accepted_roles)
+            !empty($accepted_roles)
+            && !in_array($this->user()['role'], $accepted_roles)
         ) {
             header("Location: beheer/");
             exit();
