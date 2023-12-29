@@ -5,8 +5,8 @@ function basePath($path): string { return __DIR__ . "/../$path"; }
 session_start();
 
 // Trim / at the start of the request URI. If it is empty default to "homepagina".
-$uri = trim($_SERVER['REQUEST_URI'], '/');
-$page = (empty($uri) ? 'homepagina' : $uri);
+$uri = trim($_SERVER["REQUEST_URI"], "/");
+$page = (empty($uri) ? "homepagina" : ($uri == "beheer" ? "beheer/overzicht" : $uri));
 $url = explode('?', $page);
 $page = $url[0];
 $params = $url[1] ?? "";

@@ -2,6 +2,8 @@
 $auth->protectAdminPage([Auth::WEBREDACTEUR_ROLE]);
 include basePath('Application/Http/beheer/services.php');
 include basePath("Application/Http/beheer/menu.php");
+
+$auth->protectAdminPage([Auth::ADMIN_ROLE]);
 $current_page = basename($_SERVER['PHP_SELF']);
 
 // Verwerk het toevoegen van een cadeaubon
