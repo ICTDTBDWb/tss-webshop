@@ -64,8 +64,8 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `tss`.`producten` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `naam` VARCHAR(255) NOT NULL,
-  `merk` VARCHAR(255) NOT NULL,
-  `beschrijving` VARCHAR(4000) NOT NULL,
+  `merk` VARCHAR(255),
+  `beschrijving` TEXT,
   `prijs` DOUBLE(12,2) NOT NULL,
   `aantal` INT(11) NOT NULL,
   `is_actief` TINYINT NOT NULL DEFAULT 0,
