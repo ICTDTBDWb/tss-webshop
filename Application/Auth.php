@@ -4,6 +4,8 @@ use JetBrains\PhpStorm\NoReturn;
 
 class Auth
 {
+    const BEHEERDER_ROLES = ['admin', 'webredacteur', 'seospecialist', 'klantenservice'];
+
     private static ?self $instance = null;
     private Database|null $db = null;
 
@@ -34,7 +36,7 @@ class Auth
     }
 
     /**
-     * Retrieve the user is he is logged in.s
+     * Retrieve the user is he is logged in.
      *
      * @return array|false
      */
@@ -103,16 +105,42 @@ class Auth
     }
 
     /**
-     * Redirect back to the homepage if unauthenticated.
+     * Redirect to the login page if unauthenticated.
      *
-     * @param bool $is_admin
      * @return void
      */
-    public function protectPage(bool $is_admin = false): void
+    public function protectPage(): void
     {
-        if (!$this->isLoggedIn()) {
-            $page = $is_admin ? 'beheer/login' : 'login';
-            header("Location: $page");
+        $is_admin = Session::get('auth')['is_admin'] ?? false;
+        if (!$this->isLoggedIn() && (!$is_admin || !isset($is_admin))) {
+            header("Location: login");
+            exit();
+        }
+    }
+
+    /**
+     * Redirect to the admin login page if unauthenticated.
+     *
+     * @param array $accepted_roles
+     * @return void
+     */
+    public function protectAdminPage(array $accepted_roles): void
+    {
+        $is_admin = Session::get('auth')['is_admin'] ?? false;
+
+        if (
+            !$this->isLoggedIn()
+            || (!$is_admin && isset($is_admin))
+        ) {
+            header("Location: " . ($is_admin ? '/' : 'beheer/login'));
+            exit();
+        }
+
+        if (
+            !in_array($this->user()['role'], self::BEHEERDER_ROLES)
+            || !in_array($this->user()['role'], $accepted_roles)
+        ) {
+            header("Location: beheer/");
             exit();
         }
     }
