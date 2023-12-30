@@ -4,7 +4,7 @@
 function queryEnkelProduct($getProductId) {
     $database = new Database();
     $result = $database->query(
-        "SELECT producten.id, producten.naam, producten.omschrijving ,producten.prijs, media.pad
+        "SELECT producten.id, producten.naam, producten.beschrijving ,producten.prijs, media.pad
                                         FROM producten                            
                                         INNER JOIN media ON media.id = producten.id
                                         WHERE producten.id = ?",

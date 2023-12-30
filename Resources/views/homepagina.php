@@ -36,19 +36,21 @@
     <h5>Laatst bekeken</h5>
 
     <div class="d-flex">
-        <div class="card me-2 text-white" style="width: 200px; height: 200px">
-            <img
-                src="https://img.freepik.com/free-photo/guy-playing-acoustic-guitar_169016-2126.jpg?w=1380&t=st=1701540133~exp=1701540733~hmac=7522639adac31beacdcfcb3c31df1aeb3666b4d6547be7ad761153305b7025f8"
-                alt="Product"
-                class="rounded w-100 h-100"
-                style="object-fit: cover"
-            >
-            <div class="w-100 h-100 position-absolute left-0 top-0 rounded bg-dark" style="opacity: .4"></div>
-            <div class="card-img-overlay">
-                <h5 class="card-title">Product naam</h5>
-                <p class="card-text">Product Price</p>
+        <?php foreach (recenteProducten() as $recente_product) { ?>
+            <div class="card me-2 text-white" style="width: 200px; height: 200px">
+                <img
+                    src="/assets/afbeeldingen/<?php echo $recente_product['pad'] . '.' . $recente_product['extensie']; ?>"
+                    alt="Product"
+                    class="rounded w-100 h-100"
+                    style="object-fit: cover"
+                >
+                <div class="w-100 h-100 position-absolute left-0 top-0 rounded bg-dark" style="opacity: .4"></div>
+                <div class="card-img-overlay">
+                    <h5 class="card-title"><?php echo $recente_product['naam']; ?></h5>
+                    <p class="card-text"><?php echo $recente_product['prijs']; ?></p>
+                </div>
             </div>
-        </div>
+        <?php } ?>
     </div>
 </section>
 
@@ -76,7 +78,7 @@
             <div class="row-sm w-100 d-flex flex-column p-3">
                 <div class="col-sm-12 d-flex flex-column flex-sm-grow-1">
                     <h5><?php echo $product['naam']; ?></h5>
-                    <p class="text-truncate text-wrap"><?php echo $product['omschrijving']; ?></p>
+                    <p class="text-truncate text-wrap"><?php echo $product['beschrijving']; ?></p>
                 </div>
                 <div class="col-sm-12 d-flex flex-sm-row justify-content-between align-items-end">
                     <p class="fw-semibold m-0">&euro; <?php echo $product['prijs']; ?></p>

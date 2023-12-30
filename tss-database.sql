@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `tss`.`producten` (
   `prijs` DOUBLE(12,2) NOT NULL,
   `aantal` INT(11) NOT NULL,
   `is_actief` TINYINT NOT NULL DEFAULT 0,
-  `is_verijderd` TINYINT NOT NULL DEFAULT 0,
+  `is_verwijderd` TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
 ENGINE = InnoDB;

@@ -10,9 +10,9 @@ session_start();
  * Retrieve parameters from the request URI if there are any.
  */
 $uri = trim($_SERVER["REQUEST_URI"], "/");
-$page = $uri ?: "homepagina";
+list($page, $params) = explode('?', $uri) + [null, null];
+$page = $page ?: "homepagina";
 $page = ($page == "beheer") ? "beheer/overzicht" : $page;
-list($page, $params) = explode('?', $page) + [null, null];
 
 // Require the base includes for every file.
 require_once basePath('Application/includes.php');
