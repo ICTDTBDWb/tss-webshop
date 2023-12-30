@@ -41,7 +41,7 @@
             $product_beschrijving = array_key_exists("product_beschrijving", $_POST) ? $_POST['product_beschrijving'] : "";
             $product_merk = array_key_exists("product_merk", $_POST) ? $_POST['product_merk'] : "";
             $product_actief = array_key_exists("product_actief", $_POST) ? $_POST['product_actief'] : "";
-            $afbeelding = array_key_exists("picture_upload", $_POST) ? $_POST['picture_upload'] : "";
+            $media_id = array_key_exists("media_id", $_POST) ? $_POST['media_id'] : "";
             $youtube_url = array_key_exists('upload_url' , $_POST)  ? $_POST['upload_url'] : "";
             $product_categorie = [];
 
@@ -151,7 +151,7 @@
                          if ($gelukt) {
                              $data = $database->query("SELECT COUNT(*) FROM media WHERE product_id = ? and pad = ?", [$product_id, "/assets/afbeeldingen/" . $product_id . "/" . $filename])->get();
 
-                             if ($data[0]['COUNT(*)'] = 0)
+                             if ($data[0]['COUNT(*)'] == 0)
                                  $database->query("INSERT INTO media (`product_id`,`naam`,`pad`,`extensie`) VALUES(?,?,?,?)",[$product_id,$filename,"/assets/afbeeldingen/".$product_id."/".$filename,$extensie]);
                              else
                                  var_dump("afbeelding bestaat al");
@@ -167,6 +167,22 @@
 
 
 
+
+                break;
+
+                case "media_verwijderen" :
+
+                    if ($media_id != "")
+                       $data = $database->query("SELECT * FROM media where id = ? ", [$media_id])->get();
+                        $database->query("DELETE FROM media where id = ? ", [$media_id]);
+                        $pad = array_key_exists('pad', $data[0]) ? $data[0]['pad'] : "";
+                        $extensie = array_key_exists('extensie', $data[0]) ? $data[0]['extensie'] : "";
+
+                        var_dump($rootPath.$pad.".".$extensie);
+                        if( is_writable($rootPath.$pad.".".$extensie)) {
+                            unlink($rootPath . $pad . "." . $extensie);
+
+                        }
 
                 break;
 
