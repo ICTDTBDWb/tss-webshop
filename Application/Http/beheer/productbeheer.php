@@ -16,6 +16,36 @@ $_validExtensions['video'] = ["mp4"];
 $_validExtensions['iframe'] = ["youtube"];
 
 
+//voor iedereen die media moet controleren
+/**
+ * checkt video url.
+ *
+ * @param mixed $media //is SELECT * FROM media where product_id = ? -> first
+ * @return string // gebruik dit samen met echo om waarde op scherm te tonen
+ */
+function check_media($media)
+{
+    $link = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
+    $media_source = $link . htmlspecialchars($media['pad']).".".htmlspecialchars($media['extensie']);
+    $naam = $media['naam'];
+
+    global $_validExtensions;
+
+    if (in_array($media['extensie'], $_validExtensions['image'])) {
+        $source = "<img src='$media_source' alt='$naam'  class='d-block' >";
+
+    } elseif (in_array($media['extensie'], $_validExtensions['video'])) {
+        $source = "";
+    } elseif (in_array($media['extensie'], $_validExtensions['iframe'])) {
+        $media_source = htmlspecialchars($media['pad']);
+        $source = "<iframe src='$media_source'  title='$naam'  class='d-block'></iframe>";
+    } else {
+        $source = "$naam";
+    }
+
+    return $source;
+}
+
 
 
 //make arcordion header
