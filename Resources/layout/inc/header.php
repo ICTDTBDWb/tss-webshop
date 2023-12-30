@@ -16,8 +16,8 @@
         <?php if (!str_contains($_SERVER["REQUEST_URI"], 'beheer')) { ?>
             <!--Zoekbalk-->
             <div class="col-6 d-flex justify-content-center d-none d-md-block">
-                <div class="input-group">
-                    <input type="text" name="search" id="header-search"
+                <form class="input-group" method="GET" action="/producten">
+                    <input type="text" name="zoeken" id="header-search"
                            placeholder="Product zoeken."
                            aria-label="Product zoeken."
                            aria-describedby="addon-wrapping"
@@ -25,10 +25,14 @@
                            formmethod="post"
 
                     >
-                    <button class="btn btn-outline-light border text-dark" type="button">
+                    <button
+                        value="producten-zoeken"
+                        type="submit"
+                        class="btn btn-outline-light border text-dark"
+                    >
                         <i class="fa fa-search"></i>
                     </button>
-                </div>
+                </form>
             </div>
 
             <!--Knoppen rechts-->
