@@ -4,23 +4,38 @@ include basePath('Application/Http/beheer/services.php');
 include basePath("Application/Http/beheer/menu.php");
 $auth->protectAdminPage([Auth::WEBREDACTEUR_ROLE]);
 
-
 // Verwerk het toevoegen van een cadeaubon
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['toevoegen'])) {
     $code = $_POST['code'];
     $pin = $_POST['pin'];
     $bedrag = $_POST['bedrag'];
 
-    queryVoegCadeaubonToe($code, $pin, $bedrag);
+    // Controleer of de cadeaubon al bestaat
+    if (!cadeaubonBestaat($code)) {
+        // Voeg de cadeaubon toe als deze nog niet bestaat
+        queryVoegCadeaubonToe($code, $pin, $bedrag);
+        echo "<script>alert('Cadeaubon succesvol toegevoegd.');</script>";
+    } else {
+        // Toon een foutmelding als de cadeaubon al bestaat
+        echo "<script>alert('Fout: Een cadeaubon met deze code bestaat al.');</script>";
+    }
 }
+
 
 // Verwerk het wijzigen van een cadeaubon
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['wijzigen'])) {
     $cadeaubonId = $_POST['wijzig_cadeaubon_id'];
     $nieuweCode = $_POST['nieuwe_code'];
     $nieuwBedrag = $_POST['nieuw_bedrag'];
-
+// Controleer of de cadeaubon al bestaat
+if (!cadeaubonBestaat($nieuweCode)) {
+    // Wijzig de cadeaubon toe als deze nog niet bestaat
     queryWijzigCadeaubon($cadeaubonId, $nieuweCode, $nieuwBedrag);
+    echo "<script>alert('Cadeaubon succesvol gewijzigd.');</script>";
+    } else {
+        // Toon een foutmelding als de cadeaubon al bestaat
+        echo "<script>alert('Fout: Een cadeaubon met deze code bestaat al.');</script>";
+    }
 }
 
 // Verwerk het verwijderen van een cadeaubon
@@ -103,7 +118,7 @@ $cadeaubonnen = queryHaalCadeaubonnenOp();
                     } ?>
                 </select>
             </div>
-            <button type="submit" name="verwijderen" class="btn btn-danger">Verwijder</button>
+            <button type="submit" name="verwijderen" class="btn btn-danger" onclick="return confirm('Weet u zeker dat deze cadeaubon verwijderd moet worden?');">Verwijder</button>
         </form>
     </div>
 </div>

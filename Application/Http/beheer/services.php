@@ -73,3 +73,36 @@ function queryWijzigCadeaubon($cadeaubonId, $nieuweCode, $nieuwBedrag) {
     // Sluit de databaseverbinding.
     $database->close();
 }
+
+function cadeaubonBestaat($code) {
+    // Maak een instantie van de DatabaseManager klasse.
+    $database = new Database();
+
+    // Voer een SELECT-query uit om te controleren of de cadeaubon al bestaat.
+    $result = $database->query(
+        "SELECT COUNT(*) AS 'COUNT' FROM cadeaubonnen WHERE code = ?",
+        [$code]
+    )->first();
+//var_dump ($result); exit();
+    // Controleer of de query een resultaat heeft opgeleverd
+    $cadeaubonBestaat = is_array($result) && $result ['COUNT'] > 0;
+
+    // Sluit de databaseverbinding.
+    $database->close();
+
+    // Return true als de cadeaubon al bestaat, anders false
+    return $cadeaubonBestaat;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
