@@ -42,6 +42,7 @@
             $product_merk = array_key_exists("product_merk", $_POST) ? $_POST['product_merk'] : "";
             $product_actief = array_key_exists("product_actief", $_POST) ? $_POST['product_actief'] : "";
             $media_id = array_key_exists("media_id", $_POST) ? $_POST['media_id'] : "";
+            $hoofd_afbeelding = array_key_exists("hoofd_afbeelding", $_POST) ? $_POST['hoofd_afbeelding'] : "";
             $youtube_url = array_key_exists('upload_url' , $_POST)  ? $_POST['upload_url'] : "";
             $product_categorie = [];
 
@@ -80,7 +81,24 @@
                     if ($product_id == "")
                         $product_id = $database->query("INSERT INTO producten (`naam`,`beschrijving`, `merk`, `prijs`, `aantal`, `is_actief`, `is_verijderd`) VALUES (?,?,?,?,?,?,?) ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal, $product_actief,0])->insert();
                     else
+                    {
                         $database->query("UPDATE producten SET naam = ?, beschrijving = ?, merk = ? , prijs = ? , aantal = ?, is_actief = ?, is_verijderd = ? WHERE id = ? ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal, $product_actief, 0, $product_id]);
+                        $data = $database->query("SELECT * FROM media where product_id = ?", [$product_id])->first();
+                        var_dump($data);
+                        $id = array_key_exists( 'id', $data) ? $data['id'] : "";
+                        if ($id != $hoofd_afbeelding and ($hoofd_afbeelding != "" or $id != ""))
+                        {
+                            $data2 = $database->query("SELECT * FROM media where id = ?", [$hoofd_afbeelding])->first();
+                            if(array_key_exists("id", $data2)) {
+                                $database->query("UPDATE media SET product_id = ?, naam = ? ,pad = ?, extensie = ? where id = ?", [$data2['product_id'], $data2['naam'], $data2['pad'], $data2['extensie'], $data['id']]);
+                                $database->query("UPDATE media SET product_id = ?, naam = ? ,pad = ?, extensie = ? where id = ?",[$data['product_id'], $data['naam'], $data['pad'], $data['extensie'], $data2['id'] ] );
+                            }
+
+                        }
+                    }
+
+
+
 
 
                     $database->query("DELETE FROM product_categorieen where product_id = ?",[$product_id]);
@@ -161,9 +179,10 @@
 
                      }
 
-                     if ($product_id != "" and $youtube_url != "")
+                     if ($product_id != "" and $youtube_url != "") {
                          $youtube_url = str_replace("watch?v=", "embed/", $youtube_url);
-                         $database->query("INSERT INTO media (`product_id`,`naam`,`pad`,`extensie`) VALUES(?,?,?,?)",[$product_id,"youtube video",$youtube_url, "youtube"]);
+                         $database->query("INSERT INTO media (`product_id`,`naam`,`pad`,`extensie`) VALUES(?,?,?,?)", [$product_id, "youtube video", $youtube_url, "youtube"]);
+                     }
 
 
 
@@ -343,6 +362,8 @@
           //filter on categorie
           $item['show'] = ($filter != "" && count($item['product']) > 0) || $active == true  ? "" : "collapsed";
       }
+
+      unset($item);
 
 
 ?>
@@ -577,10 +598,16 @@
             <div class="container col" style="max-width: 30%; align-content: flex-start" >
                 <label for="hoofd_afbeelding" class="form-label">Hoofd afbeelding </label>
                 <select id="hoofd_afbeelding" class="form-select" name="hoofd_afbeelding">
-                    <option selected>pic1</option>
-                    <option>pic1</option>
-                    <option>pic2</option>
-                    <option>pic3</option>
+                    <?php
+                    foreach ($product[0]["media"] as $key => $item)
+                    {
+                        $id = $item['id'];
+                        if ($key == 0)
+                            echo "<option value='$id' selected >hoofd afbeelding</option>";
+                        else
+                            echo "<option value='$id' >pic $key</option>";
+                    }
+                    ?>
                 </select><br>
                 <!--<a class="btn btn-outline-secondary" href= /beheer/mediacategoriebeheer" style="width: 100%" role="button">Media beheer</a> -->
                 <button type="button" class="btn btn-outline-secondary" style="width: 100%"  data-bs-toggle="modal" data-bs-target="#upload_picture">Media toevoegen</button><br><br>

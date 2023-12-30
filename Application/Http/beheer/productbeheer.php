@@ -244,6 +244,10 @@ function make_option_list($options)
 
 function make_media_carousel($product, $root_path)
 {
+
+    if (!is_array($product))
+        return "";
+
     global $_validExtensions;
     global $verwijder_icon;
     global $edit_icon;
