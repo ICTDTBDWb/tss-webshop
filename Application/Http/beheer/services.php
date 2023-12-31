@@ -74,6 +74,7 @@ function queryWijzigCadeaubon($cadeaubonId, $nieuweCode, $nieuwBedrag) {
     $database->close();
 }
 
+//Controleer de cadeaubon
 function cadeaubonBestaat($code) {
     // Maak een instantie van de DatabaseManager klasse.
     $database = new Database();
