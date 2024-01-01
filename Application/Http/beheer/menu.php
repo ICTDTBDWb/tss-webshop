@@ -1,6 +1,8 @@
 
 <?php
+require_once(basePath("Application/Auth.php"));
 
+$auth = Auth::getInstance();
      function make_active(string $path)
      {
 
@@ -11,6 +13,9 @@
          else
              return "";
      }
+
+
+     
 
 
 
@@ -45,15 +50,16 @@
 
 
 <div class="container-lg flex-grow-1 gx-0 py-4">
-    <div class="d-flex justify-content-center">
-        <h1 class="mt-0 font-weight-bold mb-5">Beheerdersportaal</h1>
+    <div class="d-flex justify-content-evenly">
+        <h1 class="mt-0 font-weight-bold mb-5">Beheerdersportaal</h1> <br>
+        <h3>ingelogd als : <?php echo $auth->user()['rol'] ?? "" ?></h3>
     </div>
     <!--Button overzicht-->
     <div class="d-flex justify-content-evenly" style="max-width: 75%">
         <a class="btn btn-secondary <?php echo make_active("/beheer/overzicht" ) ?>" href="/beheer/overzicht" role="button"  >Beheeroverzicht</a>
         <a class="btn btn-secondary <?php echo make_active("/beheer/accountgegevens" ) ?>" href="/beheer/accountgegevens" role="button" >Accountgegevens</a>
         <a class="btn btn-secondary <?php echo make_active("/beheer/productbeheer" ) ?>" href="/beheer/productbeheer" role="button" >Productbeheer</a>
-        <a class="btn btn-secondary <?php echo make_active("/beheer/cadeaubonnen" ) ?>" href="/beheer/cadeaubonnen" role="button" >Cadeaubonnen</a>
+        <a class="btn btn-secondary <?php echo make_active("/beheer/cadeaubonnen" ) ?>" href="/beheer/cadeaubonnen" role="button"  >Cadeaubonnen</a>
         <a class="btn btn-secondary <?php echo make_active("/beheer/overzichtbestellingen" ) ?>" href="/beheer/overzichtbestellingen" role="button" >Overzicht bestellingen</a>
         <a class="btn btn-secondary <?php echo make_active("/beheer/klanten" ) ?>" href="/beheer/klanten" role="button" >Klantbeheer</a>
         <a class="btn btn-secondary <?php echo make_active("/beheer/uitloggen" ) ?>" href="/beheer/uitloggen" role="button" >uitloggen</a>
