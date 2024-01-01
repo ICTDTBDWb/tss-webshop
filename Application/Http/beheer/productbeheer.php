@@ -35,7 +35,7 @@ function check_media($media)
         $source = "<img src='$media_source' alt='$naam'  class='d-block' >";
 
     } elseif (in_array($media['extensie'], $_validExtensions['video'])) {
-        $source = "";
+        $source = "<video src='$media' title='$naam' class='d-block'> </video>";
     } elseif (in_array($media['extensie'], $_validExtensions['iframe'])) {
         $media_source = htmlspecialchars($media['pad']);
         $source = "<iframe src='$media_source'  title='$naam'  class='d-block'></iframe>";
@@ -45,6 +45,32 @@ function check_media($media)
 
     return $source;
 }
+
+/**
+ * checkt video url.
+ *
+ * @param string $extentie //extentie
+ * @return bool // extentie komt voor
+ */
+function check_extentie($extentie)
+{
+    global $_validExtensions;
+    $gevonden = false;
+
+    if (in_array($extentie, $_validExtensions['image'])) {
+        $gevonden = true;
+    }
+    if (in_array($extentie, $_validExtensions['video'])) {
+        $gevonden = true;
+    }
+    if (in_array($extentie, $_validExtensions['iframe'])) {
+        $gevonden = true;
+    }
+
+    return $gevonden;
+}
+
+
 
 
 
@@ -248,9 +274,9 @@ function modal_edit_categorie($categorie)
         $body = "<div class='mb-3'>
                     <input type='hidden' value='$key' name='categorie_id'>
                     <label for='categorie_naam' class='form-label'>Categorie Naam</label>
-                    <input type='text' class='form-control' name='categorie_naam'  value='$categorie_naam'>
+                    <input type='text' class='form-control' name='categorie_naam' required='required' maxlength='255' value='$categorie_naam'>
                     <label for='categorie_beschrijving' class='form-label'>Categorie beschrijving</label>
-                    <textarea class='form-control' id='categorie_beschrijving' aria-label='With textarea' name='categorie_beschrijving' style='resize: none; height: 10vh' >$categorie_beschrijving</textarea>
+                    <textarea class='form-control' id='categorie_beschrijving' aria-label='With textarea' name='categorie_beschrijving' maxlength='255' style='resize: none; height: 10vh' >$categorie_beschrijving</textarea>
                  </div> ";
 
         $construct .= $title.$begin_modal.$body.$einde_modal;
@@ -311,7 +337,7 @@ function make_media_carousel($product, $root_path)
             $source = "<img src='$media' alt='$naam'  class='d-block' >";
 
         } elseif (in_array($item['extensie'], $_validExtensions['video'])) {
-            $source = "";
+            $source = "<video src='$media' title='$naam' class='d-block'> </video>";
         } elseif (in_array($item['extensie'], $_validExtensions['iframe'])) {
             $media = htmlspecialchars($item['pad']);
             $source = "<iframe src='$media'  title='$naam'  class='d-block'></iframe>";
