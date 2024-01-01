@@ -1,14 +1,14 @@
 <?php
     include basePath("Application/Http/beheer/menu.php");
-     $auth->protectAdminPage([Auth::BEHEERDER_ROLES]);
+     $auth->protectAdminPage(Auth::BEHEERDER_ROLES);
 
      $klantenservice = $auth->check_admin_rol([auth::KLANTENSERVICE_ROLE]);
      $seospecialist  = $auth->check_admin_rol([auth::SEOSPECIALIST_ROLE]);
 
 
-     $disabled = $klantenservice || $seospecialist ? "" : " disabled='disabled' ";
-     $beschrijving_disabled = $klantenservice  ? "" : " disabled='disabled' ";
-     
+     $disabled = $klantenservice || $seospecialist ? " disabled='disabled' " : "";
+     $beschrijving_disabled = $klantenservice  ? " disabled='disabled' " : "";
+
     //database
     $database = new Database();
     $rootPath = $_SERVER['DOCUMENT_ROOT'];

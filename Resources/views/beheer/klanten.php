@@ -2,7 +2,9 @@
 <!--Menu-->
 <?php include basePath("Application/Http/beheer/menu.php"); ?>
 
+
 <?php $zoekKlanten = zoekKlanten();
+$auth->protectAdminPage(Auth::BEHEERDER_ROLES);
 ?>
 
 

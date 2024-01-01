@@ -109,6 +109,26 @@ class Auth
     }
 
     /**
+     * Log out the current user admin and clear its details from the session.
+     *
+     * @return void
+     */
+    #[NoReturn] public function logout_admin(): void
+    {
+        Session::set('auth', [
+            'logged_in' => false,
+            'is_admin' => false,
+            'rol' => ""
+        ]);
+
+        session_regenerate_id();
+
+        header("Location: /beheer/login");
+        exit;
+    }
+
+
+    /**
      * Redirect to the login page if unauthenticated.
      *
      * @return void
