@@ -24,10 +24,10 @@ try {
 
 
     <p class="d-flex justify-content-evenly">
-        <a href="/beheer/overzicht" class="btn btn-secondary active">Beheeroverzicht</a>
+        <a href="/beheer/overzicht" class="btn btn-secondary">Beheeroverzicht</a>
         <a href="/beheer/accountgegevens" class="btn btn-secondary">Accountgegevens</a>
         <a href="/beheer/productbeheer" class="btn btn-secondary">Productbeheer</a>
-        <a href="/beheer/overzichtbestellingen" class="btn btn-secondary">Overzicht bestellingen</a>
+        <a href="/beheer/overzichtbestellingen" class="btn btn-secondary active">Overzicht bestellingen</a>
         <a href="/beheer/klantbeheer" class="btn btn-secondary">Klantbeheer</a>
     </p>
     <br>
