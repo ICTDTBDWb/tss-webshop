@@ -16,6 +16,36 @@ $_validExtensions['video'] = ["mp4"];
 $_validExtensions['iframe'] = ["youtube"];
 
 
+//voor iedereen die media moet controleren
+/**
+ * checkt video url.
+ *
+ * @param mixed $media //is SELECT * FROM media where product_id = ? -> first
+ * @return string // gebruik dit samen met echo om waarde op scherm te tonen
+ */
+function check_media($media)
+{
+    $link = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
+    $media_source = $link . htmlspecialchars($media['pad']).".".htmlspecialchars($media['extensie']);
+    $naam = $media['naam'];
+
+    global $_validExtensions;
+
+    if (in_array($media['extensie'], $_validExtensions['image'])) {
+        $source = "<img src='$media_source' alt='$naam'  class='d-block' >";
+
+    } elseif (in_array($media['extensie'], $_validExtensions['video'])) {
+        $source = "";
+    } elseif (in_array($media['extensie'], $_validExtensions['iframe'])) {
+        $media_source = htmlspecialchars($media['pad']);
+        $source = "<iframe src='$media_source'  title='$naam'  class='d-block'></iframe>";
+    } else {
+        $source = "$naam";
+    }
+
+    return $source;
+}
+
 
 
 //make arcordion header
@@ -244,6 +274,10 @@ function make_option_list($options)
 
 function make_media_carousel($product, $root_path)
 {
+
+    if (!is_array($product))
+        return "";
+
     global $_validExtensions;
     global $verwijder_icon;
     global $edit_icon;
@@ -261,8 +295,9 @@ function make_media_carousel($product, $root_path)
         $media = $link . htmlspecialchars($item['pad']).".".htmlspecialchars($item['extensie']);
         $naam = $item['naam'];
         $id = $item['id'];
+        $pic = $key == 0 ? "hoofd afbeelding": "pic ".$key;
         $inner = "    <div class='row' >
-                            <h5 class='col ' style='color: black; text-align: center'>pic $key</h5>
+                            <h5 class='col ' style='color: black; text-align: center'>$pic</h5>
                             <div class='btn-group col' role='group' aria-label='area'>
    
                                 <button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#mediaverwijder_$id'>
@@ -301,13 +336,14 @@ function modal_verwijder_media($media)
     $construct = "";
     foreach($media as $key => $item)
     {
+        $pic = $key == 0 ? "hoofd afbeelding": "pic ".$key;
         $id = $item['id'];
         $form = "media_form_verwijder_".$id ;
         $begin_modal= "   <form method='POST' action='' id='$form'>  
                         <div class='modal-dialog'>
                             <div class='modal-content'>
                                 <div class='modal-header'>
-                                    <h5 class='modal-title'>Categorie Verwijderen</h5>
+                                    <h5 class='modal-title'>media $pic Verwijderen</h5>
                                     <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='sluiten'></button>
                                 </div>
                              <div class='modal-body'>";
@@ -330,7 +366,7 @@ function modal_verwijder_media($media)
 
         $text = " <div class='mb-3'>
                     <input type='hidden' value='$id ' name='media_id'> 
-                    <p class='text-center fw-bold'> weet u zeker dat u categorie $media_naam wilt verwijderen? </p><br>
+                    <p class='text-center fw-bold'> weet u zeker dat u $media_naam wilt verwijderen? </p><br>
                 </div>";
 
 

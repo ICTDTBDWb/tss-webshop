@@ -20,6 +20,9 @@
     $categorie_beschrijving = "";
     $categorie_naam = "";
     $POST_GEWEEST = false;
+    $alert = "";
+    $alert_type ="";
+
 
 
      //get and post
@@ -41,7 +44,8 @@
             $product_beschrijving = array_key_exists("product_beschrijving", $_POST) ? $_POST['product_beschrijving'] : "";
             $product_merk = array_key_exists("product_merk", $_POST) ? $_POST['product_merk'] : "";
             $product_actief = array_key_exists("product_actief", $_POST) ? $_POST['product_actief'] : "";
-            $afbeelding = array_key_exists("picture_upload", $_POST) ? $_POST['picture_upload'] : "";
+            $media_id = array_key_exists("media_id", $_POST) ? $_POST['media_id'] : "";
+            $hoofd_afbeelding = array_key_exists("hoofd_afbeelding", $_POST) ? $_POST['hoofd_afbeelding'] : "";
             $youtube_url = array_key_exists('upload_url' , $_POST)  ? $_POST['upload_url'] : "";
             $product_categorie = [];
 
@@ -58,7 +62,6 @@
 
 
 
-            var_dump($_FILES);
 
             foreach($_POST as $key => $value) {
                 if (str_contains($key, "checkbox_")) {
@@ -77,10 +80,41 @@
             switch ($opslaan)
             {
                 case "opslaan":
-                    if ($product_id == "")
-                        $product_id = $database->query("INSERT INTO producten (`naam`,`beschrijving`, `merk`, `prijs`, `aantal`, `is_actief`, `is_verijderd`) VALUES (?,?,?,?,?,?,?) ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal, $product_actief,0])->insert();
+                    if ($product_id == "") {
+                        $product_id = $database->query("INSERT INTO producten (`naam`,`beschrijving`, `merk`, `prijs`, `aantal`, `is_actief`, `is_verijderd`) VALUES (?,?,?,?,?,?,?) ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal, $product_actief, 0])->insert();
+                        $alert_type = "success";
+                        $alert = "<strong>Success!</strong> Product toegevoegd aan database.";
+
+                    }
                     else
+                    {
                         $database->query("UPDATE producten SET naam = ?, beschrijving = ?, merk = ? , prijs = ? , aantal = ?, is_actief = ?, is_verijderd = ? WHERE id = ? ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal, $product_actief, 0, $product_id]);
+                        $data = $database->query("SELECT * FROM media where product_id = ?", [$product_id])->first();
+
+                        $id = is_array($data) and array_key_exists( 'id', $data) ? $data['id'] : "";
+                        if ($id != $hoofd_afbeelding and ($hoofd_afbeelding != "" or $id != ""))
+                        {
+                            $data2 = $database->query("SELECT * FROM media where id = ?", [$hoofd_afbeelding])->first();
+                            if(is_array($data2) and array_key_exists("id", $data2)) {
+                                $database->query("UPDATE media SET product_id = ?, naam = ? ,pad = ?, extensie = ? where id = ?", [$data2['product_id'], $data2['naam'], $data2['pad'], $data2['extensie'], $data['id']]);
+                                $database->query("UPDATE media SET product_id = ?, naam = ? ,pad = ?, extensie = ? where id = ?",[$data['product_id'], $data['naam'], $data['pad'], $data['extensie'], $data2['id'] ] );
+                            }
+                            else
+                            {
+                                $alert_type = "warning";
+                                $alert = "<strong>Waarschuwing!</strong> Product opgeslagen, maar hoofdafbeelding niet omgezet.";
+                            }
+
+                        }
+                        else
+                        {
+                            $alert_type = "warning";
+                            $alert = "<strong>Waarschuwing!</strong> Product opgeslagen, kan hoofdafbeelding niet vinden in database.";
+                        }
+                    }
+
+
+
 
 
                     $database->query("DELETE FROM product_categorieen where product_id = ?",[$product_id]);
@@ -94,17 +128,33 @@
                         }
 
                     }
+                    if($alert != "")
+                    {
+                        $alert_type = "success";
+                        $alert = "<strong>Success!</strong> Product opgeslagen in database.";
+                    }
+
+
                     $POST_GEWEEST = false;
                     break;
 
 
                 case "toevoegen":
                     $product_id = $database->query("INSERT INTO producten (`naam`,`beschrijving`, `merk`, `prijs`, `aantal`, `is_actief`, `is_verijderd`) VALUES (?,?,?,?,?,?,?) ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal, $product_actief,0])->insert();
-                    foreach ($product_categorie as $key => $value) {
-                        $database->query("INSERT INTO product_categorieen (`product_id`, `categorie_id` ) VALUES (?,?) ", [$product_id, $key])->get();
+                    foreach ($product_categorie_post as $key => $value) {
+                        $database->query("INSERT INTO product_categorieen (`product_id`, `categorie_id` ) VALUES (?,?) ", [$product_id, $key]);
 
                     }
-                    $POST_GEWEEST = false;
+                    $data = key($product_categorie_post);
+                    var_dump($data);
+
+                    $data = empty($data) ? "overig" : $data;
+                    $alert_type = "success";
+                    unset($_GET['Product']);
+                    var_dump($product_id." ".$data);
+                    $_GET['Product'] = $product_id." ".$data;
+                    $alert = "<strong>Success!</strong> Product als nieuw product toegevoegd aan database.";
+                    //$POST_GEWEEST = false;
                     break;
 
                 case "verwijderen":
@@ -117,6 +167,8 @@
                         unset($_GET['Product']);
 
                     }
+                    $alert_type = "success";
+                    $alert = "<strong>Success!</strong> Verwijderd uit database.";
 
                     break;
 
@@ -151,22 +203,47 @@
                          if ($gelukt) {
                              $data = $database->query("SELECT COUNT(*) FROM media WHERE product_id = ? and pad = ?", [$product_id, "/assets/afbeeldingen/" . $product_id . "/" . $filename])->get();
 
-                             if ($data[0]['COUNT(*)'] = 0)
+                             if ($data[0]['COUNT(*)'] == 0)
                                  $database->query("INSERT INTO media (`product_id`,`naam`,`pad`,`extensie`) VALUES(?,?,?,?)",[$product_id,$filename,"/assets/afbeeldingen/".$product_id."/".$filename,$extensie]);
                              else
-                                 var_dump("afbeelding bestaat al");
+                             {
+                                 $alert_type = "danger";
+                                 $alert = "<strong>Niet gelukt</strong> afbeelding bestaat al.";
+                             }
                          }
                            // $database->query("INSERT INTO media (`product_id`,`naam`,`pad`,`extensie`) VALUES(?,?,?,?)",[$product_id,$filename,"/assets/afbeeldingen/".$product_id."/".$filename,$extensie]);
 
-
                      }
 
-                     if ($product_id != "" and $youtube_url != "")
+                     if ($product_id != "" and $youtube_url != "") {
                          $youtube_url = str_replace("watch?v=", "embed/", $youtube_url);
-                         $database->query("INSERT INTO media (`product_id`,`naam`,`pad`,`extensie`) VALUES(?,?,?,?)",[$product_id,"youtube video",$youtube_url, "youtube"]);
+                         $database->query("INSERT INTO media (`product_id`,`naam`,`pad`,`extensie`) VALUES(?,?,?,?)", [$product_id, "youtube video", $youtube_url, "youtube"]);
+                     }
+
+                     if ($product_id == "")
+                     {
+                         $alert_type = "danger";
+                         $alert = "<strong>Niet gelukt</strong> Kan geen afbeelding of video uploaden als product nog niet bestaat, klik eerst op opslaan.";
+                     }
 
 
 
+
+                break;
+
+                case "media_verwijderen" :
+
+                    if ($media_id != "")
+                       $data = $database->query("SELECT * FROM media where id = ? ", [$media_id])->get();
+                        $database->query("DELETE FROM media where id = ? ", [$media_id]);
+                        $pad = array_key_exists('pad', $data[0]) ? $data[0]['pad'] : "";
+                        $extensie = array_key_exists('extensie', $data[0]) ? $data[0]['extensie'] : "";
+
+
+                        if( is_writable($rootPath.$pad.".".$extensie)) {
+                            unlink($rootPath . $pad . "." . $extensie);
+
+                        }
 
                 break;
 
@@ -186,11 +263,12 @@
          $filter = trim($filter);
 
          if(isset($_GET['Product'])) {
-             $product_select = filter_input(INPUT_GET, 'Product', FILTER_SANITIZE_SPECIAL_CHARS);
+             $product_select = $_GET['Product'];
              $product_select = preg_split("/ /", $product_select);
              //$_POST['id']  = $product_select[0];
              if(!file_exists($afbeelding_path.$product_select[0]))
                  mkdir($afbeelding_path.$product_select[0],0755);
+
 
          }
      }
@@ -268,37 +346,9 @@
 
      // }
       if ($product_id == "")
-      {
-          $media = $database->query("SELECT * FROM media")->get();
-          $uploaded_files = [];
-          $media_files =[];
-          foreach ($media as &$item)
-          {
-              $media_files[]= substr($item['pad'],strripos($item['pad'],'/') + 1);
-
-          }
-
-          foreach (new DirectoryIterator($afbeelding_path) as $key => $file) {
-              if($file->isDot()) continue;
-              if(! in_array($file->getFilename(),$media_files)) {
-                  $uploaded_files[$key]['naam'] = $file->getFilename();
-                  $uploaded_files[$key]['pad'] = "/afbeeldingen/".$file->getFilename();
-                  $uploaded_files[$key]['extensie'] = $file->getExtension();
-
-              }
-
-          }
-
-          $product[0]["media"] = $uploaded_files;
           $product[0]["media"] = "";
 
 
-
-
-
-
-
-      }
 
 
 
@@ -327,6 +377,8 @@
           //filter on categorie
           $item['show'] = ($filter != "" && count($item['product']) > 0) || $active == true  ? "" : "collapsed";
       }
+
+      unset($item);
 
 
 ?>
@@ -472,6 +524,17 @@
 
 
 <main>
+    <?php
+
+    if ($alert !="")
+        {
+            echo "<div class='alert alert-$alert_type alert-dismissible fade show'>
+                    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                    $alert
+                  </div>";
+        }
+
+    ?>
     <form method="POST" action='' class="hidden"  enctype="multipart/form-data">
         <div class="row  align-items-top ">
             <!-- Carousel -->
@@ -561,10 +624,16 @@
             <div class="container col" style="max-width: 30%; align-content: flex-start" >
                 <label for="hoofd_afbeelding" class="form-label">Hoofd afbeelding </label>
                 <select id="hoofd_afbeelding" class="form-select" name="hoofd_afbeelding">
-                    <option selected>pic1</option>
-                    <option>pic1</option>
-                    <option>pic2</option>
-                    <option>pic3</option>
+                    <?php
+                    foreach ($product[0]["media"] as $key => $item)
+                    {
+                        $id = $item['id'];
+                        if ($key == 0)
+                            echo "<option value='$id' selected >hoofd afbeelding</option>";
+                        else
+                            echo "<option value='$id' >pic $key</option>";
+                    }
+                    ?>
                 </select><br>
                 <!--<a class="btn btn-outline-secondary" href= /beheer/mediacategoriebeheer" style="width: 100%" role="button">Media beheer</a> -->
                 <button type="button" class="btn btn-outline-secondary" style="width: 100%"  data-bs-toggle="modal" data-bs-target="#upload_picture">Media toevoegen</button><br><br>
@@ -583,7 +652,7 @@
 
         <div class="row">
             <div class="col">
-                <button type='button' <?php echo $product_id == ""? "hidden" : "" ?> class="btn btn-outline-secondary" id="opslaan" name="opslaan" value="toevoegen" style="width: 100%">Toevoegen als nieuw</button>
+                <button type='submit' <?php echo $product_id == ""? "hidden" : "" ?> class="btn btn-outline-secondary" id="opslaan" name="opslaan" value="toevoegen" style="width: 100%">Toevoegen als nieuw</button>
             </div>
             <div class="col">
                 <button type="submit" class="btn btn-outline-secondary" id="opslaan"  name="opslaan" value='opslaan'  style="width: 100%">Opslaan</button>
