@@ -3,12 +3,15 @@
 
 <!--Haal de product ID op-->
 <?php
-$productId = isset($_GET['id']) ? $_GET['id'] : null;
+$getProductId = isset($_GET['id']) ? $_GET['id'] : null;
 $productDetails = null;
-if ($productId) {
-    $productDetails = queryEnkelProduct($productId);
+if ($getProductId) {
+    $productDetails = queryEnkelProduct($getProductId);
+
 }
 ?>
+
+
 
 <!--Print enkel product aan de hand van ID-->
 <!--Title-->
@@ -27,18 +30,43 @@ if ($productId) {
         </h5>
         <div>
             <img
-                    src="<?php print $enkelProduct['pad'];?>"
+                    src="<?php print ($enkelProduct['pad'] . "." . $enkelProduct['extensie']);?>"
                     alt="Banner"
                     class="rounded w-50 h-50"
                     style="max-width: 200px; height: auto;"
             >
         </div>
+        <div class="col-4 text-right">
+            <a>
+                <?php print $enkelProduct['beschrijving'];?>
+            </a>
+        </div>
+        <br>
         <div>
             <?php print "€" . " " . $enkelProduct['prijs']; ?>
             <br>
-            <form action="/winkelwagen">
-                <label for="quantity">Aantal</label>
-                <input type="number" id="quantity" name="quantity" min="1" max="5">
+            <!--POST informatie ophalen-->
+            <?php
+
+            // Verwerken van productgegevens
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                if (isset($_POST['id'], $_POST['productaantal'])) {
+
+                    // Ophalen van de POST data
+                    $productId = $_POST['id'];
+                    $productaantal = $_POST['productaantal'];
+
+                    voegProductToeAanBestelling($productId, $productaantal);
+
+                }
+            }
+
+            ?>
+            <br>
+            <form method="post" onsubmit="setTimeout(function () { window.location.reload(); }, 10)">
+                <label for="productaantal">Aantal</label>
+                <input type="number" id="productaantal" name="productaantal" min="1">
+                <input type="hidden" id="id" name="id" value="<?php echo ($enkelProduct['id']); ?>">
                 <input type="submit" value="In winkelwagen">
             </form>
         </div>
