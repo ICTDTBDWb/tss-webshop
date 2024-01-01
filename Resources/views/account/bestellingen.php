@@ -47,7 +47,7 @@ $bestellingen = zoekBestellingen($klantId, $zoekterm);
                 <td><?php echo htmlspecialchars($bestelling['besteldatum']); ?></td>
                 <td><?php echo htmlspecialchars($bestelling['productnaam']); ?></td>
                 <td>
-                    <!-- Weergave van het totale bedrag in Euro-formaat -->
+                    <!-- Weergave van het totale bedrag -->
                     €<?php echo htmlspecialchars(number_format($bestelling['totaal'], 2, ',', '.')); ?>
                 </td>
             </tr>
