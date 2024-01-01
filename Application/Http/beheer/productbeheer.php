@@ -132,7 +132,7 @@ function arcordion_item_constructor($categorie, $key, $show )
 }
 
 
-function checkbox_constructor($categorie, $product)
+function checkbox_constructor($categorie, $product, $disabled = "enabled")
 {
 
     $construct = "";
@@ -161,16 +161,16 @@ function checkbox_constructor($categorie, $product)
                         <div class='form-check'  style='min-height: 5vh'>
                           <div class = 'row'>
                             <div class = 'col'>
-                            <input class='form-check-input' type='checkbox' name='checkbox_$categorie_id' id='checkbox_$categorie_id' $checked >
+                            <input class='form-check-input' type='checkbox' name='checkbox_$categorie_id' id='checkbox_$categorie_id' $checked $disabled >
                                 <label class='form-check-label' for='checkbox_$categorie_id' >
                                 $categorie_naam
                             </label>
                         </div>
                          <div class='btn-group col ' role='group' aria-label='area_$categorie_id' style='height: 4vh; width:2vh; align-items: start'  >
-                                <button type='button' class='btn btn-outline-primary '  data-bs-toggle='modal' data-bs-target='#categorieaanpassen_$categorie_id'>
+                                <button type='button' class='btn btn-outline-primary '  data-bs-toggle='modal' data-bs-target='#categorieaanpassen_$categorie_id' $disabled>
                                    $edit_icon
                                 </button>
-                                <button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#categorieverwijder_$categorie_id'>
+                                <button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#categorieverwijder_$categorie_id' $disabled>
                                    $verwijder_icon
                                 </button>
                             </div>
@@ -298,7 +298,7 @@ function make_option_list($options)
 
 
 
-function make_media_carousel($product, $root_path)
+function make_media_carousel($product, $root_path, $disabled = "")
 {
 
     if (!is_array($product))
@@ -326,7 +326,7 @@ function make_media_carousel($product, $root_path)
                             <h5 class='col ' style='color: black; text-align: center'>$pic</h5>
                             <div class='btn-group col' role='group' aria-label='area'>
    
-                                <button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#mediaverwijder_$id'>
+                                <button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#mediaverwijder_$id' $disabled>
                                    $verwijder_icon
                                 </button>
                             </div>

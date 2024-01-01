@@ -150,6 +150,26 @@ class Auth
     }
 
     /**
+     * returns true if user has given role
+     *
+     * @param array $accepted_roles
+     * @return bool
+     */
+    public function check_admin_rol(array $accepted_roles = []): bool
+    {
+        $ingelogd = false;
+        if (
+            !empty($accepted_roles) && !empty($this->user()['rol'])
+            && in_array($this->user()['rol'], $accepted_roles)
+        ) {
+         $ingelogd = true;
+        }
+
+       return $ingelogd;
+    }
+
+
+    /**
      * This function is called automatically when destructing.
      */
     public function __destruct() { $this->db->close(); }

@@ -1,13 +1,20 @@
 <?php
     include basePath("Application/Http/beheer/menu.php");
-    //database
+     $auth->protectAdminPage([Auth::BEHEERDER_ROLES]);
 
+     $klantenservice = $auth->check_admin_rol([auth::KLANTENSERVICE_ROLE]);
+     $seospecialist  = $auth->check_admin_rol([auth::SEOSPECIALIST_ROLE]);
+
+
+     $disabled = $klantenservice || $seospecialist ? "" : " disabled='disabled' ";
+     $beschrijving_disabled = $klantenservice  ? "" : " disabled='disabled' ";
+     
+    //database
     $database = new Database();
     $rootPath = $_SERVER['DOCUMENT_ROOT'];
     $media_link = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
     $afbeelding_path = $rootPath."/assets/afbeeldingen/";
     $product_categorie_post = [];
-
 
 
     $product_id = "";
@@ -570,7 +577,7 @@
                 <div class="carousel-inner"  style="height: 100%; width: 100%" data-bs-interval="false"  >
 
 
-                <?php echo make_media_carousel($product[0]["media"], $media_link) ?>
+                <?php echo make_media_carousel($product[0]["media"], $media_link, $disabled) ?>
 
                 </div>
                 <!-- Left and right controls/icons -->
@@ -593,13 +600,13 @@
                     <div class="row">
                         <div class="col" style='min-width: 70%'>
                             <label for="product_naam" class="form-label">Product Naam:</label>
-                            <input type="text" class="form-control" id="product_naam" name="product_naam" aria-describedby="product_help" required="required" maxlength="255" value='<?php echo $product_naam ?>'>
+                            <input type="text" class="form-control" id="product_naam" name="product_naam" aria-describedby="product_help" required="required" maxlength="255" <?php echo $disabled ?> value='<?php echo $product_naam ?>'>
                             <input type="hidden" class="form-control" id="product_id" name="product_id"   value='<?php echo $product_id ?>'>
                             <div id="product_help" class="form-text">verander of geef naam van product op.</div><br>
                         </div>
                         <div class="col">
                             <label for="product_actief" class="form-label">Product zichtbaar </label>
-                            <select id="product_actief" class="form-select" name="product_actief">
+                            <select id="product_actief" class="form-select" name="product_actief" <?php echo $disabled ?>">
                                 <?php
 
                                   if ( $product_actief == 0 )
@@ -622,7 +629,7 @@
                     <div class="row">
                         <div class="col" style='min-width: 50%'>
                             <label for="product_merk" class="form-label" >Product Merk:</label>
-                            <input type="text" class="form-control" id="product_merk" name="product_merk" maxlength="255" value='<?php echo $product_merk ?>'  list="merknamen" >
+                            <input type="text" class="form-control" id="product_merk" name="product_merk" maxlength="255" <?php echo $disabled ?> value='<?php echo $product_merk ?>'  list="merknamen" >
                             <datalist id="merknamen">
                                 <?php
                                 echo make_option_list($product[0]["merken"]);
@@ -631,13 +638,13 @@
                         </div>
                         <div class="col" >
                             <label for="product_aantal" class="form-label" >aantal:</label>
-                            <input type="number" class="form-control" id="product_aantal" name="product_aantal" min="0" value='<?php echo $product_aantal ?>'>
+                            <input type="number" class="form-control" id="product_aantal" name="product_aantal" min="0" <?php echo $disabled ?> value='<?php echo $product_aantal ?>'>
                         </div>
                         <div class="col">
                             <label for="product_prijs" class="form-label">prijs</label>
                             <div class="input-group mb-3">
                             <span class="input-group-text" id="product_prijs">€</span>
-                            <input type="number" class="form-control" id="product_prijs" name="product_prijs" min="0.00" step="any" value='<?php echo $product_prijs ?>'>
+                            <input type="number" class="form-control" id="product_prijs" name="product_prijs" min="0.00" step="any" <?php echo $disabled ?> value='<?php echo $product_prijs ?>'>
                             </div>
                         </div>
                     </div>
@@ -647,7 +654,7 @@
         <div class="row">
             <div class="container col" style="max-width: 30%; align-content: flex-start" >
                 <label for="hoofd_afbeelding" class="form-label">Hoofd afbeelding </label>
-                <select id="hoofd_afbeelding" class="form-select" name="hoofd_afbeelding">
+                <select id="hoofd_afbeelding" class="form-select" name="hoofd_afbeelding" <?php echo $disabled ?> >
                     <?php
                     foreach ($product[0]["media"] as $key => $item)
                     {
@@ -660,29 +667,29 @@
                     ?>
                 </select><br>
                 <!--<a class="btn btn-outline-secondary" href= /beheer/mediacategoriebeheer" style="width: 100%" role="button">Media beheer</a> -->
-                <button type="button" class="btn btn-outline-secondary" style="width: 100%"  data-bs-toggle="modal" data-bs-target="#upload_picture">Media toevoegen</button><br><br>
+                <button type="button" class="btn btn-outline-secondary" style="width: 100%"  data-bs-toggle="modal" data-bs-target="#upload_picture" <?php echo $disabled ?>>Media toevoegen</button><br><br>
 
                 <label for="categorie" class="form-label">Categorieen </label>
-                <card class="card" style="max-height: 30vh; min-height: 30vh; overflow-y: auto; overflow-x: hidden">
-                   <?php echo checkbox_constructor($categorieen, $product) ?>
+                <card class="card" style="max-height: 30vh; min-height: 30vh; overflow-y: auto; overflow-x: hidden" >
+                   <?php echo checkbox_constructor($categorieen, $product, $disabled) ?>
                 </card><br>
-                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#categorietoevoegen" style="width: 100%">Categorie toevoegen</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#categorietoevoegen" <?php echo $disabled ?> style="width: 100%">Categorie toevoegen</button>
             </div>
             <div class="col">
                 <label for="beschrijving" class="form-label">Beschrijving</label>
-                <textarea class="form-control" id="beschrijving" aria-label="With textarea" name="product_beschrijving" maxlength="4000" style="resize: none; height: 50vh" ><?php echo $product_beschrijving?> </textarea>
+                <textarea class="form-control" id="beschrijving" aria-label="With textarea" name="product_beschrijving" maxlength="4000" <?php echo $beschrijving_disabled ?> style="resize: none; height: 50vh" ><?php echo $product_beschrijving?> </textarea>
             </div>
         </div><br>
 
         <div class="row">
             <div class="col">
-                <button type='submit' <?php echo $product_id == ""? "hidden" : "" ?> class="btn btn-outline-secondary" id="opslaan" name="opslaan" value="toevoegen" style="width: 100%">Toevoegen als nieuw</button>
+                <button type='submit' <?php echo $product_id == ""? "hidden" : "" ?> class="btn btn-outline-secondary" id="opslaan" name="opslaan" value="toevoegen"  <?php echo $disabled ?> style="width: 100%">Toevoegen als nieuw</button>
             </div>
             <div class="col">
-                <button type="submit" class="btn btn-outline-secondary" id="opslaan"  name="opslaan" value='opslaan'  style="width: 100%">Opslaan</button>
+                <button type="submit" class="btn btn-outline-secondary" id="opslaan"  name="opslaan" value='opslaan'  <?php echo $beschrijving_disabled ?> style="width: 100%">Opslaan</button>
             </div>
             <div class="col">
-                <button type="submit" class="btn btn-outline-secondary" id="opslaan"  name="opslaan" value="verwijderen"  style="width: 100%">Verwijderen</button>
+                <button type="submit" class="btn btn-outline-secondary" id="opslaan"  name="opslaan" value="verwijderen"  <?php echo $disabled ?> style="width: 100%">Verwijderen</button>
             </div>
 
         </div>
