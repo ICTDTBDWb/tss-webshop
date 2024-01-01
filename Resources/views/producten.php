@@ -47,8 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </h5>
                             <div>
                                 <img
-                                        src="<?php print $productenEnAfbeelding['pad'];?>"
-                                        alt="Banner"
+                                        src="<?php print ($productenEnAfbeelding['pad'] . "." . $productenEnAfbeelding['extensie']);?>"
+                                        alt="Product afbeelding"
                                         class="rounded w-50 h-50"
                                         style="object-fit: cover"
                                 >

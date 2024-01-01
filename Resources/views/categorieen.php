@@ -29,7 +29,7 @@ if ($categorieId) {
             </h5>
             <div>
                 <img
-                    src="<?php print $enkeleCategorie['pad'];?>"
+                    src="<?php print ($enkeleCategorie['pad'] . "." . $enkeleCategorie['extensie']);?>"
                     alt="Product afbeelding"
                     class="rounded w-50 h-50"
                     style="max-width: 200px; height: auto;"

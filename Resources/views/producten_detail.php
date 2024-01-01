@@ -30,7 +30,7 @@ if ($getProductId) {
         </h5>
         <div>
             <img
-                    src="<?php print $enkelProduct['pad'];?>"
+                    src="<?php print ($enkelProduct['pad'] . "." . $enkelProduct['extensie']);?>"
                     alt="Banner"
                     class="rounded w-50 h-50"
                     style="max-width: 200px; height: auto;"
@@ -38,7 +38,7 @@ if ($getProductId) {
         </div>
         <div class="col-4 text-right">
             <a>
-                <?php print $enkelProduct['omschrijving'];?>
+                <?php print $enkelProduct['beschrijving'];?>
             </a>
         </div>
         <br>
