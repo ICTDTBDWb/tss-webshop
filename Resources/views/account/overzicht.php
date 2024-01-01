@@ -1,4 +1,5 @@
 <?php
+$auth->protectPage();
 // Plaats van benodigde PHP-bestanden en sessiebeheer
 include basePath('/Application/Http/account/services.php');
 //print_r($_SESSION);

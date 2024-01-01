@@ -23,7 +23,9 @@ if ($categorieId) {
     <?php foreach ($productDetails as $enkeleCategorie) {?>
         <div class="col text-right">
             <h5>
-                <?php print $enkeleCategorie['naam'];?>
+                <a style="text-decoration:none; color:black;" href="/producten_detail?id=<?php echo ($enkeleCategorie['product_id']); ?>">
+                    <?php print $enkeleCategorie['naam'];?>
+                </a>
             </h5>
             <div>
                 <img
@@ -36,13 +38,32 @@ if ($categorieId) {
             <div>
                 <?php print "€" . " " . $enkeleCategorie['prijs']; ?>
                 <br>
-                <form action="/winkelwagen">
-                    <label for="quantity">Aantal</label>
-                    <input type="number" id="quantity" name="quantity" min="1" max="5">
+                <?php
+
+                // Verwerken van productgegevens
+                if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                    if (isset($_POST['id'], $_POST['productaantal'])) {
+
+                        // Ophalen van de POST data
+                        $productId = $_POST['id'];
+                        $productaantal = $_POST['productaantal'];
+
+                        voegProductToeAanBestelling($productId, $productaantal);
+
+                    }
+                }
+
+                ?>
+                <form method="post" onsubmit="setTimeout(function () { window.location.reload(); }, 10)">
+                    <label for="productaantal">Aantal</label>
+                    <input type="number" id="productaantal" name="productaantal" min="1">
+                    <input type="hidden" id="id" name="id" value="<?php echo ($enkeleCategorie['product_id']); ?>">
                     <input type="submit" value="In winkelwagen">
                 </form>
             </div>
             <br>
+
+
             <br>
         </div>
     <?php  } ?>
