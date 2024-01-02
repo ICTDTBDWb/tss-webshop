@@ -2,23 +2,20 @@
 
 $dbm = new Database();
 
-
-//session_start();
 include(__DIR__."/../winkelwagen/functies.php");
 include(__DIR__."/../checkout/functies.php");
 
 // Redirect to homepage if not logged in.
 $homepage_path = "http://localhost/";
-if(!$_SESSION['user']['logged_in']??false){
+if(!$_SESSION['auth']['logged_in']??false){
     //redirect login page
     header("Location: $homepage_path");
     exit;
 }
 
 
-$klant_id = $_SESSION['user']['id'];
 $query = "SELECT id, email, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode from klanten where id=:klant_id";
-$klant = $dbm->query($query, ["klant_id" => $klant_id])->first();
+$klant = $dbm->query($query, ["klant_id" => $auth->user()['id']])->first();
 
 
 $verzendmethodes_array = getVerzendmethodes($dbm);
@@ -113,7 +110,7 @@ if($_POST??false){
         ) {
 
             bestellingOpslaan(
-                $klant_id,
+                $auth->user()['id'],
                 $verzendmethode_filtered,
                 getTotalFromCurrentCart() - getCouponBedrag(),
                 $betaalmethode_filtered,
