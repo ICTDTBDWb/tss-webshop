@@ -3,10 +3,11 @@
 include basePath("Application/Http/beheer/menu.php");
 $auth->protectAdminPage(Auth::BEHEERDER_ROLES);
 
-$loggedInUserId = $_SESSION['auth']['user_id'];
+$loggedInUser = $auth->user();
 
 // Query om de accountgegevens van de ingelogde gebruiker op te halen
 $query = "SELECT 
+    id,
     rol,
     email,
     IFNULL(password, 'n.v.t.') AS password,
@@ -18,13 +19,11 @@ $query = "SELECT
     IFNULL(postcode, 'n.v.t.') AS postcode,
     IFNULL(woonplaats, 'n.v.t.') AS woonplaats,
     IFNULL(land, 'n.v.t.') AS land
-FROM tss.medewerkers WHERE id = :id";
+FROM tss.medewerkers WHERE id = ?";
 
 // Voeg de parameter voor de gebruikers-ID toe aan de query
 $dbManager = new Database();
-$dbManager->query($query);
-$dbManager->bind(':id', $loggedInUserId);
-$medewerker = $dbManager->single(); // Haal één medewerker op
+$medewerker = $dbManager->query($query, [$loggedInUser['id']])->first();; // Haal één medewerker op
 
 // Controleer of er gegevens zijn gevonden voor de ingelogde gebruiker
 if (!$medewerker) {
@@ -36,13 +35,6 @@ if (!$medewerker) {
 
 <!-- Nu kun je de accountgegevens van de ingelogde gebruiker weergeven -->
 <p class="d-flex justify-content-center fs-1 fw-bolder">Beheerdersportaal</p>
-<p class="d-flex justify-content-evenly">
-    <a href="/beheer/overzicht" class="btn btn-secondary">Beheeroverzicht</a>
-    <a href="/beheer/accountgegevens" class="btn btn-secondary active">Accountgegevens</a>
-    <a href="/beheer/productbeheer" class="btn btn-secondary">Productbeheer</a>
-    <a href="/beheer/overzichtbestellingen" class="btn btn-secondary">Overzicht bestellingen</a>
-    <a href="/beheer/klantbeheer" class="btn btn-secondary">Klantbeheer</a>
-</p>
 
 <!-- Toon de accountgegevens van de ingelogde gebruiker -->
 <div style="overflow-x: auto;">
