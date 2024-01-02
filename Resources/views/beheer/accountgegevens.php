@@ -57,17 +57,17 @@ if (!$medewerker) {
         </thead>
         <tbody>
         <tr>
-            <td><?php echo htmlspecialchars($medewerker['rol']); ?></td>
-            <td><?php echo htmlspecialchars($medewerker['email']); ?></td>
+            <td><?php echo htmlspecialchars($medewerker['rol'] ?? ""); ?></td>
+            <td><?php echo htmlspecialchars($medewerker['email'] ?? ""); ?></td>
             <td>••••••••</td> <!-- Password is not displayed for security reasons -->
-            <td><?php echo htmlspecialchars($medewerker['voornaam']); ?></td>
-            <td><?php echo htmlspecialchars($medewerker['tussenvoegsel']); ?></td>
-            <td><?php echo htmlspecialchars($medewerker['achternaam']); ?></td>
-            <td><?php echo htmlspecialchars($medewerker['straat']); ?></td>
-            <td><?php echo htmlspecialchars($medewerker['huisnummer']); ?></td>
-            <td><?php echo htmlspecialchars($medewerker['postcode']); ?></td>
-            <td><?php echo htmlspecialchars($medewerker['woonplaats']); ?></td>
-            <td><?php echo htmlspecialchars($medewerker['land']); ?></td>
+            <td><?php echo htmlspecialchars($medewerker['voornaam'] ?? ""); ?></td>
+            <td><?php echo htmlspecialchars($medewerker['tussenvoegsel'] ?? ""); ?></td>
+            <td><?php echo htmlspecialchars($medewerker['achternaam'] ?? ""); ?></td>
+            <td><?php echo htmlspecialchars($medewerker['straat'] ?? ""); ?></td>
+            <td><?php echo htmlspecialchars($medewerker['huisnummer'] ?? ""); ?></td>
+            <td><?php echo htmlspecialchars($medewerker['postcode'] ?? ""); ?></td>
+            <td><?php echo htmlspecialchars($medewerker['woonplaats'] ?? ""); ?></td>
+            <td><?php echo htmlspecialchars($medewerker['land'] ?? ""); ?></td>
             <td>
                 <a href="/beheer/edit_medewerker?id=<?php echo $medewerker['id']; ?>" class="btn btn-primary">Wijzigen</a>
             </td>
