@@ -20,13 +20,6 @@ try {
     exit;
 }
 ?>
-
-
-
-
-
-
-
     <br>
     <!-- Search bar -->
     <form class="d-flex justify-content-center mb-3" action="" method="GET">

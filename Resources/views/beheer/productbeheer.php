@@ -89,7 +89,6 @@
                         $product_id = $database->query("INSERT INTO producten (`naam`,`beschrijving`, `merk`, `prijs`, `aantal`, `is_actief`, `is_verwijderd`) VALUES (?,?,?,?,?,?,?) ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal, $product_actief, 0])->insert();
                         $alert_type = "success";
                         $alert = "<strong>Success!</strong> Product toegevoegd aan database.";
-
                     }
                     else
                     {
@@ -327,10 +326,6 @@
       $producten_categorie['verwijderd']['naam'] = "verwijderd";
       $producten_categorie['verwijderd']['beschrijving'] = "";
       $producten_categorie['verwijderd']['product'] = $database->query("SELECT * FROM producten where naam like ? and is_verwijderd = ?",["%".$filter."%",1])->get();
-
-
-
-
 
       if (is_array($product) and array_key_exists("0", $product)) {
 
