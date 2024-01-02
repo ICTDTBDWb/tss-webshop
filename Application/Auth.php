@@ -4,6 +4,12 @@ use JetBrains\PhpStorm\NoReturn;
 
 class Auth
 {
+    const ADMIN_ROLE = 'admin';
+    const WEBREDACTEUR_ROLE = 'webredacteur';
+    const SEOSPECIALIST_ROLE = 'seospecialist';
+    const KLANTENSERVICE_ROLE = 'klantenservice';
+    const BEHEERDER_ROLES = [self::ADMIN_ROLE, self::WEBREDACTEUR_ROLE, self::SEOSPECIALIST_ROLE, self::KLANTENSERVICE_ROLE];
+
     private static ?self $instance = null;
     private Database|null $db = null;
 
@@ -34,7 +40,7 @@ class Auth
     }
 
     /**
-     * Retrieve the user is he is logged in.s
+     * Retrieve the user is he is logged in.
      *
      * @return array|false
      */
@@ -42,7 +48,7 @@ class Auth
     {
         if (!$this->isLoggedIn()) return false;
 
-        $table = Session::get('auth')['is_admin'] ? 'beheerders' : 'klanten';
+        $table = Session::get('auth')['is_admin'] ? 'medewerkers' : 'klanten';
         $result = $this->db->query(
             "SELECT * FROM $table WHERE id = ?",
             [Session::get('auth')['user_id']]
@@ -62,7 +68,7 @@ class Auth
      */
     public function attempt(array $credentials, bool $is_admin = false): bool
     {
-        $table = $is_admin ? 'beheerders' : 'klanten';
+        $table = $is_admin ? 'medewerkers' : 'klanten';
         $result = $this->db->query(
             "SELECT id, email, password FROM $table WHERE email = ?",
             [$credentials[0]]
@@ -103,19 +109,85 @@ class Auth
     }
 
     /**
-     * Redirect back to the homepage if unauthenticated.
+     * Log out the current user admin and clear its details from the session.
      *
-     * @param bool $is_admin
      * @return void
      */
-    public function protectPage(bool $is_admin = false): void
+    #[NoReturn] public function logout_admin(): void
     {
-        if (!$this->isLoggedIn()) {
-            $page = $is_admin ? 'beheer/login' : 'login';
-            header("Location: $page");
+        Session::set('auth', [
+            'logged_in' => false,
+            'is_admin' => false,
+            'rol' => ""
+        ]);
+
+        session_regenerate_id();
+
+        header("Location: /beheer/login");
+        exit;
+    }
+
+
+    /**
+     * Redirect to the login page if unauthenticated.
+     *
+     * @return void
+     */
+    public function protectPage(): void
+    {
+        $is_admin = Session::get('auth')['is_admin'] ?? false;
+        if (!$this->isLoggedIn() && (!$is_admin || !isset($is_admin))) {
+            header("Location: /login");
             exit();
         }
     }
+
+    /**
+     * Redirect to the admin login page if unauthenticated.
+     *
+     * @param array $accepted_roles
+     * @return void
+     */
+    public function protectAdminPage(array $accepted_roles = []): void
+    {
+        $is_admin = Session::get('auth')['is_admin'] ?? false;
+
+        if (
+            !$this->isLoggedIn()
+            || (!$is_admin && isset($is_admin))
+        ) {
+            header("Location: " . ($is_admin ? '/' : '/beheer/login'));
+            exit();
+        }
+
+        if (
+            !empty($accepted_roles)
+            && !in_array($this->user()['rol'], $accepted_roles)
+        ) {
+            header("Location: /beheer");
+            exit();
+        }
+    }
+
+    /**
+     * returns true if user has given role
+     *
+     * @param array $accepted_roles
+     * @return bool
+     */
+    public function check_admin_rol(array $accepted_roles = []): bool
+    {
+        $ingelogd = false;
+        if (
+            !empty($accepted_roles) && !empty($this->user()['rol'])
+            && in_array($this->user()['rol'], $accepted_roles)
+        ) {
+         $ingelogd = true;
+        }
+
+       return $ingelogd;
+    }
+
 
     /**
      * This function is called automatically when destructing.

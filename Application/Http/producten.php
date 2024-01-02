@@ -1,14 +1,16 @@
 <?php
 
 // Funtion voor query van een enkel product aan de hand van ID
-function queryEnkelProduct($productId) {
+function queryEnkelProduct($getProductId) {
     $database = new Database();
     $result = $database->query(
-        "SELECT producten.naam, producten.prijs, media.pad
-                                        FROM producten                            
-                                        INNER JOIN media ON media.id = producten.id
-                                        WHERE producten.id = ?",
-        [$productId]
+        "SELECT producten.id, producten.naam, producten.beschrijving ,producten.prijs, media.pad, media.extensie
+                                        FROM product_categorieen
+                                        INNER JOIN producten ON producten.id = product_categorieen.product_id
+                                        INNER JOIN categorieen ON categorieen.id = product_categorieen.categorie_id
+                                        INNER JOIN media ON media.product_id = product_categorieen.product_id
+                                        WHERE categorie_id = ?",
+        [$getProductId]
     )->get();
 
     $database->close();
@@ -20,7 +22,7 @@ function queryEnkelProduct($productId) {
 function queryEnkeleCategorie($categorieId) {
     $database = new Database();
     $result = $database->query(
-        "SELECT categorie_id, producten.naam, producten.prijs, media.pad
+        "SELECT categorie_id, product_categorieen.product_id, producten.naam, producten.prijs, media.pad, media.extensie
                                         FROM product_categorieen
                                         INNER JOIN producten ON producten.id = product_categorieen.product_id
                                         INNER JOIN categorieen ON categorieen.id = product_categorieen.categorie_id
@@ -48,12 +50,24 @@ function queryCategorieen() {
 function queryProductEnAfbeelding() {
     $database = new Database(); // Maak een instantie van de DatabaseManager klasse.
     $result = $database->query("SELECT producten.id, producten.naam, producten.prijs, media.product_id, media.pad, media.extensie
-FROM tss.producten
-JOIN media ON producten.id = media.id")->get(); // Voer een query uit en haal meerdere rijen op.
+FROM product_categorieen
+INNER JOIN producten ON producten.id = product_categorieen.product_id
+INNER JOIN categorieen ON categorieen.id = product_categorieen.categorie_id
+INNER JOIN media ON media.product_id = product_categorieen.product_id
+WHERE is_actief=1 AND is_verwijderd=0")->get(); // Voer een query uit en haal meerdere rijen op.
 
     $database->close(); // Sluit de database connectie.
 
     return $result;
 }
+
+// Functie om een product toe te voegen aan een winkelwagen
+function voegProductToeAanBestelling($product_id, $aantal) {
+    $_SESSION["winkelwagen"]["producten"][] = [
+        "id" => $product_id,
+        "hoeveelheid_in_winkelwagen" => $aantal,
+    ];
+}
+
 
 ?>

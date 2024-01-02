@@ -1,13 +1,7 @@
 <?php
-// Zorg ervoor dat je sessies hebt gestart
-session_start();
 
-// Controleer of de gebruiker is ingelogd en haal de gebruikers-ID op
-if (!isset($_SESSION['auth']['user_id'])) {
-    // Gebruiker is niet ingelogd, toon een foutmelding of stuur de gebruiker naar het inlogscherm
-    echo 'U bent niet ingelogd. Log in om uw accountgegevens te bekijken.';
-    exit;
-}
+include basePath("Application/Http/beheer/menu.php");
+$auth->protectAdminPage(Auth::BEHEERDER_ROLES);
 
 $loggedInUserId = $_SESSION['auth']['user_id'];
 

@@ -1,5 +1,7 @@
 <!-- PHP logica -->
-<?php include basePath("Application/Http/beheer/klanten.php"); ?>
+<?php include basePath("Application/Http/beheer/klanten.php");
+$auth->protectAdminPage(Auth::BEHEERDER_ROLES);
+?>
 
 <h1>Klant toevoegen</h1>
 <div class="d-flex justify-content-end mt-2">
@@ -14,9 +16,6 @@
 <form method="post" action="/beheer/klanten_nieuw">
     <div class="mb-3">
     Email: <input type="email" name="email" placeholder="email">
-    </div>
-    <div class="mb-3">
-    Wachtwoord: <input type="password" name="password" placeholder="password">
     </div>
     <div class="mb-3">
     Voornaam: <input type="text" name="voornaam" placeholder="voornaam">
@@ -55,7 +54,6 @@
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $database = new Database();
     $email = ($_POST['email']);
-    $password = ($_POST['password']);
     $voornaam = ($_POST['voornaam']);
     $tussenvoegsel = ($_POST['tussenvoegsel']);
     $achternaam = ($_POST['achternaam']);
@@ -67,8 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Voeg gegevens toe aan de database
     $result = $database->query(
-        "INSERT INTO klanten (email, password, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode, woonplaats, land) 
-                    values ('" . $email . "','" . $password . "','" . $voornaam . "','" . $tussenvoegsel . "','" . $achternaam . "','" . $straat . "','" . $huisnummer . "',
+        "INSERT INTO klanten (email, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode, woonplaats, land) 
+                    values ('" . $email . "','" . $voornaam . "','" . $tussenvoegsel . "','" . $achternaam . "','" . $straat . "','" . $huisnummer . "',
                     '" . $postcode . "','" . $woonplaats . "','" . $land . "')");
 
     $database->close();
