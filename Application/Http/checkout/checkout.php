@@ -7,7 +7,7 @@ include(__DIR__."/../checkout/functies.php");
 
 // Redirect to homepage if not logged in.
 $homepage_path = "http://localhost/";
-if(!$_SESSION['auth']['logged_in']??false){
+if(!$auth->isLoggedIn()){
     //redirect login page
     header("Location: $homepage_path");
     exit;
