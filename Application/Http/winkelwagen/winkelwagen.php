@@ -1,5 +1,8 @@
 <?php
 include("functies.php");
+include(__DIR__."../../beheer/productbeheer.php");
+
+
 $databaseManager = new Database();
 // hard coded true for testing
 $path = "/assets/afbeeldingen/";
@@ -73,7 +76,6 @@ if ($_GET['addtocart']??false){
             "GROUP BY p.id ";
 
         $result = $databaseManager->query($query, ["id" => $id])->first();
-
 
         if(isset($_SESSION["winkelwagen"]["producten"][$id])) {
             $_SESSION["winkelwagen"]["producten"][$id]["hoeveelheid_in_winkelwagen"]++;

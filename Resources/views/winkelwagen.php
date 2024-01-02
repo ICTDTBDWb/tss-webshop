@@ -7,8 +7,14 @@
         height: auto;
         object-fit: contain;
     }
+    .d-block {
+        width: 256px;
+        height: auto;
+        object-fit: contain;
+    }
 </style>
-<div class="d-flex flex-grow-1 flex-column">
+
+<div class="d-flex flex-fill flex-column">
     <!-- Navigatie -->
     <div class="d-flex flex-row justify-content-start navigation py-3">
         <a class="btn btn-outline-primary mx-3" href="/homepagina" role="button">Homepagina</a>
@@ -17,30 +23,30 @@
     </div>
 
     <!-- Pagina content -->
-    <div class="d-flex flex-column flex-grow-1 overflow-hidden">
-        <form action="" method="post" class="d-flex flex-column flex-grow-1 overflow-hidden">
+    <div class="d-flex flex-column flex-grow-1">
+        <form action="" method="post" class="d-flex flex-column flex-grow-1">
         <div class="d-flex flex-row wijzigingen">
             <div class="d-flex justify-content-end flex-grow-1">
                 <input type="submit" name="wijzigingen_opslaan" class="btn-primary" value="Wijzigingen opslaan"/>
             </div>
             <div class="d-flex flex-grow-1"></div>
         </div>
-        <div class="d-flex flex-row flex-grow-1 overflow-hidden">
-            <div class="producten overflow-scroll flex-grow-1 d-flex">
+        <div class="d-flex flex-row flex-grow-1">
+            <div class="producten overflow-x-scroll flex-grow-1 d-flex">
                 <div class="d-flex flex-column flex-grow-1">
                     <?php if($producten) { ?>
                         <?php foreach($producten as $product) { ?>
                         <?php $totaal_prijs += $product['prijs']*$product['hoeveelheid_in_winkelwagen'] ?>
                         <div class="d-flex border flex-grow-1 p-1 product">
                             <div clas="d-flex">
-                                    <a href="/product/<?php echo $product['id'] ?>">
-                                        <img class="productimage p-2"  alt="<?php echo $product['media_naam'] ?>" src="<?php echo $product['media_pad'].".".$product['media_extensie'] ?>"></img>
+                                    <a href="/product_details/id=<?php echo $product['id'] ?>">
+                                        <?php echo check_media(["naam" => $product['media_naam'], "pad" => $product['media_pad'], "extensie" => $product['media_extensie']]); ?>
                                     </a>
                                 </div>
                             <div class="d-flex flex-grow-1 flex-column justify-content-between py-2">
                                 <div class="d-flex flex-row">
                                     <div class="productnaam flex-grow-1">
-                                        <a href="/product/<?php echo $product['id'] ?>"><?php echo $product['product_naam'] ?></a>
+                                        <a href="/product_details/id=<?php echo $product['id'] ?>"><?php echo $product['product_naam'] ?></a>
                                     </div>
                                     <div class="productprijs flex-grow-1">Prijs: <?php echo $product['prijs']*$product['hoeveelheid_in_winkelwagen'] ?></div>
                                 </div>

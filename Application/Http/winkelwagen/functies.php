@@ -58,7 +58,7 @@ function getTotalFromCurrentCart() {
         count($_SESSION['winkelwagen']['producten'])
     ) {
         foreach ($_SESSION["winkelwagen"]["producten"] as $key => $product) {
-                $totaal += $_SESSION["winkelwagen"]["producten"][$key]["prijs"]*$_SESSION["winkelwagen"]["producten"][$key]["hoeveelheid_in_winkelwagen"];
+            $totaal += $_SESSION["winkelwagen"]["producten"][$key]["prijs"]*$_SESSION["winkelwagen"]["producten"][$key]["hoeveelheid_in_winkelwagen"];
         }
     }
 

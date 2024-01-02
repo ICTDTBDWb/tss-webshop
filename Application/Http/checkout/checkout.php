@@ -61,7 +61,6 @@ if($_POST??false){
         $validation_error_array['achternaam'] = true;
     }
 
-
     $straat_filtered = filter_input(INPUT_POST, 'straat', FILTER_SANITIZE_SPECIAL_CHARS);
     if($straat_filtered === false) {
         $validation_error_array['straat'] = true;
