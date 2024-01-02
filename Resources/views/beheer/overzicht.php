@@ -1,5 +1,6 @@
 <?php
-
+include basePath("Application/Http/beheer/menu.php");
+$auth->protectAdminPage(Auth::BEHEERDER_ROLES);
 $errorMessage = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -52,14 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-    <p class="d-flex justify-content-center fs-1 fw-bolder">Beheerdersportaal</p>
-    <p class="d-flex justify-content-evenly">
-        <a href="/beheer/overzicht" class="btn btn-secondary active">Beheeroverzicht</a>
-        <a href="/beheer/accountgegevens" class="btn btn-secondary">Accountgegevens</a>
-        <a href="/beheer/productbeheer" class="btn btn-secondary">Productbeheer</a>
-        <a href="/beheer/overzichtbestellingen" class="btn btn-secondary">Overzicht bestellingen</a>
-        <a href="/beheer/klantbeheer" class="btn btn-secondary">Klantbeheer</a>
-    </p>
+
 
     <div class="row justify-content-start">
         <div class="col-md-4 mb-4">

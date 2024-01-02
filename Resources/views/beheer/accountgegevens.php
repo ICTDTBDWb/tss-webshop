@@ -18,17 +18,12 @@ FROM tss.medewerkers WHERE id = :id";
 
 // Fetch data from the database
 $dbManager = new Database();
-$medewerkers = $dbManager->query("SELECT * FROM tss.medewerkers")->get()
+$medewerkers = $dbManager->query("SELECT * FROM tss.medewerkers")->get();
+
+include basePath("Application/Http/beheer/menu.php");
+$auth->protectAdminPage(Auth::BEHEERDER_ROLES);
 ?>
 
-<p class="d-flex justify-content-center fs-1 fw-bolder">Beheerdersportaal</p>
-<p class="d-flex justify-content-evenly">
-    <a href="/beheer/overzicht" class="btn btn-secondary active">Beheeroverzicht</a>
-    <a href="/beheer/accountgegevens" class="btn btn-secondary">Accountgegevens</a>
-    <a href="/beheer/productbeheer" class="btn btn-secondary">Productbeheer</a>
-    <a href="/beheer/overzichtbestellingen" class="btn btn-secondary">Overzicht bestellingen</a>
-    <a href="/beheer/klantbeheer" class="btn btn-secondary">Klantbeheer</a>
-</p>
 
 <!-- Table for displaying medewerkers data -->
 <div style="overflow-x: auto;">
@@ -52,17 +47,17 @@ $medewerkers = $dbManager->query("SELECT * FROM tss.medewerkers")->get()
         <tbody>
         <?php foreach ($medewerkers as $medewerker): ?>
             <tr>
-                <td><?php echo htmlspecialchars($medewerker['rol']); ?></td>
-                <td><?php echo htmlspecialchars($medewerker['email']); ?></td>
+                <td><?php echo htmlspecialchars($medewerker['rol'] ?? ""); ?></td>
+                <td><?php echo htmlspecialchars($medewerker['email'] ?? ""); ?></td>
                 <td>••••••••</td> <!-- Password is not displayed for security reasons -->
-                <td><?php echo htmlspecialchars($medewerker['voornaam']); ?></td>
-                <td><?php echo htmlspecialchars($medewerker['tussenvoegsel']); ?></td>
-                <td><?php echo htmlspecialchars($medewerker['achternaam']); ?></td>
-                <td><?php echo htmlspecialchars($medewerker['straat']); ?></td>
-                <td><?php echo htmlspecialchars($medewerker['huisnummer']); ?></td>
-                <td><?php echo htmlspecialchars($medewerker['postcode']); ?></td>
-                <td><?php echo htmlspecialchars($medewerker['woonplaats']); ?></td>
-                <td><?php echo htmlspecialchars($medewerker['land']); ?></td>
+                <td><?php echo htmlspecialchars($medewerker['voornaam'] ?? ""); ?></td>
+                <td><?php echo htmlspecialchars($medewerker['tussenvoegsel'] ?? ""); ?></td>
+                <td><?php echo htmlspecialchars($medewerker['achternaam'] ?? ""); ?></td>
+                <td><?php echo htmlspecialchars($medewerker['straat'] ?? ""); ?></td>
+                <td><?php echo htmlspecialchars($medewerker['huisnummer'] ?? ""); ?></td>
+                <td><?php echo htmlspecialchars($medewerker['postcode'] ?? ""); ?></td>
+                <td><?php echo htmlspecialchars($medewerker['woonplaats'] ?? ""); ?></td>
+                <td><?php echo htmlspecialchars($medewerker['land'] ?? ""); ?></td>
                 <td>
                     <a href="/beheer/edit_medewerker?id=<?php echo $medewerker['id']; ?>" class="btn btn-primary">Wijzigen</a>
                 </td>

@@ -1,12 +1,20 @@
 <?php
     include basePath("Application/Http/beheer/menu.php");
+     $auth->protectAdminPage(Auth::BEHEERDER_ROLES);
+
+     $klantenservice = $auth->check_admin_rol([auth::KLANTENSERVICE_ROLE]);
+     $seospecialist  = $auth->check_admin_rol([auth::SEOSPECIALIST_ROLE]);
+
+
+     $disabled = $klantenservice || $seospecialist ? " disabled='disabled' " : "";
+     $beschrijving_disabled = $klantenservice  ? " disabled='disabled' " : "";
+
     //database
     $database = new Database();
     $rootPath = $_SERVER['DOCUMENT_ROOT'];
     $media_link = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
     $afbeelding_path = $rootPath."/assets/afbeeldingen/";
     $product_categorie_post = [];
-
 
 
     $product_id = "";
@@ -57,9 +65,6 @@
             $filesize = array_key_exists("size",$file) ? $file['size']: "";
             $filetmp_name = array_key_exists("tmp_name",$file) ? $file['tmp_name'] : "";
             $fileerror = array_key_exists("error",$file) ? $file['error'] : "";
-
-
-
 
 
 
@@ -196,10 +201,20 @@
                      {
 
                          $path_parts = pathinfo($afbeelding_path.$product_id."/".$filename);
+                         $extensie = $path_parts['extension'];
+
+                         if (!check_extentie($extensie))
+                         {
+                             $alert_type = "danger";
+                             $alert = "<strong>Niet gelukt</strong> Wat u probeert op te slaan is geen afbeelding of video. afbeelding formaten zijn PNG/JPG/BMP/GIF, video zijn MP4";
+                             break;
+                         }
+
+
                          $gelukt = move_uploaded_file($filetmp_name, $afbeelding_path.$product_id."/".$filename);
                         //var_dump($path_parts);
                          $filename = $path_parts['filename'];
-                         $extensie = $path_parts['extension'];
+
                          if ($gelukt) {
                              $data = $database->query("SELECT COUNT(*) FROM media WHERE product_id = ? and pad = ?", [$product_id, "/assets/afbeeldingen/" . $product_id . "/" . $filename])->get();
 
@@ -216,6 +231,22 @@
                      }
 
                      if ($product_id != "" and $youtube_url != "") {
+
+                         if (!filter_var($youtube_url, FILTER_VALIDATE_URL))
+                         {
+                             $alert_type = "danger";
+                             $alert = "<strong>Niet gelukt</strong> Geen valide URL.";
+                             break;
+                         }
+
+                         if (!strpos($youtube_url, 'www.youtube') > 0)
+                         {
+                             $alert_type = "danger";
+                             $alert = "<strong>Niet gelukt</strong> URL is geen youtube video.";
+                             break;
+                         }
+
+
                          $youtube_url = str_replace("watch?v=", "embed/", $youtube_url);
                          $database->query("INSERT INTO media (`product_id`,`naam`,`pad`,`extensie`) VALUES(?,?,?,?)", [$product_id, "youtube video", $youtube_url, "youtube"]);
                      }
@@ -546,7 +577,7 @@
                 <div class="carousel-inner"  style="height: 100%; width: 100%" data-bs-interval="false"  >
 
 
-                <?php echo make_media_carousel($product[0]["media"], $media_link) ?>
+                <?php echo make_media_carousel($product[0]["media"], $media_link, $disabled) ?>
 
                 </div>
                 <!-- Left and right controls/icons -->
@@ -569,13 +600,13 @@
                     <div class="row">
                         <div class="col" style='min-width: 70%'>
                             <label for="product_naam" class="form-label">Product Naam:</label>
-                            <input type="text" class="form-control" id="product_naam" name="product_naam" aria-describedby="product_help" value='<?php echo $product_naam ?>'>
+                            <input type="text" class="form-control" id="product_naam" name="product_naam" aria-describedby="product_help" required="required" maxlength="255" <?php echo $disabled ?> value='<?php echo $product_naam ?>'>
                             <input type="hidden" class="form-control" id="product_id" name="product_id"   value='<?php echo $product_id ?>'>
                             <div id="product_help" class="form-text">verander of geef naam van product op.</div><br>
                         </div>
                         <div class="col">
                             <label for="product_actief" class="form-label">Product zichtbaar </label>
-                            <select id="product_actief" class="form-select" name="product_actief">
+                            <select id="product_actief" class="form-select" name="product_actief" <?php echo $disabled ?>">
                                 <?php
 
                                   if ( $product_actief == 0 )
@@ -598,7 +629,7 @@
                     <div class="row">
                         <div class="col" style='min-width: 50%'>
                             <label for="product_merk" class="form-label" >Product Merk:</label>
-                            <input type="text" class="form-control" id="product_merk" name="product_merk"  value='<?php echo $product_merk ?>'  list="merknamen" >
+                            <input type="text" class="form-control" id="product_merk" name="product_merk" maxlength="255" <?php echo $disabled ?> value='<?php echo $product_merk ?>'  list="merknamen" >
                             <datalist id="merknamen">
                                 <?php
                                 echo make_option_list($product[0]["merken"]);
@@ -607,13 +638,13 @@
                         </div>
                         <div class="col" >
                             <label for="product_aantal" class="form-label" >aantal:</label>
-                            <input type="number" class="form-control" id="product_aantal" name="product_aantal" min="0" value='<?php echo $product_aantal ?>'>
+                            <input type="number" class="form-control" id="product_aantal" name="product_aantal" min="0" <?php echo $disabled ?> value='<?php echo $product_aantal ?>'>
                         </div>
                         <div class="col">
                             <label for="product_prijs" class="form-label">prijs</label>
                             <div class="input-group mb-3">
                             <span class="input-group-text" id="product_prijs">€</span>
-                            <input type="number" class="form-control" id="product_prijs" name="product_prijs" min="0.00" step="any" value='<?php echo $product_prijs ?>'>
+                            <input type="number" class="form-control" id="product_prijs" name="product_prijs" min="0.00" step="any" <?php echo $disabled ?> value='<?php echo $product_prijs ?>'>
                             </div>
                         </div>
                     </div>
@@ -623,7 +654,7 @@
         <div class="row">
             <div class="container col" style="max-width: 30%; align-content: flex-start" >
                 <label for="hoofd_afbeelding" class="form-label">Hoofd afbeelding </label>
-                <select id="hoofd_afbeelding" class="form-select" name="hoofd_afbeelding">
+                <select id="hoofd_afbeelding" class="form-select" name="hoofd_afbeelding" <?php echo $disabled ?> >
                     <?php
                     foreach ($product[0]["media"] as $key => $item)
                     {
@@ -636,91 +667,95 @@
                     ?>
                 </select><br>
                 <!--<a class="btn btn-outline-secondary" href= /beheer/mediacategoriebeheer" style="width: 100%" role="button">Media beheer</a> -->
-                <button type="button" class="btn btn-outline-secondary" style="width: 100%"  data-bs-toggle="modal" data-bs-target="#upload_picture">Media toevoegen</button><br><br>
+                <button type="button" class="btn btn-outline-secondary" style="width: 100%"  data-bs-toggle="modal" data-bs-target="#upload_picture" <?php echo $disabled ?>>Media toevoegen</button><br><br>
 
                 <label for="categorie" class="form-label">Categorieen </label>
-                <card class="card" style="max-height: 30vh; min-height: 30vh; overflow-y: auto; overflow-x: hidden">
-                   <?php echo checkbox_constructor($categorieen, $product) ?>
+                <card class="card" style="max-height: 30vh; min-height: 30vh; overflow-y: auto; overflow-x: hidden" >
+                   <?php echo checkbox_constructor($categorieen, $product, $disabled) ?>
                 </card><br>
-                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#categorietoevoegen" style="width: 100%">Categorie toevoegen</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#categorietoevoegen" <?php echo $disabled ?> style="width: 100%">Categorie toevoegen</button>
             </div>
             <div class="col">
                 <label for="beschrijving" class="form-label">Beschrijving</label>
-                <textarea class="form-control" id="beschrijving" aria-label="With textarea" name="product_beschrijving" style="resize: none; height: 50vh" ><?php echo $product_beschrijving?> </textarea>
+                <textarea class="form-control" id="beschrijving" aria-label="With textarea" name="product_beschrijving" maxlength="4000" <?php echo $beschrijving_disabled ?> style="resize: none; height: 50vh" ><?php echo $product_beschrijving?> </textarea>
             </div>
         </div><br>
 
         <div class="row">
             <div class="col">
-                <button type='submit' <?php echo $product_id == ""? "hidden" : "" ?> class="btn btn-outline-secondary" id="opslaan" name="opslaan" value="toevoegen" style="width: 100%">Toevoegen als nieuw</button>
+                <button type='submit' <?php echo $product_id == ""? "hidden" : "" ?> class="btn btn-outline-secondary" id="opslaan" name="opslaan" value="toevoegen"  <?php echo $disabled ?> style="width: 100%">Toevoegen als nieuw</button>
             </div>
             <div class="col">
-                <button type="submit" class="btn btn-outline-secondary" id="opslaan"  name="opslaan" value='opslaan'  style="width: 100%">Opslaan</button>
+                <button type="submit" class="btn btn-outline-secondary" id="opslaan"  name="opslaan" value='opslaan'  <?php echo $beschrijving_disabled ?> style="width: 100%">Opslaan</button>
             </div>
             <div class="col">
-                <button type="submit" class="btn btn-outline-secondary" id="opslaan"  name="opslaan" value="verwijderen"  style="width: 100%">Verwijderen</button>
+                <button type="submit" class="btn btn-outline-secondary" id="opslaan"  name="opslaan" value="verwijderen"  <?php echo $disabled ?> style="width: 100%">Verwijderen</button>
             </div>
 
         </div>
 
 
-        <div class="modal fade" tabindex="-1" id="categorietoevoegen" >
-
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Categorie Toevoegen</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
-                        </div>
-                        <div class="modal-body">
-                            <label for='categorie_naam' class='form-label'>Categorie Naam</label>
-                            <input type='text' class='form-control' id='categorie_naam' name='categorie_naam'  value=''>
-                            <label for='categorie_beschrijving' class='form-label'>Categorie beschrijving</label>
-                            <textarea class='form-control' id='categorie_beschrijving' aria-label='With textarea' name='categorie_beschrijving' style='resize: none; height: 10vh' ></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Annuleren</button>
-                            <button type='submit' class='btn btn-primary' name='opslaan' value='categorie_toevoegen'>Opslaan</button>
-                        </div>
-                    </div>
-                </div>
-
-        </div>
-
-        <div class="modal fade" tabindex="-1" id="upload_picture" >
-
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Media Uploaden</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
-                        </div>
-                        <div class="modal-body">
-
-                            <div class="mb-3">
-                                <div class='btn-group' role='group'>
-                                    <button type="button" class="btn btn-outline-secondary active" id="selectimage" onclick="afbeelding()">afbeelding/video</button>
-                                    <button type="button" class="btn btn-outline-secondary" id="selecturl" onclick="youtube()">youtube</button>
-                                </div>
-                                <label for="formFile" class="form-label" id="labelfile">Selecteer een afbeelding of video:</label>
-                                <input class="form-control" type="file" accept="image/png, image/gif, image/jpeg" id="formFile" name="upload_picture">
-                                <label for="formurl" class="form-label" id="labelurl" style="display: none">Geef URL van video op</label>
-                                <input class="form-control" type="hidden"  id="formurl" name="upload_url">
-                            </div>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                            <button type="submit" class="btn btn-primary" name="opslaan" value="upload_media">Upload</button>
-                        </div>
-                    </div>
-                </div>
 
 
-        </div>
+
 
 
     </form>
+
+    <div class="modal fade" tabindex="-1" id="upload_picture" >
+        <form method="post" action="" id="form_upload_picture" enctype="multipart/form-data">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Media Uploaden</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <div class='btn-group' role='group'>
+                            <button type="button" class="btn btn-outline-secondary active" id="selectimage" onclick="afbeelding()">afbeelding/video</button>
+                            <button type="button" class="btn btn-outline-secondary" id="selecturl" onclick="youtube()">youtube</button>
+                        </div>
+                        <label for="formFile" class="form-label" id="labelfile">Selecteer een afbeelding of video:</label>
+                        <input class="form-control" type="file" accept="image/png, image/gif, image/jpeg, video/mp4" id="formFile" name="upload_picture">
+                        <label for="formurl" class="form-label" id="labelurl" style="display: none">Geef URL van video op</label>
+                        <input class="form-control" type="hidden"  id="formurl" name="upload_url">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+                    <button type="submit" class="btn btn-primary" name="opslaan" value="upload_media"  onclick="insert_input('form_upload_picture')">Upload</button>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+
+    <div class="modal fade" tabindex="-1" id="categorietoevoegen" >
+       <form method="post" action="" id="form_categorietoevoegen">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Categorie Toevoegen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+                </div>
+                <div class="modal-body">
+                    <label for='categorie_naam' class='form-label'>Categorie Naam</label>
+                    <input type='text' class='form-control' id='categorie_naam' required='required' maxlength='255' name='categorie_naam'  value=''>
+                    <label for='categorie_beschrijving' class='form-label'>Categorie beschrijving</label>
+                    <textarea class='form-control' id='categorie_beschrijving' aria-label='With textarea'  maxlength='255' name='categorie_beschrijving' style='resize: none; height: 10vh' ></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Annuleren</button>
+                    <button type='submit' class='btn btn-primary' name='opslaan' value='categorie_toevoegen' onclick="insert_input('form_categorietoevoegen')">Opslaan</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    </div>
+
 
 
         <?php echo modal_verwijder_categorie($producten_categorie);

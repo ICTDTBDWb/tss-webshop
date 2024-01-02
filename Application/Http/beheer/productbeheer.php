@@ -35,7 +35,7 @@ function check_media($media)
         $source = "<img src='$media_source' alt='$naam'  class='d-block' >";
 
     } elseif (in_array($media['extensie'], $_validExtensions['video'])) {
-        $source = "";
+        $source = "<video src='$media' title='$naam' class='d-block'> </video>";
     } elseif (in_array($media['extensie'], $_validExtensions['iframe'])) {
         $media_source = htmlspecialchars($media['pad']);
         $source = "<iframe src='$media_source'  title='$naam'  class='d-block'></iframe>";
@@ -45,6 +45,32 @@ function check_media($media)
 
     return $source;
 }
+
+/**
+ * checkt video url.
+ *
+ * @param string $extentie //extentie
+ * @return bool // extentie komt voor
+ */
+function check_extentie($extentie)
+{
+    global $_validExtensions;
+    $gevonden = false;
+
+    if (in_array($extentie, $_validExtensions['image'])) {
+        $gevonden = true;
+    }
+    if (in_array($extentie, $_validExtensions['video'])) {
+        $gevonden = true;
+    }
+    if (in_array($extentie, $_validExtensions['iframe'])) {
+        $gevonden = true;
+    }
+
+    return $gevonden;
+}
+
+
 
 
 
@@ -106,7 +132,7 @@ function arcordion_item_constructor($categorie, $key, $show )
 }
 
 
-function checkbox_constructor($categorie, $product)
+function checkbox_constructor($categorie, $product, $disabled = "enabled")
 {
 
     $construct = "";
@@ -135,16 +161,16 @@ function checkbox_constructor($categorie, $product)
                         <div class='form-check'  style='min-height: 5vh'>
                           <div class = 'row'>
                             <div class = 'col'>
-                            <input class='form-check-input' type='checkbox' name='checkbox_$categorie_id' id='checkbox_$categorie_id' $checked >
+                            <input class='form-check-input' type='checkbox' name='checkbox_$categorie_id' id='checkbox_$categorie_id' $checked $disabled >
                                 <label class='form-check-label' for='checkbox_$categorie_id' >
                                 $categorie_naam
                             </label>
                         </div>
                          <div class='btn-group col ' role='group' aria-label='area_$categorie_id' style='height: 4vh; width:2vh; align-items: start'  >
-                                <button type='button' class='btn btn-outline-primary '  data-bs-toggle='modal' data-bs-target='#categorieaanpassen_$categorie_id'>
+                                <button type='button' class='btn btn-outline-primary '  data-bs-toggle='modal' data-bs-target='#categorieaanpassen_$categorie_id' $disabled>
                                    $edit_icon
                                 </button>
-                                <button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#categorieverwijder_$categorie_id'>
+                                <button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#categorieverwijder_$categorie_id' $disabled>
                                    $verwijder_icon
                                 </button>
                             </div>
@@ -248,9 +274,9 @@ function modal_edit_categorie($categorie)
         $body = "<div class='mb-3'>
                     <input type='hidden' value='$key' name='categorie_id'>
                     <label for='categorie_naam' class='form-label'>Categorie Naam</label>
-                    <input type='text' class='form-control' name='categorie_naam'  value='$categorie_naam'>
+                    <input type='text' class='form-control' name='categorie_naam' required='required' maxlength='255' value='$categorie_naam'>
                     <label for='categorie_beschrijving' class='form-label'>Categorie beschrijving</label>
-                    <textarea class='form-control' id='categorie_beschrijving' aria-label='With textarea' name='categorie_beschrijving' style='resize: none; height: 10vh' >$categorie_beschrijving</textarea>
+                    <textarea class='form-control' id='categorie_beschrijving' aria-label='With textarea' name='categorie_beschrijving' maxlength='255' style='resize: none; height: 10vh' >$categorie_beschrijving</textarea>
                  </div> ";
 
         $construct .= $title.$begin_modal.$body.$einde_modal;
@@ -272,7 +298,7 @@ function make_option_list($options)
 
 
 
-function make_media_carousel($product, $root_path)
+function make_media_carousel($product, $root_path, $disabled = "")
 {
 
     if (!is_array($product))
@@ -300,7 +326,7 @@ function make_media_carousel($product, $root_path)
                             <h5 class='col ' style='color: black; text-align: center'>$pic</h5>
                             <div class='btn-group col' role='group' aria-label='area'>
    
-                                <button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#mediaverwijder_$id'>
+                                <button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#mediaverwijder_$id' $disabled>
                                    $verwijder_icon
                                 </button>
                             </div>
@@ -311,7 +337,7 @@ function make_media_carousel($product, $root_path)
             $source = "<img src='$media' alt='$naam'  class='d-block' >";
 
         } elseif (in_array($item['extensie'], $_validExtensions['video'])) {
-            $source = "";
+            $source = "<video src='$media' title='$naam' class='d-block'> </video>";
         } elseif (in_array($item['extensie'], $_validExtensions['iframe'])) {
             $media = htmlspecialchars($item['pad']);
             $source = "<iframe src='$media'  title='$naam'  class='d-block'></iframe>";

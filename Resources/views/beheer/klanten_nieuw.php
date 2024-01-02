@@ -1,5 +1,7 @@
 <!-- PHP logica -->
-<?php include basePath("Application/Http/beheer/klanten.php"); ?>
+<?php include basePath("Application/Http/beheer/klanten.php");
+$auth->protectAdminPage(Auth::BEHEERDER_ROLES);
+?>
 
 <h1>Klant toevoegen</h1>
 <div class="d-flex justify-content-end mt-2">

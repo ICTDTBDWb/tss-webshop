@@ -109,6 +109,26 @@ class Auth
     }
 
     /**
+     * Log out the current user admin and clear its details from the session.
+     *
+     * @return void
+     */
+    #[NoReturn] public function logout_admin(): void
+    {
+        Session::set('auth', [
+            'logged_in' => false,
+            'is_admin' => false,
+            'rol' => ""
+        ]);
+
+        session_regenerate_id();
+
+        header("Location: /beheer/login");
+        exit;
+    }
+
+
+    /**
      * Redirect to the login page if unauthenticated.
      *
      * @return void
@@ -148,6 +168,26 @@ class Auth
             exit();
         }
     }
+
+    /**
+     * returns true if user has given role
+     *
+     * @param array $accepted_roles
+     * @return bool
+     */
+    public function check_admin_rol(array $accepted_roles = []): bool
+    {
+        $ingelogd = false;
+        if (
+            !empty($accepted_roles) && !empty($this->user()['rol'])
+            && in_array($this->user()['rol'], $accepted_roles)
+        ) {
+         $ingelogd = true;
+        }
+
+       return $ingelogd;
+    }
+
 
     /**
      * This function is called automatically when destructing.
