@@ -18,7 +18,7 @@ require_once(basePath("Application/Auth.php"));
      $items = [["ref" => "/beheer/overzicht", "naam" => "Beheeroverzicht"],
          ["ref" => "/beheer/accountgegevens", "naam" => "Accountgegevens"],
          ["ref" => "/beheer/productbeheer", "naam" => "Productbeheer"],
-         ["ref" => "/beheer/cadeaubonnen", "naam" => "Cadeaubonnen", "admin" => [AUTH::ADMIN_ROLE, AUTH::WEBREDACTEUR_ROLE, AUTH::KLANTENSERVICE_ROLE]],
+         ["ref" => "/beheer/cadeaubonnen", "naam" => "Cadeaubonnen", "admin" => [AUTH::ADMIN_ROLE, AUTH::WEBREDACTEUR_ROLE]],
          ["ref" => "/beheer/overzichtbestellingen", "naam" => "Overzicht bestellingen", "admin" => [AUTH::ADMIN_ROLE, AUTH::WEBREDACTEUR_ROLE, AUTH::KLANTENSERVICE_ROLE]],
          ["ref" => "/beheer/klanten", "naam" => "Klantbeheer", "admin" => [AUTH::ADMIN_ROLE, AUTH::WEBREDACTEUR_ROLE, AUTH::KLANTENSERVICE_ROLE]],
          ["ref" => "/beheer/uitloggen", "naam" => "uitloggen"]

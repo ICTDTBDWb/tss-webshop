@@ -1,6 +1,6 @@
 <!-- PHP logica -->
 <?php include basePath("Application/Http/beheer/klanten.php");
-$auth->protectAdminPage(Auth::BEHEERDER_ROLES);
+$auth->protectAdminPage([AUTH::ADMIN_ROLE, AUTH::WEBREDACTEUR_ROLE, AUTH::KLANTENSERVICE_ROLE]);
 $klantId = isset($_GET['id']) ? $_GET['id'] : null;
 $klantDetails = null;
 if ($klantId) {
