@@ -1,14 +1,19 @@
 <?php
 $auth->protectPage();
-// Inclusie van de services voor accountbeheer
+// Inclusie van de services voor accountbeheer en de aparte functie
 include basePath("Application/Http/account/services.php");
+
 
 // Bepalen van de huidige pagina voor form actie
 $current_page = basename($_SERVER['PHP_SELF']);
-//print $current_page;
+
 // Initialiseren van variabelen voor cadeaukaart verificatie
 $verificatieResultaat = null;
 $verificatieMelding = '';
+$foutmelding = '';
+
+// Haal de product_id_map dynamisch op uit de database
+$product_id_map = haalGiftboxProductIDMapOp();
 
 // Controleren of de huidige request een POST request is
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -28,22 +33,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Verwerken van giftbox gegevens indien beschikbaar
     if (isset($_POST['giftboxbedrag'], $_POST['aantal_giftboxes'])) {
-        // Definiëren van product ID's op basis van giftbox bedragen
-        $product_id_map = [
-            '25' => 6,
-            '50' => 7,
-            '75' => 8,
-            '100' => 9
-        ];
-
         // Ophalen van de POST data
         $stukprijs = $_POST['giftboxbedrag'];
         $aantal = $_POST['aantal_giftboxes'];
-        $product_id = $product_id_map[$stukprijs];
-        voegGiftboxToeAanBestelling($product_id,$aantal);
-        header('Location: /account/cadeaubonnen');
-        exit();
+        $product_id = isset($product_id_map[$stukprijs]) ? $product_id_map[$stukprijs] : null;
 
+        // Als het product_id bestaat, voeg de giftbox toe aan de bestelling
+        if ($product_id) {
+            voegGiftboxToeAanBestelling($product_id, $aantal);
+            header('Location: /account/cadeaubonnen');
+            exit();
+        } else {
+            // Anders, toon een foutmelding
+            $foutmelding = "Er is een ongeldig giftboxbedrag geselecteerd.";
+        }
     }
 }
 ?>
@@ -56,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="col-md-6">
         <h2>Cadeaubonnen</h2>
         <form action="/account/cadeaubonnen" method="post">
-        <!-- Veld voor het invoeren van de cadeaukaartcode -->
+            <!-- Veld voor het invoeren van de cadeaukaartcode -->
             <div class="mb-3">
                 <label for="cadeaukaartcode" class="form-label">Cadeaukaartcode</label>
                 <input type="text" class="form-control" id="cadeaukaartcode" name="cadeaukaartcode" required>
@@ -70,9 +73,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit" class="btn btn-primary">Cadeaubon Verifiëren</button>
         </form>
         <!-- Toon bericht na verificatie -->
-        <?php if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cadeaukaartcode'])): ?>
-
-            <p class="alert <?= $verificatieResultaat ? 'alert-success' : 'alert-danger' ?>">
+        <?php if ($verificatieResultaat): ?>
+            <p class="alert alert-success">
+                <?= $verificatieMelding ?>
+            </p>
+        <?php elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cadeaukaartcode'])): ?>
+            <p class="alert alert-danger">
                 <?= $verificatieMelding ?>
             </p>
         <?php endif; ?>
@@ -84,12 +90,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <form action="" method="post">
             <!-- Selectie van giftbox bedrag -->
             <div class="mb-3">
-                <label for="giftboxbedrag" class="form-label">Giftbox bedrag</label>
+                <label for="giftboxbedrag" class="form-label">Bedrag</label>
                 <select class="form-control" id="giftboxbedrag" name="giftboxbedrag" required>
-                    <option value="25">€25</option>
-                    <option value="50">€50</option>
-                    <option value="75">€75</option>
-                    <option value="100">€100</option>
+                    <?php
+                    // Toon de giftbox opties op basis van de beschikbare ID's en bedragen
+                    foreach ($product_id_map as $prijs => $id) {
+                        echo "<option value=\"{$prijs}\">€{$prijs}</option>";
+                    }
+                    ?>
                 </select>
             </div>
             <!-- Veld voor het aantal giftboxes -->
@@ -100,8 +108,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <!-- Verzendknop -->
             <button type="submit" class="btn btn-primary">Toevoegen aan winkelwagen</button>
         </form>
-        <br>
+        <!-- Toon foutmelding indien aanwezig -->
+        <?php if ($foutmelding): ?>
+            <p class="alert alert-danger"><?= $foutmelding ?></p>
+        <?php endif; ?>
         <!-- Beschrijving van de giftbox -->
+        <br>
         <p>De TSS Giftbox, een cadeaukaart die de ontvanger zelf kan inwisselen bij TSS voor een tegoed in de webwinkel, wordt sfeervol verpakt en kosteloos thuisbezorgd.</p>
         <!-- Afbeelding van een cadeaubon -->
         <img src="/assets/afbeeldingen/cadeaubon.jpg" alt="Cadeaubon Afbeelding" style="max-width: 100%; height: auto;">

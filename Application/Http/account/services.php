@@ -143,5 +143,25 @@ function haalBestellingDetailsOp($klantId,$bestellingId) {
     return $database->query($query, [$klantId,$bestellingId])->get();
 }
 
+function haalGiftboxProductIDMapOp() {
+    $database = new Database();
+
+    // Aangepaste query om alleen de giftbox producten op te halen
+    $query = "SELECT prijs, id FROM tss.producten WHERE naam LIKE 'Giftbox%' AND is_actief = 1 AND is_verwijderd = 0";
+
+    // Voer de query uit en haal de resultaten op
+    $resultaten = $database->query($query)->get();
+
+    // Initialiseer de map array
+    $product_id_map = [];
+
+    // Vul de map met resultaten van de query
+    foreach ($resultaten as $row) {
+        $product_id_map[$row['prijs']] = $row['id'];
+    }
+
+    return $product_id_map;
+}
+
 
 ?>
