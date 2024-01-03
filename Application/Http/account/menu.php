@@ -33,7 +33,6 @@
         <?php
         // Haal de naam van het huidige script op
         $current_page = basename($_SERVER['REQUEST_URI']);
-        var_dump($current_page);
         ?>
 
         <!-- Navigatiemenu-items -->
