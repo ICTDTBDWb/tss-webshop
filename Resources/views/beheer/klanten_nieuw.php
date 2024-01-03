@@ -65,8 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Voeg gegevens toe aan de database
     $result = $database->query(
-        "INSERT INTO klanten (email, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode, woonplaats, land) 
-                    values ('" . $email . "','" . $voornaam . "','" . $tussenvoegsel . "','" . $achternaam . "','" . $straat . "','" . $huisnummer . "',
+        "INSERT INTO klanten (email, password, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode, woonplaats, land) 
+                    values ('" . $email . "','" . "','" . $voornaam . "','". $tussenvoegsel . "','" . $achternaam . "','" . $straat . "','" . $huisnummer . "',
                     '" . $postcode . "','" . $woonplaats . "','" . $land . "')");
 
     $database->close();
