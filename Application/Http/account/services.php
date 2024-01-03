@@ -146,7 +146,7 @@ function haalBestellingDetailsOp($klantId,$bestellingId) {
 function haalGiftboxProductIDMapOp() {
     $database = new Database();
 
-    // Aangepaste query om alleen de giftbox producten op te halen
+    // query om alleen de giftbox producten op te halen die actief en niet verwijderd zijn
     $query = "SELECT prijs, id FROM tss.producten WHERE naam LIKE 'Giftbox%' AND is_actief = 1 AND is_verwijderd = 0";
 
     // Voer de query uit en haal de resultaten op
