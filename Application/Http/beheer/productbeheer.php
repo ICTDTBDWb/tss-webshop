@@ -167,7 +167,7 @@ function checkbox_constructor($categorie, $product, $disabled = "enabled")
                                    $verwijder_icon
                                 </button>
                             </div>
-                           </div>" : "";
+                            " : "";
 
 
         $construct.= "
@@ -180,6 +180,7 @@ function checkbox_constructor($categorie, $product, $disabled = "enabled")
                             </label>
                         </div>
                          $inneritem
+                        </div>
                       </div>";
 
 
