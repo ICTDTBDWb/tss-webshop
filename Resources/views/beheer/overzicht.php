@@ -1,6 +1,7 @@
 <?php
 include basePath("Application/Http/beheer/menu.php");
 $auth->protectAdminPage(Auth::BEHEERDER_ROLES);
+$admin = $auth->check_admin_rol([auth::ADMIN_ROLE]);
 $errorMessage = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -57,37 +58,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="row justify-content-start">
         <div class="col-md-4 mb-4">
-            <form class="border p-4" method="post" action="">
-                <div class="mb-3">
-                    <label for="voornaam" class="form-label">Voornaam</label>
-                    <input type="text" class="form-control" id="voornaam" name="voornaam">
+
+                <?php
+                $content = " <form class='border p-4 hidden' method='post' action=''>
+                <div class='mb-3'>
+                    <label for='voornaam' class='form-label'>Voornaam</label>
+                    <input type='text' class='form-control' id='voornaam' name='voornaam'>
                 </div>
-                <div class="mb-3">
-                    <label for="tussenvoegsel" class="form-label">Tussenvoegsel</label>
-                    <input type="text" class="form-control" id="tussenvoegsel" name="tussenvoegsel">
+                <div class='mb-3'>
+                    <label for='tussenvoegsel' class='form-label'>Tussenvoegsel</label>
+                    <input type='text' class='form-control' id='tussenvoegsel' name='tussenvoegsel'>
                 </div>
-                <div class="mb-3">
-                    <label for="achternaam" class="form-label">Achternaam</label>
-                    <input type="text" class="form-control" id="achternaam" name="achternaam">
+                <div class='mb-3'>
+                    <label for='achternaam' class='form-label'>Achternaam</label>
+                    <input type='text' class='form-control' id='achternaam' name='achternaam'>
                 </div>
-                <div class="mb-3">
-                    <label for="emailadres" class="form-label">Emailadres</label>
-                    <input type="email" class="form-control" id="emailadres" name="emailadres">
+                <div class='mb-3'>
+                    <label for='emailadres' class='form-label'>Emailadres</label>
+                    <input type='email' class='form-control' id='emailadres' name='emailadres'>
                 </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Wachtwoord</label>
-                    <input type="password" class="form-control" id="password" name="password">
+                <div class='mb-3'>
+                    <label for='password' class='form-label'>Wachtwoord</label>
+                    <input type='password' class='form-control' id='password' name='password'>
                 </div>
-                <div class="mb-3">
-                    <label for="rol" class="form-label">Rol</label>
-                    <select class="form-control" id="rol" name="rol">
-                        <option value="1">Klantenservice</option>
-                        <option value="2">Webredacteur</option>
-                        <option value="3">SEO specialist</option>
+                <div class='mb-3'>
+                    <label for='rol' class='form-label'>Rol</label>
+                    <select class='form-control' id='rol' name='rol'>
+                        <option value='1'>Klantenservice</option>
+                        <option value='2'>Webredacteur</option>
+                        <option value='3'>SEO specialist</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Account toevoegen</button>
-            </form>
+                <button type='submit' class='btn btn-primary'>Account toevoegen</button>
+                </form>";
+                if ($admin)
+                {
+                    echo $content;
+                }
+                ?>
+
         </div>
 
         <!-- Aangepaste container voor het staafdiagram -->
