@@ -1,4 +1,3 @@
-<!--POST informatie ophalen-->
 <?php
 
 // Verwerken van productgegevens
@@ -14,11 +13,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
+
+
+
 <!--Title-->
 <div class="container-lg flex-grow-1 gx-0 py-2">
     <div class="d-flex justify-content-center">
         <h1 class="mt-0 font-weight-bold mb-5">Producten</h1>
     </div>
+    <!--Filter-->
+    <h5 class="font-weight-bold d-flex justify-content-end" style="max-width: 25%"></h5>
+    <form method="get" action="/producten" style="display: flex; flex-wrap: wrap;">
+        <?php foreach (queryCategorieen() as $categorieen) { ?>
+            <div style="margin-left: 10px;">
+                <input type="checkbox" name="categorie[]" value="<?php echo $categorieen['id']; ?>">
+                <label><?php echo $categorieen['naam']; ?></label>
+            </div>
+        <?php } ?>
+        <input type="submit" value="Filter">
+    </form>
+    <br>
     <br>
     <div class="container">
         <div class="row">
@@ -38,7 +52,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <!--Weergave producten-->
             <div class="col-10">
                 <div class="row">
-                    <?php foreach (queryProductEnAfbeelding() as $productenEnAfbeelding) {?>
+                    <?php
+                    $filteredCategories = isset($_GET['categorie']) ? $_GET['categorie'] : array();
+
+                    foreach (queryProductEnAfbeelding() as $productenEnAfbeelding) {
+                    // Check if the product belongs to any of the selected categories
+                    if (empty($filteredCategories) || in_array($productenEnAfbeelding['categorie_id'], $filteredCategories)) {
+                    ?>
                         <div class="col-md-4 text-right">
                             <h5>
                                 <a style="text-decoration:none; color:black;" href="/producten_detail?id=<?php echo ($productenEnAfbeelding['id']); ?>">
@@ -72,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <br>
                             <br>
                         </div>
-                    <?php  } ?>
+                    <?php  } }?>
                 </div>
             </div>
         </div>
