@@ -157,6 +157,19 @@ function checkbox_constructor($categorie, $product, $disabled = "enabled")
         global $verwijder_icon;
         $categorie_id = $item['id'];
         $categorie_naam = $item['naam'];
+
+        $inneritem = $categorie_naam != "Giftboxen" ? "
+                            <div class='btn-group col ' role='group' aria-label='area_$categorie_id' style='height: 4vh; width:2vh; align-items: start'  >
+                                <button type='button' class='btn btn-outline-primary '  data-bs-toggle='modal' data-bs-target='#categorieaanpassen_$categorie_id' $disabled>
+                                   $edit_icon
+                                </button>
+                                <button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#categorieverwijder_$categorie_id' $disabled>
+                                   $verwijder_icon
+                                </button>
+                            </div>
+                           </div>" : "";
+
+
         $construct.= "
                         <div class='form-check'  style='min-height: 5vh'>
                           <div class = 'row'>
@@ -166,15 +179,7 @@ function checkbox_constructor($categorie, $product, $disabled = "enabled")
                                 $categorie_naam
                             </label>
                         </div>
-                         <div class='btn-group col ' role='group' aria-label='area_$categorie_id' style='height: 4vh; width:2vh; align-items: start'  >
-                                <button type='button' class='btn btn-outline-primary '  data-bs-toggle='modal' data-bs-target='#categorieaanpassen_$categorie_id' $disabled>
-                                   $edit_icon
-                                </button>
-                                <button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#categorieverwijder_$categorie_id' $disabled>
-                                   $verwijder_icon
-                                </button>
-                            </div>
-                           </div>
+                         $inneritem
                       </div>";
 
 
