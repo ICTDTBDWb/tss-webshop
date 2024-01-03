@@ -6,7 +6,7 @@
     <div class="container-lg mx-auto py-3 row gx-0 items-center">
         <!--Logo-->
         <div class="col d-flex align-items-center">
-            <a href="<?php echo str_contains($_SERVER['REQUEST_URI'], 'beheer') ? '/beheer' : '/' ?>" class="text-decoration-none">
+            <a href="<?php echo str_contains($_SERVER['REQUEST_URI'], 'beheer') ? '/beheer/overzicht' : '/' ?>" class="text-decoration-none">
                 <p class="m-0 fw-bold text-dark">
                     The Sixt String
                 </p>

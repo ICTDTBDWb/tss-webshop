@@ -81,9 +81,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="mb-3">
                     <label for="rol" class="form-label">Rol</label>
                     <select class="form-control" id="rol" name="rol">
-                        <option value="1">Admin</option>
-                        <option value="2">Manager</option>
-                        <option value="3">Beheerder</option>
+                        <option value="1">Klantenservice</option>
+                        <option value="2">Webredacteur</option>
+                        <option value="3">SEO specialist</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary">Account toevoegen</button>

@@ -140,6 +140,10 @@ class Auth
             header("Location: /login");
             exit();
         }
+
+        if ($is_admin) {
+            header("Location: /beheer/overzicht");
+        }
     }
 
     /**
@@ -164,7 +168,7 @@ class Auth
             !empty($accepted_roles)
             && !in_array($this->user()['rol'], $accepted_roles)
         ) {
-            header("Location: /beheer");
+            header("Location: /beheer/overzicht");
             exit();
         }
     }
