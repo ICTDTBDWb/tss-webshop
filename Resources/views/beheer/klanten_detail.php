@@ -9,28 +9,29 @@ if ($klantId) {
 }
 ?>
 
-<!--set $_POST condities-->
+<!--POST condities-->
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $database = new Database();
 
-    // Query en parameters om klantgegevens aan te passen in de database
-    $query = "UPDATE klanten SET email=?, voornaam=?, tussenvoegsel=?, achternaam=?, straat=?, huisnummer=?, postcode=?, woonplaats=?, land=? WHERE id=?";
-    $params = [
-        $_POST['email'],
-        $_POST['voornaam'],
-        $_POST['tussenvoegsel'],
-        $_POST['achternaam'],
-        $_POST['straat'],
-        $_POST['huisnummer'],
-        $_POST['postcode'],
-        $_POST['woonplaats'],
-        $_POST['land'],
-        $_POST['id']
-    ];
+    $UpdateIngevuldeVelden = [];
+    $parameters = [];
 
-    $result = $database->query($query, $params);
+    // Voeg de ingevulde velden toe aan de query
+    foreach ($_POST as $veld => $waarde) {
+        if (!empty($waarde) && $veld != 'id') {
+            $updateIngevuldeVelden[] = "$veld=?";
+            $parameters[] = $waarde;
+        }
+    }
 
+    // Voer de query uit met alleen de ingevulde velden
+    if (!empty($updateIngevuldeVelden)) {
+        $query = "UPDATE klanten SET " . implode(', ', $updateIngevuldeVelden) . " WHERE id=?";
+        $parameters[] = $_POST['id'];
+
+        $result = $database->query($query, $parameters);
+    }
 
     $database->close();
 }
