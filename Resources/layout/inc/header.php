@@ -8,7 +8,7 @@
         <div class="col d-flex align-items-center">
             <a href="<?php echo str_contains($_SERVER['REQUEST_URI'], 'beheer') ? '/beheer/overzicht' : '/' ?>" class="text-decoration-none">
                 <p class="m-0 fw-bold text-dark">
-                    The Sixt String
+                    The Sixth String
                 </p>
             </a>
         </div>

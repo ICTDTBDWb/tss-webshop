@@ -147,7 +147,7 @@ function haalGiftboxProductIDMapOp() {
     $database = new Database();
 
     // query om alleen de giftbox producten op te halen die actief en niet verwijderd zijn
-    $query = "SELECT prijs, id FROM tss.producten WHERE naam LIKE 'Giftbox%' AND is_actief = 1 AND is_verwijderd = 0";
+    $query = "SELECT prijs, id FROM producten WHERE is_verwijderd = 0 and is_actief = 1 and id IN (SELECT `product_id` from product_categorieen inner join categorieen on product_categorieen.categorie_id = categorieen.id where categorieen.naam like '%Giftboxen%')";
 
     // Voer de query uit en haal de resultaten op
     $resultaten = $database->query($query)->get();
