@@ -49,7 +49,7 @@ $auth->protectAdminPage(Auth::BEHEERDER_ROLES);
 </form>
 
 
-<!--set $_POST condities-->
+<!--Variabelen voor de POST-->
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $database = new Database();

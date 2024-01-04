@@ -1,6 +1,7 @@
-<!-- PHP logica -->
-<?php include basePath("Application/Http/beheer/klanten.php");
+<?php
+include basePath("Application/Http/beheer/klanten.php");
 $auth->protectAdminPage(Auth::BEHEERDER_ROLES);
+// Haal klant ID op
 $klantId = isset($_GET['id']) ? $_GET['id'] : null;
 $klantDetails = null;
 if ($klantId) {
@@ -8,6 +9,32 @@ if ($klantId) {
 }
 ?>
 
+<!--set $_POST condities-->
+<?php
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $database = new Database();
+
+    // Query en parameters om klantgegevens aan te passen in de database
+    $query = "UPDATE klanten SET email=?, voornaam=?, tussenvoegsel=?, achternaam=?, straat=?, huisnummer=?, postcode=?, woonplaats=?, land=? WHERE id=?";
+    $params = [
+        $_POST['email'],
+        $_POST['voornaam'],
+        $_POST['tussenvoegsel'],
+        $_POST['achternaam'],
+        $_POST['straat'],
+        $_POST['huisnummer'],
+        $_POST['postcode'],
+        $_POST['woonplaats'],
+        $_POST['land'],
+        $_POST['id']
+    ];
+
+    $result = $database->query($query, $params);
+
+
+    $database->close();
+}
+?>
 <!--Print enkele klant aan de hand van ID-->
 <div class="container">
     <h1>Klant details</h1>
@@ -62,8 +89,9 @@ if ($klantId) {
         }
     </style>
     <br>
+    <!--Formulier om nieuwe klantgegevens in te vullen-->
     <?php foreach ($klantDetails as $enkeleKlant) {?>
-    <form method="post" action="/beheer/klanten_detail?id=<?php echo ($enkeleKlant['id']); ?>" onsubmit="setTimeout(function () { window.location.reload(); }, 10)">
+    <form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>" onSubmit="setTimeout(function(){location.reload(true);},100)" >
         <div class="mb-3">
             Id: <input type="text" name="id" placeholder="id">
         </div>
@@ -103,30 +131,5 @@ if ($klantId) {
     <?php  } ?>
 </div>
 
-    <!--set $_POST condities-->
-    <?php
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $database = new Database();
-        $id = ($_POST['id']);
-        $email = ($_POST['email']);
-        $voornaam = ($_POST['voornaam']);
-        $tussenvoegsel = ($_POST['tussenvoegsel']);
-        $achternaam = ($_POST['achternaam']);
-        $straat = ($_POST['straat']);
-        $huisnummer = ($_POST['huisnummer']);
-        $postcode = ($_POST['postcode']);
-        $woonplaats = ($_POST['woonplaats']);
-        $land = ($_POST['land']);
 
-        // Voeg gegevens toe aan de database
-        $result = $database->query(
-            "UPDATE klanten SET email='$email', voornaam='$voornaam', tussenvoegsel='$tussenvoegsel', achternaam='$achternaam',
-                   straat='$straat', huisnummer='$huisnummer', postcode='$postcode', woonplaats='$woonplaats', land='$land'
-                   WHERE id='$id'");
-
-        $database->close();
-
-        return $result;
-    }
-    ?>
 
