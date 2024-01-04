@@ -69,9 +69,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     values ('" . $email . "','" . "','" . $voornaam . "','". $tussenvoegsel . "','" . $achternaam . "','" . $straat . "','" . $huisnummer . "',
                     '" . $postcode . "','" . $woonplaats . "','" . $land . "')");
 
+    echo "<script>alert('Klant toegevoegd.');</script>";
+
     $database->close();
 
     return $result;
+
+
 
 
 }

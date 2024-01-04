@@ -31,8 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $parameters[] = $_POST['id'];
 
         $result = $database->query($query, $parameters);
-    }
 
+    }
+    
     $database->close();
 }
 ?>

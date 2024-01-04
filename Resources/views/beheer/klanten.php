@@ -46,9 +46,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <td><?php echo $klanten['achternaam']; ?></td>
                 <td><a class="btn btn-secondary" href="/beheer/klanten_detail?id=<?php echo $klanten['id']; ?>" role="button">Wijzigen</a></td>
                 <td>
-                    <form method="post" action="/beheer/klanten" onsubmit="setTimeout(function () { window.location.reload(); }, 10)">
+                    <form method="post" action="/beheer/klanten" onsubmit="setTimeout(function () { window.location.reload(); }, 100)">
                         <input name="klantId" class="d-none" value="<?php echo $klanten['id']; ?>">
-                        <button class="btn btn-secondary" role="button" name="klantVerwijderen" value="verwijderen">Verwijderen</button>
+                        <button class="btn btn-secondary" role="button" name="klantVerwijderen" value="verwijderen"
+                                onclick="return confirm('Weet u zeker dat u deze klant wilt verwijderen?')">Verwijderen</button>
                     </form>
                 </td>
             </tr>
