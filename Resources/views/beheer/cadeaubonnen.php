@@ -2,7 +2,7 @@
 
 include basePath('Application/Http/beheer/services.php');
 include basePath("Application/Http/beheer/menu.php");
-$auth->protectAdminPage([Auth::WEBREDACTEUR_ROLE]);
+$auth->protectAdminPage([Auth::WEBREDACTEUR_ROLE,AUTH::ADMIN_ROLE]);
 
 
 // Verwerk het toevoegen van een cadeaubon

@@ -4,7 +4,7 @@
 
 
 <?php $zoekKlanten = zoekKlanten();
-$auth->protectAdminPage(Auth::BEHEERDER_ROLES);
+$auth->protectAdminPage([AUTH::ADMIN_ROLE, AUTH::WEBREDACTEUR_ROLE, AUTH::KLANTENSERVICE_ROLE]);
 ?>
 
 

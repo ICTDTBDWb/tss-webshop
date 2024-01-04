@@ -2,7 +2,7 @@
 <?php
 require_once(basePath("Application/Auth.php"));
 
-$auth = Auth::getInstance();
+     $auth = Auth::getInstance();
      function make_active(string $path)
      {
 
@@ -15,7 +15,32 @@ $auth = Auth::getInstance();
      }
 
 
-     
+     $items = [["ref" => "/beheer/overzicht", "naam" => "Beheeroverzicht"],
+         ["ref" => "/beheer/accountgegevens", "naam" => "Accountgegevens"],
+         ["ref" => "/beheer/productbeheer", "naam" => "Productbeheer"],
+         ["ref" => "/beheer/cadeaubonnen", "naam" => "Cadeaubonnen", "admin" => [AUTH::ADMIN_ROLE, AUTH::WEBREDACTEUR_ROLE]],
+         ["ref" => "/beheer/overzichtbestellingen", "naam" => "Overzicht bestellingen", "admin" => [AUTH::ADMIN_ROLE, AUTH::WEBREDACTEUR_ROLE, AUTH::KLANTENSERVICE_ROLE]],
+         ["ref" => "/beheer/klanten", "naam" => "Klantbeheer", "admin" => [AUTH::ADMIN_ROLE, AUTH::WEBREDACTEUR_ROLE, AUTH::KLANTENSERVICE_ROLE]],
+         ["ref" => "/beheer/uitloggen", "naam" => "uitloggen"]
+     ];
+
+     $content = "";
+     foreach ($items as $item) {
+         $ref = $item['ref'];
+         $naam = $item['naam'];
+         $active = make_active($ref);
+         $admin_gevraagd = $item['admin'] ?? "";
+
+         if (is_array($admin_gevraagd)) {
+             $admin = $auth->check_admin_rol($item['admin']);
+             $content .= $admin ? "<a class='btn btn-secondary $active' href=$ref role='button'  >$naam</a>" : "";
+         }
+         else
+             $content .= "<a class='btn btn-secondary $active' href=$ref role='button'  >$naam</a>";
+     }
+
+
+
 
 
 
@@ -56,13 +81,8 @@ $auth = Auth::getInstance();
     </div>
     <!--Button overzicht-->
     <div class="d-flex justify-content-evenly" style="max-width: 75%">
-        <a class="btn btn-secondary <?php echo make_active("/beheer/overzicht" ) ?>" href="/beheer/overzicht" role="button"  >Beheeroverzicht</a>
-        <a class="btn btn-secondary <?php echo make_active("/beheer/accountgegevens" ) ?>" href="/beheer/accountgegevens" role="button" >Accountgegevens</a>
-        <a class="btn btn-secondary <?php echo make_active("/beheer/productbeheer" ) ?>" href="/beheer/productbeheer" role="button" >Productbeheer</a>
-        <a class="btn btn-secondary <?php echo make_active("/beheer/cadeaubonnen" ) ?>" href="/beheer/cadeaubonnen" role="button"  >Cadeaubonnen</a>
-        <a class="btn btn-secondary <?php echo make_active("/beheer/overzichtbestellingen" ) ?>" href="/beheer/overzichtbestellingen" role="button" >Overzicht bestellingen</a>
-        <a class="btn btn-secondary <?php echo make_active("/beheer/klanten" ) ?>" href="/beheer/klanten" role="button" >Klantbeheer</a>
-        <a class="btn btn-secondary <?php echo make_active("/beheer/uitloggen" ) ?>" href="/beheer/uitloggen" role="button" >uitloggen</a>
+        <?php echo $content ?>
+
     </div>
 </div>
 </html>

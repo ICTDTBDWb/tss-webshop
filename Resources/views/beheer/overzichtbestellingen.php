@@ -1,6 +1,6 @@
 <?php
 include basePath("Application/Http/beheer/menu.php");
-$auth->protectAdminPage(Auth::BEHEERDER_ROLES);
+$auth->protectAdminPage([AUTH::ADMIN_ROLE, AUTH::WEBREDACTEUR_ROLE, AUTH::KLANTENSERVICE_ROLE]);
 // Initial variables
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 $condition = $searchTerm ? "WHERE id LIKE '%$searchTerm%'" : '';

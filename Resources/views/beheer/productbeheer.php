@@ -190,7 +190,17 @@
 
                 case "categorie_toevoegen":
 
-                    $database->query("INSERT INTO categorieen (`naam`, `beschrijving`) VALUES(?,?)",[$categorie_naam, $categorie_beschrijving]);
+
+                    $data = $database->query("SELECT COUNT(*) FROM categorieen WHERE naam = ?",[$categorie_naam])->get();
+
+
+                    if($categorie_naam != "" && $data[0]['COUNT(*)'] == 0) {
+                        $database->query("INSERT INTO categorieen (`naam`, `beschrijving`) VALUES(?,?)", [$categorie_naam, $categorie_beschrijving]);
+                    }
+                    else{
+                        $alert_type = "danger";
+                        $alert = "<strong>Niet gelukt</strong> categorie naam is leeg of naam bestaat al.";
+                    }
 
                 break;
 
