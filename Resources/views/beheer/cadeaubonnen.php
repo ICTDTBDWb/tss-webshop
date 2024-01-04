@@ -73,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['wijzigen'])) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['verwijderen'])) {
     $cadeaubonId = $_POST['cadeaubon_id'];
     queryVerwijderCadeaubon($cadeaubonId);
+    echo "<script>alert('Cadeaubon succesvol verwijderd.');</script>";
 }
 
 
