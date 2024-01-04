@@ -5,17 +5,20 @@ include basePath("Application/Http/beheer/menu.php");
 $auth->protectAdminPage([Auth::WEBREDACTEUR_ROLE]);
 
 
-
 // Verwerk het toevoegen van een cadeaubon
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['toevoegen'])) {
-    $code = valideerInput($_POST['code'], 25);
-    $pin = valideerInput($_POST['pin'], 11);
-    $bedrag = valideerInput($_POST['bedrag'], 12, true);
+    // Valideer input
+    $isCodeValid = valideerInput($_POST['code'], 25, false);
+    $isPinValid = valideerInput($_POST['pin'], 11, true);
+    $isBedragValid = isValideBedrag($_POST['bedrag']);
 
-    if (!isValideLengte($code, 25) || !isValideLengte($pin, 11) || !isValideBedrag($bedrag)) {
+    if (!$isCodeValid || !$isPinValid || !$isBedragValid) {
         echo "<script>alert('Fout: Onjuiste invoer.');</script>";
     } else {
-        $bedrag = number_format((float)$bedrag, 2, '.', '');
+        $bedrag = number_format((float)$_POST['bedrag'], 2, '.', '');
+        $code = $_POST['code'];
+        $pin = $_POST['pin'];
+
         if (!cadeaubonBestaat($code)) {
             queryVoegCadeaubonToe($code, $pin, $bedrag);
             echo "<script>alert('Cadeaubon succesvol toegevoegd.');</script>";
@@ -28,13 +31,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['toevoegen'])) {
 // Verwerk het wijzigen van een cadeaubon
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['wijzigen'])) {
     $cadeaubonId = $_POST['wijzig_cadeaubon_id'];
-    $nieuweCode = valideerInput($_POST['nieuwe_code'], 25);
-    $nieuwBedrag = valideerInput($_POST['nieuw_bedrag'], 10, true);
+    $isNieuweCodeValid = valideerInput($_POST['nieuwe_code'], 25, false);
+    $isNieuwBedragValid = isValideBedrag($_POST['nieuw_bedrag']);
 
-    if (!isValideLengte($nieuweCode, 25) || !isValideBedrag($nieuwBedrag)) {
+    if (!$isNieuweCodeValid || !$isNieuwBedragValid) {
         echo "<script>alert('Fout: Onjuiste invoer.');</script>";
     } else {
-        $nieuwBedrag = number_format((float)$nieuwBedrag, 2, '.', '');
+        $nieuwBedrag = number_format((float)$_POST['nieuw_bedrag'], 2, '.', '');
+        $nieuweCode = $_POST['nieuwe_code'];
+
         if (!cadeaubonBestaat($nieuweCode)) {
             queryWijzigCadeaubon($cadeaubonId, $nieuweCode, $nieuwBedrag);
             echo "<script>alert('Cadeaubon succesvol gewijzigd.');</script>";
@@ -44,11 +49,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['wijzigen'])) {
     }
 }
 
-// Verwerkt  het verwijderen van een cadeaubon
+// Verwerkt het verwijderen van een cadeaubon
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['verwijderen'])) {
     $cadeaubonId = $_POST['cadeaubon_id'];
     queryVerwijderCadeaubon($cadeaubonId);
 }
+
 
 // Haal alle cadeaubonnen op
 $cadeaubonnen = queryHaalCadeaubonnenOp();
