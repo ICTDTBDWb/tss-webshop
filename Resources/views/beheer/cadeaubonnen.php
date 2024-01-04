@@ -13,7 +13,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['toevoegen'])) {
     $isBedragValid = isValideBedrag($_POST['bedrag']);
 
     if (!$isCodeValid || !$isPinValid || !$isBedragValid) {
-        echo "<script>alert('Fout: Onjuiste invoer.');</script>";
+        $foutmelding = 'Fout: Onjuiste invoer bij ';
+        if (!$isCodeValid) {
+            $foutmelding .= 'code, ';
+        }
+        if (!$isPinValid) {
+            $foutmelding .= 'PIN, ';
+        }
+        if (!$isBedragValid) {
+            $foutmelding .= 'bedrag, ';
+        }
+        $foutmelding = rtrim($foutmelding, ', ') . '.'; // Verwijder de laatste komma en spatie
+        echo "<script>alert('$foutmelding');</script>";
     } else {
         $bedrag = number_format((float)$_POST['bedrag'], 2, '.', '');
         $code = $_POST['code'];
@@ -35,7 +46,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['wijzigen'])) {
     $isNieuwBedragValid = isValideBedrag($_POST['nieuw_bedrag']);
 
     if (!$isNieuweCodeValid || !$isNieuwBedragValid) {
-        echo "<script>alert('Fout: Onjuiste invoer.');</script>";
+        $foutmelding = 'Fout: Onjuiste invoer bij ';
+        if (!$isNieuweCodeValid) {
+            $foutmelding .= 'nieuwe code, ';
+        }
+        if (!$isNieuwBedragValid) {
+            $foutmelding .= 'nieuw bedrag, ';
+        }
+        $foutmelding = rtrim($foutmelding, ', ') . '.'; // Verwijder de laatste komma en spatie
+        echo "<script>alert('$foutmelding');</script>";
     } else {
         $nieuwBedrag = number_format((float)$_POST['nieuw_bedrag'], 2, '.', '');
         $nieuweCode = $_POST['nieuwe_code'];
@@ -48,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['wijzigen'])) {
         }
     }
 }
+
 
 // Verwerkt het verwijderen van een cadeaubon
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['verwijderen'])) {
