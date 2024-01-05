@@ -49,7 +49,7 @@ function queryCategorieen() {
 // Funtion voor query van product informatie en bijbehorende afbeelding aan de hand van ID
 function queryProductEnAfbeelding() {
     $database = new Database(); // Maak een instantie van de DatabaseManager klasse.
-    $result = $database->query("SELECT producten.id, producten.naam, producten.prijs, media.product_id, media.pad, media.extensie
+    $result = $database->query("SELECT producten.id, producten.naam, producten.prijs, media.product_id, media.pad, media.extensie, product_categorieen.categorie_id
 FROM product_categorieen
 INNER JOIN producten ON producten.id = product_categorieen.product_id
 INNER JOIN categorieen ON categorieen.id = product_categorieen.categorie_id
