@@ -97,55 +97,36 @@ function cadeaubonBestaat($code) {
 }
 
 /**
- * Functie om input te valideren en ongewenste tekens aan te passen.
+ * Functie om te controleren of de input geldig is.
  *
- * Deze functie trimt de input, beperkt deze tot de maximale lengte en verwijdert ongewenste tekens.
- * Als het een numeriek veld is, worden alleen cijfers en het punt (.) toegestaan.
- * Voor niet-numerieke velden worden alleen alfanumerieke tekens toegestaan.
+ * Deze functie controleert of de input de juiste lengte heeft en of deze voldoet aan de eisen voor numerieke of alfanumerieke tekens.
  *
  * @param string $input De te valideren input string.
  * @param int $maxLengte De maximale lengte van de input string.
  * @param bool $isNumeriek Geeft aan of de input numeriek moet zijn.
- * @return string De gevalideerde en aangepaste input string.
+ * @return bool True als de input geldig is, anders False.
  */
 function valideerInput($input, $maxLengte, $isNumeriek = false) {
-    // Trim de input en beperk tot de maximale lengte
-    $input = substr(trim($input), 0, $maxLengte);
-
-    // Verwijder ongewenste tekens afhankelijk van het type input
-    if ($isNumeriek) {
-        // Voor numerieke velden, verwijder alles behalve cijfers en punt
-        $input = preg_replace('/[^0-9.]/', '', $input);
-    } else {
-        // Voor niet-numerieke velden, verwijder alles behalve alfanumerieke tekens
-        $input = preg_replace('/[^a-zA-Z0-9]/', '', $input);
+    // Controleer de lengte van de input
+    if (strlen($input) > $maxLengte) {
+        return false;
     }
 
-    return $input;
+    // Controleer het type input
+    if ($isNumeriek) {
+        // Voor numerieke velden, controleer op alleen cijfers en punt
+        return preg_match('/^[0-9.]*$/', $input);
+    } else {
+        // Voor niet-numerieke velden, controleer op alleen alfanumerieke tekens
+        return preg_match('/^[a-zA-Z0-9]*$/', $input);
+    }
 }
 
-/**
- * Controleert of een bedrag valide is.
- *
- * Een bedrag is valide als het een numerieke waarde is met maximaal twee decimalen.
- *
- * @param string $bedrag De te controleren bedrag string.
- * @return bool True als het bedrag valide is, anders False.
- */
 function isValideBedrag($bedrag) {
     return preg_match('/^\d+(\.\d{1,2})?$/', $bedrag);
 }
 
-/**
- * Controleert of de lengte van een input string binnen de vereiste lengte valt.
- *
- * @param string $input De te controleren input string.
- * @param int $vereisteLengte De maximale toegestane lengte van de input.
- * @return bool True als de lengte van de input binnen de vereiste lengte valt, anders False.
- */
-function isValideLengte($input, $vereisteLengte) {
-    return strlen($input) <= $vereisteLengte;
-}
+
 
 
 

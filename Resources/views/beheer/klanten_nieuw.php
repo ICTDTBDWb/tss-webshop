@@ -49,7 +49,7 @@ $auth->protectAdminPage([AUTH::ADMIN_ROLE, AUTH::WEBREDACTEUR_ROLE, AUTH::KLANTE
 </form>
 
 
-<!--set $_POST condities-->
+<!--Variabelen voor de POST-->
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $database = new Database();
@@ -65,13 +65,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Voeg gegevens toe aan de database
     $result = $database->query(
-        "INSERT INTO klanten (email, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode, woonplaats, land) 
-                    values ('" . $email . "','" . $voornaam . "','" . $tussenvoegsel . "','" . $achternaam . "','" . $straat . "','" . $huisnummer . "',
+        "INSERT INTO klanten (email, password, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode, woonplaats, land) 
+                    values ('" . $email . "','" . "','" . $voornaam . "','". $tussenvoegsel . "','" . $achternaam . "','" . $straat . "','" . $huisnummer . "',
                     '" . $postcode . "','" . $woonplaats . "','" . $land . "')");
+
+    echo "<script>alert('Klant toegevoegd.');</script>";
 
     $database->close();
 
     return $result;
+
+
 
 
 }

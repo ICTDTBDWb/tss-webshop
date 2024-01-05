@@ -5,7 +5,7 @@ function bestellingOpslaan(int $klant_id, int $verzendmethode_id, $totaal, strin
 {
     $datum = date('Y-m-d H:i:s');
 
-    $dbm = new PDO("mysql:host=host.docker.internal;port=3308;dbname=tss;charset=utf8mb4", "root", "root");
+    $dbm = new Database();
 
     // Valideer voor opslaan
     $cadeaubonnen = $_SESSION['winkelwagen']['cadeaubonnen']??false;

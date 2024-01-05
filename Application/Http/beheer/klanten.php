@@ -1,5 +1,6 @@
 <?php
 
+// Funtion voor query om alle klanten weer te geven
 function queryKlanten() {
     $database = new Database(); // Maak een instantie van de DatabaseManager klasse.
     $result = $database->query("SELECT * FROM klanten")->get(); // Voer een query uit en haal meerdere rijen op.
@@ -22,39 +23,19 @@ function queryEnkeleKlant($klantId) {
     return $result;
 }
 
-function updateEnkeleKlant() {
+
+// Funtion voor query voor het opzoeken van een klant op basis van voornaam of achternaam
+function zoekKlanten($zoekKlantNaam) {
     $database = new Database();
-    $result = $database->query("UPDATE klanten SET email, password, voornaam, tussenvoegsel, achternaam, straat, huisnummer, postcode, woonplaats, land
-               WHERE id=?"
-    )->get();
+    $zoekKlantNaam = '%' . $zoekKlantNaam . '%';
 
-    $database->close();
+    $query = "SELECT * FROM klanten WHERE voornaam LIKE ? OR achternaam LIKE ?";
 
-    return $result;
+    // Execute the query
+    $result = $database->query($query, [$zoekKlantNaam, $zoekKlantNaam])->get();
 
-}
-
-function klantVerwijderen($klantId) {
-    $database = new Database();
-    $result = $database->query("DELETE klanten FROM klanten WHERE id=",
-        [$klantId]
-    )->first();
-
-    $database->close();
-
-    return $result;
-
-}
-
-function zoekKlanten() {
-    $database = new Database();
-    $result = $database->query(
-        "SELECT * FROM klanten"
-    )->get();
-
+    // Close the database connection
     $database->close();
 
     return $result;
 }
-
-?>
