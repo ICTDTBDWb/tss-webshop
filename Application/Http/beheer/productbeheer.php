@@ -282,7 +282,7 @@ function modal_edit_categorie($categorie)
                     <label for='categorie_naam' class='form-label'>Categorie Naam</label>
                     <input type='text' class='form-control' name='categorie_naam' required='required' maxlength='255' value='$categorie_naam'>
                     <label for='categorie_beschrijving' class='form-label'>Categorie beschrijving</label>
-                    <textarea class='form-control' id='categorie_beschrijving' aria-label='With textarea' name='categorie_beschrijving' maxlength='255' style='resize: none; height: 10vh' >$categorie_beschrijving</textarea>
+                    <textarea class='form-control' id='categorie_beschrijving' aria-label='With textarea' required='required' name='categorie_beschrijving' maxlength='255' style='resize: none; height: 10vh' >$categorie_beschrijving</textarea>
                  </div> ";
 
         $construct .= $title.$begin_modal.$body.$einde_modal;

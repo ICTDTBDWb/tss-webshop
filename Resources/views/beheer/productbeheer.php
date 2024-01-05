@@ -1,5 +1,6 @@
 <?php
     include basePath("Application/Http/beheer/menu.php");
+    include basePath("Application/Http/beheer/services.php");
      $auth->protectAdminPage(Auth::BEHEERDER_ROLES);
 
      $klantenservice = $auth->check_admin_rol([auth::KLANTENSERVICE_ROLE]);
@@ -45,16 +46,16 @@
 
             $POST_GEWEEST = true;
             $opslaan = $_POST['opslaan'];
-            $product_id = array_key_exists("product_id", $_POST) ? $_POST['product_id'] : "";
-            $product_naam = array_key_exists("product_naam", $_POST) ? $_POST['product_naam'] : "";
-            $product_prijs = array_key_exists("product_prijs", $_POST) && is_numeric($_POST['product_prijs']) ? $_POST['product_prijs'] : 0.0;
-            $product_aantal = array_key_exists("product_aantal", $_POST) && is_numeric($_POST['product_aantal']) ? $_POST['product_aantal'] : 0;
-            $product_beschrijving = array_key_exists("product_beschrijving", $_POST) ? $_POST['product_beschrijving'] : "";
-            $product_merk = array_key_exists("product_merk", $_POST) ? $_POST['product_merk'] : "";
-            $product_actief = array_key_exists("product_actief", $_POST) ? $_POST['product_actief'] : "";
-            $media_id = array_key_exists("media_id", $_POST) ? $_POST['media_id'] : "";
-            $hoofd_afbeelding = array_key_exists("hoofd_afbeelding", $_POST) ? $_POST['hoofd_afbeelding'] : "";
-            $youtube_url = array_key_exists('upload_url' , $_POST)  ? $_POST['upload_url'] : "";
+            $product_id = is_numeric($_POST['product_id'] ?? "") ? $_POST['product_id'] : "" ;
+            $product_naam = valideerInput($_POST['product_naam'] ?? "", 255) ;
+            $product_prijs =  valideerInput($_POST['product_prijs'] ?? 0.0, 12);
+            $product_aantal =  valideerInput($_POST['product_aantal'] ?? 0,11);
+            $product_beschrijving =  valideerInput($_POST['product_beschrijving'] ?? "", 4000);
+            $product_merk =  valideerInput($_POST['product_merk'] ?? "",255);
+            $product_actief =  $_POST['product_actief'] ?? 0;
+            $media_id =  $_POST['media_id'] ?? "";
+            $hoofd_afbeelding =  $_POST['hoofd_afbeelding'] ?? "";
+            $youtube_url =  $_POST['upload_url'] ?? "";
             $product_categorie = [];
 
 
@@ -77,9 +78,9 @@
 
             }
 
-            $categorie_id = array_key_exists("categorie_id", $_POST) ? $_POST['categorie_id'] : "";
-            $categorie_beschrijving = array_key_exists("categorie_beschrijving", $_POST) ? $_POST['categorie_beschrijving'] : "";
-            $categorie_naam = array_key_exists("categorie_naam",  $_POST) ? $_POST['categorie_naam'] : "";
+            $categorie_id = $_POST['categorie_id'] ?? "";
+            $categorie_beschrijving = valideerInput( $_POST['categorie_beschrijving'] ?? "", 255);
+            $categorie_naam = valideerInput($_POST['categorie_naam'] ?? "", 255);
 
 
             switch ($opslaan)
@@ -416,7 +417,6 @@
 
       unset($item);
 
-
 ?>
 
 
@@ -634,7 +634,7 @@
                     <div class="row">
                         <div class="col" style='min-width: 50%'>
                             <label for="product_merk" class="form-label" >Product Merk:</label>
-                            <input type="text" class="form-control" id="product_merk" name="product_merk" maxlength="255" <?php echo $disabled ?> value='<?php echo $product_merk ?>'  list="merknamen" >
+                            <input type="text" class="form-control" id="product_merk" name="product_merk" maxlength="255" required="required" <?php echo $disabled ?> value='<?php echo $product_merk ?>'  list="merknamen" >
                             <datalist id="merknamen">
                                 <?php
                                 echo make_option_list($product[0]["merken"]);
@@ -643,13 +643,13 @@
                         </div>
                         <div class="col" >
                             <label for="product_aantal" class="form-label" >aantal:</label>
-                            <input type="number" class="form-control" id="product_aantal" name="product_aantal" min="0" <?php echo $disabled ?> value='<?php echo $product_aantal ?>'>
+                            <input type="number" class="form-control" id="product_aantal" name="product_aantal" min="0" required="required" <?php echo $disabled ?> value='<?php echo $product_aantal ?>'>
                         </div>
                         <div class="col">
                             <label for="product_prijs" class="form-label">prijs</label>
                             <div class="input-group mb-3">
                             <span class="input-group-text" id="product_prijs">€</span>
-                            <input type="number" class="form-control" id="product_prijs" name="product_prijs" min="0.00" step="any" <?php echo $disabled ?> value='<?php echo $product_prijs ?>'>
+                            <input type="number" class="form-control" id="product_prijs" name="product_prijs" min="0.00" step="any" required="required" <?php echo $disabled ?> value='<?php echo $product_prijs ?>'>
                             </div>
                         </div>
                     </div>
@@ -682,7 +682,7 @@
             </div>
             <div class="col">
                 <label for="beschrijving" class="form-label">Beschrijving</label>
-                <textarea class="form-control" id="beschrijving" aria-label="With textarea" name="product_beschrijving" maxlength="4000" <?php echo $beschrijving_disabled ?> style="resize: none; height: 50vh" ><?php echo $product_beschrijving?> </textarea>
+                <textarea class="form-control" id="beschrijving" aria-label="With textarea" name="product_beschrijving" required="required" maxlength="4000" <?php echo $beschrijving_disabled ?> style="resize: none; height: 50vh" ><?php echo $product_beschrijving?> </textarea>
             </div>
         </div><br>
 
@@ -694,8 +694,31 @@
                 <button type="submit" class="btn btn-outline-secondary" id="opslaan"  name="opslaan" value='opslaan'  <?php echo $beschrijving_disabled ?> style="width: 100%">Opslaan</button>
             </div>
             <div class="col">
-                <button type="submit" class="btn btn-outline-secondary" id="opslaan"  name="opslaan" value="verwijderen"  <?php echo $disabled ?> style="width: 100%">Verwijderen</button>
+                <button type="submit" <?php echo $product_id == ""? "hidden" : "" ?> class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#productverwijderen"  <?php echo $disabled ?> style="width: 100%">Verwijderen</button>
             </div>
+
+        </div>
+
+
+
+
+        <div class="modal fade" tabindex="-1" id="productverwijderen" >
+
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Product Verwijdern</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class='text-center fw-bold'> weet u zeker dat u product <?php $product_naam ?> wilt verwijderen? </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Annuleren</button>
+                            <button type='submit' class='btn btn-danger' name='opslaan' value='verwijderen' >Verwijderen</button>
+                        </div>
+                    </div>
+                </div>
 
         </div>
 
@@ -750,7 +773,7 @@
                     <label for='categorie_naam' class='form-label'>Categorie Naam</label>
                     <input type='text' class='form-control' id='categorie_naam' required='required' maxlength='255' name='categorie_naam'  value=''>
                     <label for='categorie_beschrijving' class='form-label'>Categorie beschrijving</label>
-                    <textarea class='form-control' id='categorie_beschrijving' aria-label='With textarea'  maxlength='255' name='categorie_beschrijving' style='resize: none; height: 10vh' ></textarea>
+                    <textarea class='form-control' id='categorie_beschrijving' aria-label='With textarea' required='required' maxlength='255' name='categorie_beschrijving' style='resize: none; height: 10vh' ></textarea>
                 </div>
                 <div class="modal-footer">
                     <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Annuleren</button>
