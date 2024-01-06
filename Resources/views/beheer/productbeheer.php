@@ -87,9 +87,19 @@
             {
                 case "opslaan":
                     if ($product_id == "") {
-                        $product_id = $database->query("INSERT INTO producten (`naam`,`beschrijving`, `merk`, `prijs`, `aantal`, `is_actief`, `is_verwijderd`) VALUES (?,?,?,?,?,?,?) ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal, $product_actief, 0])->insert();
-                        $alert_type = "success";
-                        $alert = "<strong>Success!</strong> Product toegevoegd aan database.";
+                        $data = $database->query("SELECT COUNT(*) FROM producten WHERE is_verwijderd = 0 and naam = ?",[$product_naam])->get();
+
+                        if ($data[0]['COUNT(*)'] == 0) {
+                            $product_id = $database->query("INSERT INTO producten (`naam`,`beschrijving`, `merk`, `prijs`, `aantal`, `is_actief`, `is_verwijderd`) VALUES (?,?,?,?,?,?,?) ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal, $product_actief, 0])->insert();
+                            $alert_type = "success";
+                            $alert = "<strong>Success!</strong> Product toegevoegd aan database.";
+                        }
+                        else
+                        {
+                            $alert_type = "danger";
+                            $alert = "<strong>Niet gelukt!</strong> Product naam bestaat al.";
+                        }
+
                     }
                     else
                     {
