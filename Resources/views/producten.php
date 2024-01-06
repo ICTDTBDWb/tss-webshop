@@ -65,10 +65,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="row">
                     <?php
                     $filteredCategories = isset($_GET['categorie']) ? $_GET['categorie'] : array();
-
+                    $product_id = [];
                     foreach (queryProductEnAfbeelding() as $productenEnAfbeelding) {
                     // Check if the product belongs to any of the selected categories
+
                     if (empty($filteredCategories) || in_array($productenEnAfbeelding['categorie_id'], $filteredCategories)) {
+
+                        if(!in_array($productenEnAfbeelding['product_id'], $product_id))
+                            $product_id[] = $productenEnAfbeelding['product_id'];
+                        else
+                            continue;
                     ?>
                         <div class="col-md-4 text-right">
                             <h5>

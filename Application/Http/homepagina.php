@@ -6,7 +6,7 @@
 function uitgelichteCategorieen(): false|array
 {
     $db = new Database();
-    $results = $db->query("SELECT * FROM categorieen LIMIT 3")->get();
+    $results = $db->query("SELECT * FROM categorieen where naam not like '%Giftboxen%' LIMIT 3")->get();
     $db->close();
 
     return $results === false ? [] : $results;
@@ -32,7 +32,7 @@ function recenteProducten(): array
             m.pad, m.extensie 
         FROM producten p
         LEFT JOIN media m on p.id = m.product_id
-        WHERE p.id IN ($placeholders) AND p.is_actief = 1 AND p.is_verwijderd = 0
+        WHERE p.id IN ($placeholders) AND p.is_actief = 1 AND p.is_verwijderd = 0 GROUP by p.id
     ", $recently_viewed)->get();
     $db->close();
 
@@ -51,7 +51,7 @@ function aanbevolenProducten(): array
             m.pad, m.extensie 
         FROM producten p
         LEFT JOIN media m on p.id = m.product_id
-        WHERE p.is_actief = 1 AND p.is_verwijderd = 0
+        WHERE p.is_actief = 1 AND p.is_verwijderd = 0 GROUP by p.id
         LIMIT 10
     ")->get();
     $db->close();

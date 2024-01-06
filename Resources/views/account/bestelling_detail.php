@@ -2,6 +2,7 @@
 $auth->protectPage();
 // Plaats van de benodigde PHP-bestanden en sessiebeheer
 include basePath("Application/Http/account/services.php");
+include basePath("Application/Http/beheer/productbeheer.php");
 $klantId=Session::get('auth')['user_id'];
 // Haal de bestelling ID op uit de querystring (indien aanwezig)
 $bestellingId = isset($_GET['id']) ? $_GET['id'] : null;
@@ -13,6 +14,15 @@ if ($bestellingId) {
 ?>
 <!-- Plaats van het navigatiemenu voor de accountsectie -->
 <?php include basePath("Application/Http/account/menu.php"); ?>
+
+<style>
+    .media
+    {
+        max-width: 200px;
+        height: auto;
+    }
+</style>
+
 
 <?php if ($bestellingDetails): ?>
     <!-- Weergave van bestellingdetails als deze zijn opgehaald -->
@@ -40,7 +50,10 @@ if ($bestellingId) {
                 <td>
                     <?php if (!empty($detail['mediapad'])): ?>
                         <!-- Weergave van productafbeelding met de juiste extensie -->
-                        <img src="<?php echo htmlspecialchars($detail['mediapad'] . "." . $detail['mediaextensie']); ?>" alt="Product Afbeelding" style="max-width: 100px; height: auto;">
+                       <!-- <img src="<?php echo htmlspecialchars($detail['mediapad'] . "." . $detail['mediaextensie']); ?>" alt="Product Afbeelding" style="max-width: 100px; height: auto;"> !-->
+
+                        <?php echo check_media(['naam' => $detail['productnaam'], 'pad' => $detail['mediapad'], 'extensie' => $detail['mediaextensie']], "media" ) ?>
+
                     <?php else: ?>
                         <!-- Als er geen afbeelding beschikbaar is -->
                         Geen afbeelding
