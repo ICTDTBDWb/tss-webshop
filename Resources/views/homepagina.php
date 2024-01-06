@@ -1,7 +1,28 @@
 <?php
     $categorieen = uitgelichteCategorieen();
     $recente_producten = recenteProducten();
+
+include basePath("Application/Http/beheer/productbeheer.php");
 ?>
+
+<style>
+    .media
+    {
+        border-radius: 25px;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .media1
+    {
+        border-radius: 25px;
+        width: 200px;
+        height: auto;
+        object-fit: contain;
+    }
+
+</style>
 
 <!--Banner-->
 <section class="row gx-0 mb-5">
@@ -57,12 +78,13 @@
         <div class="d-flex">
             <?php foreach (recenteProducten() as $recente_product) { ?>
                 <div class="card me-2 text-white" style="width: 200px; height: 200px">
-                    <img
+                  <!--  <img
                         src="/assets/afbeeldingen/<?php echo $recente_product['pad'] . '.' . $recente_product['extensie']; ?>"
                         alt="Product"
                         class="rounded w-100 h-100"
                         style="object-fit: cover"
-                    >
+                    > !-->
+                    <?php echo check_media($recente_product, "media") ?>
                     <div class="w-100 h-100 position-absolute left-0 top-0 rounded bg-dark" style="opacity: .4"></div>
                     <div class="card-img-overlay">
                         <h5 class="card-title"><?php echo $recente_product['naam']; ?></h5>
@@ -89,12 +111,13 @@
             href="/producten_detail?id=<?php echo $product['id']; ?>"
             class="w-md-auto card d-flex flex-sm-row text-decoration-none text-dark mb-2"
         >
-            <img
+            <!--<img
                     src="/assets/afbeeldingen/<?php echo $product['pad'] . '.' . $product['extensie']; ?>"
                     alt="<?php echo $product['naam']; ?>"
                     class="rounded"
                     style="width: 200px; height: 200px; object-fit: contain"
-            >
+            >!-->
+            <?php echo check_media($recente_product, "media1") ?>
             <div class="row-sm w-100 d-flex flex-column p-3">
                 <div class="col-sm-12 d-flex flex-column flex-sm-grow-1">
                     <h5><?php echo $product['naam']; ?></h5>

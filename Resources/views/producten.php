@@ -1,5 +1,7 @@
 <?php
 
+include basePath("Application/Http/beheer/productbeheer.php");
+
 // Verwerken van productgegevens
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['id'], $_POST['productaantal'])) {
@@ -14,6 +16,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
+<style>
+    .media
+    {
+        object-fit: cover;
+        height: 50%;
+        width: 50%;
+        border-radius: 2%;
+    }
+</style>
 
 
 <!--Title-->
@@ -66,12 +77,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </a>
                             </h5>
                             <div>
-                                <img
+                             <!--   <img
                                         src="<?php print ($productenEnAfbeelding['pad'] . "." . $productenEnAfbeelding['extensie']);?>"
                                         alt="Product afbeelding"
                                         class="rounded w-50 h-50"
                                         style="object-fit: cover"
-                                >
+                                > !-->
+                                <?php echo check_media($productenEnAfbeelding, "media") ?>
                             </div>
                             <br>
                             <div>

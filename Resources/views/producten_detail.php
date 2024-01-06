@@ -1,5 +1,6 @@
 <!-- PHP logica -->
-<?php include basePath("Application/Http/producten.php"); ?>
+<?php include basePath("Application/Http/producten.php");
+include basePath("Application/Http/beheer/productbeheer.php");  ?>
 
 <!--Haal de product ID op-->
 <?php
@@ -11,7 +12,17 @@ if ($getProductId) {
 }
 ?>
 
+<style>
+    .media
+    {
+        object-fit: cover;
+        height: 50%;
+        width: 50%;
+        border-radius: 2%;
+        max-width: 200px;
 
+    }
+</style>
 
 <!--Print enkel product aan de hand van ID-->
 <!--Title-->
@@ -29,12 +40,13 @@ if ($getProductId) {
             <?php print $enkelProduct['naam'];?>
         </h5>
         <div>
-            <img
+          <!--  <img
                     src="<?php print ($enkelProduct['pad'] . "." . $enkelProduct['extensie']);?>"
                     alt="Banner"
                     class="rounded w-50 h-50"
                     style="max-width: 200px; height: auto;"
-            >
+            > !-->
+            <?php echo check_media($enkelProduct, "media") ?>
         </div>
         <div class="col-4 text-right">
             <a>
