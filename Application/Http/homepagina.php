@@ -51,7 +51,7 @@ function aanbevolenProducten(): array
             m.pad, m.extensie 
         FROM producten p
         LEFT JOIN media m on p.id = m.product_id
-        WHERE p.is_actief = 1 AND p.is_verwijderd = 0 GROUP by p.id
+        WHERE p.is_actief = 1 AND p.is_verwijderd = 0 and not p.id in (select product_id from product_categorieen inner join categorieen on product_categorieen.categorie_id = categorieen.id and categorieen.naam like '%Giftboxen%') GROUP by p.id
         LIMIT 10
     ")->get();
     $db->close();
