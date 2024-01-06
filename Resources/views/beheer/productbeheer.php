@@ -48,8 +48,8 @@
             $opslaan = $_POST['opslaan'];
             $product_id = array_key_exists("product_id", $_POST) ? $_POST['product_id'] : "";
             $product_naam = array_key_exists("product_naam", $_POST)  ? check_lengte($_POST['product_naam'], 255) : "";
-            $product_prijs = array_key_exists("product_prijs", $_POST) && is_numeric($_POST['product_prijs']) &&  $_POST['product_prijs'] <= 999999999999.99? $_POST['product_prijs'] : 0.0;
-            $product_aantal = array_key_exists("product_aantal", $_POST) && is_numeric($_POST['product_aantal'] && $_POST['product_aantal'] <= 99999999999) ? $_POST['product_aantal'] : 0;
+            $product_prijs = array_key_exists("product_prijs", $_POST) && is_numeric($_POST['product_prijs']) ? min($_POST['product_prijs'], 999999999999.99) : 0.0;
+            $product_aantal = array_key_exists("product_aantal", $_POST) && is_numeric($_POST['product_aantal'] ) ? min($_POST['product_aantal'], 99999999999) : 0;
             $product_beschrijving = array_key_exists("product_beschrijving", $_POST)  ? check_lengte($_POST['product_beschrijving'],4000) : "";
             $product_merk = array_key_exists("product_merk", $_POST) ? check_lengte($_POST['product_merk'], 255) : "";
             $product_actief = array_key_exists("product_actief", $_POST) ? $_POST['product_actief'] : "";
@@ -104,10 +104,13 @@
                     {
                         $database->query("UPDATE producten SET naam = ?, beschrijving = ?, merk = ? , prijs = ? , aantal = ?, is_actief = ?, is_verwijderd = ? WHERE id = ? ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal, $product_actief, 0, $product_id]);
                         $data = $database->query("SELECT * FROM media where product_id = ?", [$product_id])->first();
+                        var_dump($data);
 
-                        $id = is_array($data) and array_key_exists( 'id', $data) ? $data['id'] : "";
+                        $id = is_array($data) && array_key_exists( 'id', $data) ? $data['id'] : "";
+                        var_dump($hoofd_afbeelding." ".$id);
                         if ($id != $hoofd_afbeelding and ($hoofd_afbeelding != "" or $id != ""))
                         {
+
                             $data2 = $database->query("SELECT * FROM media where id = ?", [$hoofd_afbeelding])->first();
                             if(is_array($data2) and array_key_exists("id", $data2)) {
                                 $database->query("UPDATE media SET product_id = ?, naam = ? ,pad = ?, extensie = ? where id = ?", [$data2['product_id'], $data2['naam'], $data2['pad'], $data2['extensie'], $data['id']]);
@@ -142,7 +145,7 @@
                         }
 
                     }
-                    if($alert != "")
+                    if($alert == "")
                     {
                         $alert_type = "success";
                         $alert = "<strong>Success!</strong> Product opgeslagen in database.";

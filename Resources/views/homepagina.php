@@ -117,7 +117,7 @@ include basePath("Application/Http/beheer/productbeheer.php");
                     class="rounded"
                     style="width: 200px; height: 200px; object-fit: contain"
             >!-->
-            <?php echo check_media($recente_product, "media1") ?>
+            <?php echo check_media($product, "media1") ?>
             <div class="row-sm w-100 d-flex flex-column p-3">
                 <div class="col-sm-12 d-flex flex-column flex-sm-grow-1">
                     <h5><?php echo $product['naam']; ?></h5>
