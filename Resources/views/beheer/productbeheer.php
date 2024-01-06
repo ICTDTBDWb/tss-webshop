@@ -584,7 +584,7 @@
     <form method="POST" action='' class="hidden"  enctype="multipart/form-data">
         <div class="row  align-items-top ">
             <!-- Carousel -->
-            <div id="demo" class="carousel slide col " data-bs-ride="carousel" style="max-width:20vh; max-height:20vh; min-height: 20vh; min-width: 20vh; margin-left: 2vh; margin-right: 2vh" data-bs-interval="false">
+            <div id="demo" class="carousel slide col " data-bs-ride="carousel" style="max-width:25vh; max-height:25vh; min-height: 25vh; min-width: 25vh; margin-left: 2vh; margin-right: 2vh" data-bs-interval="false">
 
                 <!-- Indicators/dots -->
 
