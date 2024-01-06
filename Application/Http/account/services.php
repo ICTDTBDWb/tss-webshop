@@ -138,7 +138,7 @@ function haalBestellingDetailsOp($klantId,$bestellingId) {
               JOIN tss.bestelling_regels br ON b.id = br.bestelling_id
               JOIN tss.producten p ON br.product_id = p.id
               LEFT JOIN tss.media pm ON p.id = pm.product_id
-              WHERE b.klant_id = ? and b.id = ?";
+              WHERE b.klant_id = ? and b.id = ? GROUP BY b.id";
 
     return $database->query($query, [$klantId,$bestellingId])->get();
 }

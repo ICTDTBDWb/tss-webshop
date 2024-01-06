@@ -21,29 +21,36 @@ $_validExtensions['iframe'] = ["youtube"];
  * checkt video url.
  *
  * @param mixed $media //is SELECT * FROM media where product_id = ? -> first
+ * @param string $class //optional
  * @return string // gebruik dit samen met echo om waarde op scherm te tonen
  */
-function check_media($media)
+function check_media($media, $class = "d-block")
 {
     $link = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
-    $media_source = $link . htmlspecialchars($media['pad']).".".htmlspecialchars($media['extensie']);
-    $naam = $media['naam'];
+    $media_source = $link . htmlspecialchars($media['pad'] ?? "").".".htmlspecialchars($media['extensie'] ?? "");
+    $naam = $media['naam'] ?? "";
 
     global $_validExtensions;
 
     if (in_array($media['extensie'], $_validExtensions['image'])) {
-        $source = "<img src='$media_source' alt='$naam'  class='d-block' >";
+        $source = "<img src='$media_source' alt='$naam'  class=$class style='object-fit: cover'>";
 
     } elseif (in_array($media['extensie'], $_validExtensions['video'])) {
-        $source = "<video src='$media' title='$naam' class='d-block'> </video>";
+        $source = "<video src='$media' title='$naam' class=$class> </video>";
     } elseif (in_array($media['extensie'], $_validExtensions['iframe'])) {
         $media_source = htmlspecialchars($media['pad']);
-        $source = "<iframe src='$media_source'  title='$naam'  class='d-block'></iframe>";
+        $source = "<iframe src='$media_source'  title='$naam'  class=$class></iframe>";
     } else {
         $source = "$naam";
     }
 
     return $source;
+}
+
+
+function check_lengte($input, $lengte)
+{
+    return strlen($input) <= $lengte ? $input : substr($input, $lengte);
 }
 
 /**
@@ -282,7 +289,7 @@ function modal_edit_categorie($categorie)
                     <label for='categorie_naam' class='form-label'>Categorie Naam</label>
                     <input type='text' class='form-control' name='categorie_naam' required='required' maxlength='255' value='$categorie_naam'>
                     <label for='categorie_beschrijving' class='form-label'>Categorie beschrijving</label>
-                    <textarea class='form-control' id='categorie_beschrijving' aria-label='With textarea' name='categorie_beschrijving' maxlength='255' style='resize: none; height: 10vh' >$categorie_beschrijving</textarea>
+                    <textarea class='form-control' id='categorie_beschrijving' aria-label='With textarea' required='required' name='categorie_beschrijving' maxlength='255' style='resize: none; height: 10vh' >$categorie_beschrijving</textarea>
                  </div> ";
 
         $construct .= $title.$begin_modal.$body.$einde_modal;

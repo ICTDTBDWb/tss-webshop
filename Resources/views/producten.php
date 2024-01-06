@@ -1,5 +1,7 @@
 <?php
 
+include basePath("Application/Http/beheer/productbeheer.php");
+
 // Verwerken van productgegevens
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['id'], $_POST['productaantal'])) {
@@ -14,6 +16,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
+<style>
+    .media
+    {
+        object-fit: cover;
+        height: 50%;
+        width: 50%;
+        border-radius: 2%;
+    }
+</style>
 
 
 <!--Title-->
@@ -54,10 +65,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="row">
                     <?php
                     $filteredCategories = isset($_GET['categorie']) ? $_GET['categorie'] : array();
-
+                    $product_id = [];
                     foreach (queryProductEnAfbeelding() as $productenEnAfbeelding) {
                     // Check if the product belongs to any of the selected categories
+
                     if (empty($filteredCategories) || in_array($productenEnAfbeelding['categorie_id'], $filteredCategories)) {
+
+                        if(!in_array($productenEnAfbeelding['product_id'], $product_id))
+                            $product_id[] = $productenEnAfbeelding['product_id'];
+                        else
+                            continue;
                     ?>
                         <div class="col-md-4 text-right">
                             <h5>
@@ -66,12 +83,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </a>
                             </h5>
                             <div>
-                                <img
+                             <!--   <img
                                         src="<?php print ($productenEnAfbeelding['pad'] . "." . $productenEnAfbeelding['extensie']);?>"
                                         alt="Product afbeelding"
                                         class="rounded w-50 h-50"
                                         style="object-fit: cover"
-                                >
+                                > !-->
+                                <?php echo check_media($productenEnAfbeelding, "media") ?>
                             </div>
                             <br>
                             <div>

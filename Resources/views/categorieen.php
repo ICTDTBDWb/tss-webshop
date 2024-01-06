@@ -1,5 +1,7 @@
 <!-- PHP logica -->
-<?php include basePath("Application/Http/producten.php"); ?>
+<?php include basePath("Application/Http/producten.php");
+include basePath("Application/Http/beheer/productbeheer.php");?>
+
 
 <!--Haal de product ID op-->
 <?php
@@ -9,6 +11,18 @@ if ($categorieId) {
     $productDetails = queryEnkeleCategorie($categorieId);
 }
 ?>
+
+<style>
+    .media
+    {
+        object-fit: cover;
+        height: 50%;
+        width: 50%;
+        border-radius: 2%;
+        max-width: 200px;
+
+    }
+</style>
 
 <!--Print enkel product aan de hand van ID-->
 <!--Title-->
@@ -28,12 +42,13 @@ if ($categorieId) {
                 </a>
             </h5>
             <div>
-                <img
+               <!-- <img
                     src="<?php print ($enkeleCategorie['pad'] . "." . $enkeleCategorie['extensie']);?>"
                     alt="Product afbeelding"
                     class="rounded w-50 h-50"
                     style="max-width: 200px; height: auto;"
-                >
+                >!-->
+                <?php echo check_media($enkeleCategorie, "media") ?>
             </div>
             <div>
                 <?php print "€" . " " . $enkeleCategorie['prijs']; ?>
