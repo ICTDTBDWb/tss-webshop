@@ -5,7 +5,7 @@ function bestellingOpslaan(int $klant_id, int $verzendmethode_id, $totaal, strin
 {
     $datum = date('Y-m-d H:i:s');
 
-    $dbm = new Database();
+    $dbm = new PDO(Database::CONFIG['dns'], Database::CONFIG['username'], Database::CONFIG['password'] );
 
     // Valideer voor opslaan
     $cadeaubonnen = $_SESSION['winkelwagen']['cadeaubonnen']??false;

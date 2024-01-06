@@ -201,12 +201,16 @@
                 case "wijzig_categorie":
 
                     $database->query("UPDATE categorieen SET naam = ?, beschrijving = ? where `id`= ?", [$categorie_naam, $categorie_beschrijving, $categorie_id])->get();
+                    $alert_type = "success";
+                    $alert = "<strong>Success!</strong> Categorie succesvol gewijzigd.";
                     break;
 
                 case "categorie_verwijderen":
 
                     $database->query("DELETE FROM product_categorieen where categorie_id = ?",[$categorie_id]);
                     $database->query("DELETE FROM categorieen where id = ?",[$categorie_id]);
+                    $alert_type = "success";
+                    $alert = "<strong>Success!</strong> Categorie succesvol verwijderd.";
 
                     break;
 
@@ -219,6 +223,8 @@
 
                     if($categorie_naam != "" && $data[0]['COUNT(*)'] == 0) {
                         $database->query("INSERT INTO categorieen (`naam`, `beschrijving`) VALUES(?,?)", [$categorie_naam, $categorie_beschrijving]);
+                        $alert_type = "success";
+                        $alert = "<strong>Success!</strong> Categorie succesvol toegevoegd.";
                     }
                     else{
                         $alert_type = "danger";
