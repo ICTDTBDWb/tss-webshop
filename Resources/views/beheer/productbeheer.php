@@ -79,8 +79,8 @@
             }
 
             $categorie_id = array_key_exists("categorie_id", $_POST) ? $_POST['categorie_id'] : "";
-            $categorie_beschrijving = array_key_exists("categorie_beschrijving", $_POST) ? $_POST['categorie_beschrijving'] : "";
-            $categorie_naam = array_key_exists("categorie_naam",  $_POST) ? $_POST['categorie_naam'] : "";
+            $categorie_beschrijving = array_key_exists("categorie_beschrijving", $_POST) ? check_lengte($_POST['categorie_beschrijving'], 255) : "";
+            $categorie_naam = array_key_exists("categorie_naam",  $_POST) ? check_lengte($_POST['categorie_naam'],255) : "";
 
             switch ($opslaan)
             {
