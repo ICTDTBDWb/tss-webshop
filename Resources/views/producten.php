@@ -2,6 +2,7 @@
 
 include basePath("Application/Http/beheer/productbeheer.php");
 
+
 // Verwerken van productgegevens
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['id'], $_POST['productaantal'])) {
@@ -11,6 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $productaantal = $_POST['productaantal'];
 
         voegProductToeAanBestelling($productId, $productaantal);
+
+        echo "<meta http-equiv='refresh' content='0'>";
+
+
 
     }
 }
@@ -96,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <?php print "€" . " " . $productenEnAfbeelding['prijs']; ?>
                                 <br>
                                 <!--Producten toevoegen aan winkelwagen en refresh window-->
-                                <form method="post" onsubmit="setTimeout(function () { window.location.reload(); }, 10)">
+                                <form method="post" onsubmit="" >
                                     <label for="productaantal">Aantal</label>
 
                                     <input type="number" id="productaantal" name="productaantal" min="1">
@@ -104,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <input type="hidden" id="id" name="id" value="<?php echo ($productenEnAfbeelding['id']); ?>">
                                     <br>
                                     <br>
-                                    <input type="submit" value="In winkelwagen">
+                                    <input type="submit" value="In winkelwagen" >
                                 </form>
                             </div>
                             <br>

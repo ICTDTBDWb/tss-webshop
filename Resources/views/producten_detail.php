@@ -69,13 +69,14 @@ if ($getProductId) {
                     $productaantal = $_POST['productaantal'];
 
                     voegProductToeAanBestelling($productId, $productaantal);
+                    echo "<meta http-equiv='refresh' content='0'>";
 
                 }
             }
 
             ?>
             <br>
-            <form method="post" onsubmit="setTimeout(function () { window.location.reload(); }, 10)">
+            <form method="post">
                 <label for="productaantal">Aantal</label>
                 <input type="number" id="productaantal" name="productaantal" min="1">
                 <input type="hidden" id="id" name="id" value="<?php echo ($enkelProduct['id']); ?>">
