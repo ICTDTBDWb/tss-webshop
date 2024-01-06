@@ -46,16 +46,16 @@
 
             $POST_GEWEEST = true;
             $opslaan = $_POST['opslaan'];
-            $product_id = is_numeric($_POST['product_id'] ?? "") ? $_POST['product_id'] : "" ;
-            $product_naam = valideerInput($_POST['product_naam'] ?? "", 255) ;
-            $product_prijs =  valideerInput($_POST['product_prijs'] ?? 0.0, 12);
-            $product_aantal =  valideerInput($_POST['product_aantal'] ?? 0,11);
-            $product_beschrijving =  valideerInput($_POST['product_beschrijving'] ?? "", 4000);
-            $product_merk =  valideerInput($_POST['product_merk'] ?? "",255);
-            $product_actief =  $_POST['product_actief'] ?? 0;
-            $media_id =  $_POST['media_id'] ?? "";
-            $hoofd_afbeelding =  $_POST['hoofd_afbeelding'] ?? "";
-            $youtube_url =  $_POST['upload_url'] ?? "";
+            $product_id = array_key_exists("product_id", $_POST) ? $_POST['product_id'] : "";
+            $product_naam = array_key_exists("product_naam", $_POST)  ? check_lengte($_POST['product_naam'], 255) : "";
+            $product_prijs = array_key_exists("product_prijs", $_POST) && is_numeric($_POST['product_prijs']) &&  $_POST['product_prijs'] <= 999999999999.99? $_POST['product_prijs'] : 0.0;
+            $product_aantal = array_key_exists("product_aantal", $_POST) && is_numeric($_POST['product_aantal'] && $_POST['product_aantal'] <= 99999999999) ? $_POST['product_aantal'] : 0;
+            $product_beschrijving = array_key_exists("product_beschrijving", $_POST)  ? check_lengte($_POST['product_beschrijving'],4000) : "";
+            $product_merk = array_key_exists("product_merk", $_POST) ? check_lengte($_POST['product_merk'], 255) : "";
+            $product_actief = array_key_exists("product_actief", $_POST) ? $_POST['product_actief'] : "";
+            $media_id = array_key_exists("media_id", $_POST) ? $_POST['media_id'] : "";
+            $hoofd_afbeelding = array_key_exists("hoofd_afbeelding", $_POST) ? $_POST['hoofd_afbeelding'] : "";
+            $youtube_url = array_key_exists('upload_url' , $_POST)  ? $_POST['upload_url'] : "";
             $product_categorie = [];
 
 
@@ -78,10 +78,9 @@
 
             }
 
-            $categorie_id = $_POST['categorie_id'] ?? "";
-            $categorie_beschrijving = valideerInput( $_POST['categorie_beschrijving'] ?? "", 255);
-            $categorie_naam = valideerInput($_POST['categorie_naam'] ?? "", 255);
-
+            $categorie_id = array_key_exists("categorie_id", $_POST) ? $_POST['categorie_id'] : "";
+            $categorie_beschrijving = array_key_exists("categorie_beschrijving", $_POST) ? $_POST['categorie_beschrijving'] : "";
+            $categorie_naam = array_key_exists("categorie_naam",  $_POST) ? $_POST['categorie_naam'] : "";
 
             switch ($opslaan)
             {
@@ -653,13 +652,13 @@
                         </div>
                         <div class="col" >
                             <label for="product_aantal" class="form-label" >aantal:</label>
-                            <input type="number" class="form-control" id="product_aantal" name="product_aantal" min="0" required="required" <?php echo $disabled ?> value='<?php echo $product_aantal ?>'>
+                            <input type="number" class="form-control" id="product_aantal" name="product_aantal" min="0" max="99999999999" required="required" <?php echo $disabled ?> value='<?php echo $product_aantal ?>'>
                         </div>
                         <div class="col">
                             <label for="product_prijs" class="form-label">prijs</label>
                             <div class="input-group mb-3">
                             <span class="input-group-text" id="product_prijs">€</span>
-                            <input type="number" class="form-control" id="product_prijs" name="product_prijs" min="0.00" step="any" required="required" <?php echo $disabled ?> value='<?php echo $product_prijs ?>'>
+                            <input type="number" class="form-control" id="product_prijs" name="product_prijs" min="0.00" max="999999999999.99" step="any" required="required" <?php echo $disabled ?> value='<?php echo $product_prijs ?>'>
                             </div>
                         </div>
                     </div>

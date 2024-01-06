@@ -46,6 +46,12 @@ function check_media($media)
     return $source;
 }
 
+
+function check_lengte($input, $lengte)
+{
+    return strlen($input) <= $lengte ? $input : substr($input, $lengte);
+}
+
 /**
  * checkt video url.
  *
