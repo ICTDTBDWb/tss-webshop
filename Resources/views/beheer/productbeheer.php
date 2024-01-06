@@ -104,11 +104,11 @@
                     {
                         $database->query("UPDATE producten SET naam = ?, beschrijving = ?, merk = ? , prijs = ? , aantal = ?, is_actief = ?, is_verwijderd = ? WHERE id = ? ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal, $product_actief, 0, $product_id]);
                         $data = $database->query("SELECT * FROM media where product_id = ?", [$product_id])->first();
-                        var_dump($data);
+
 
                         $id = is_array($data) && array_key_exists( 'id', $data) ? $data['id'] : "";
-                        var_dump($hoofd_afbeelding." ".$id);
-                        if ($id != $hoofd_afbeelding and ($hoofd_afbeelding != "" or $id != ""))
+                        
+                        if ($id != $hoofd_afbeelding and ($hoofd_afbeelding != "" || $id != ""))
                         {
 
                             $data2 = $database->query("SELECT * FROM media where id = ?", [$hoofd_afbeelding])->first();
@@ -123,9 +123,9 @@
                             }
 
                         }
-                        else
+                        elseif($id = "" && $id != $hoofd_afbeelding )
                         {
-                            $alert_type = "warning";
+                           $alert_type = "warning";
                             $alert = "<strong>Waarschuwing!</strong> Product opgeslagen, kan hoofdafbeelding niet vinden in database.";
                         }
                     }
