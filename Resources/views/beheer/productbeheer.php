@@ -157,20 +157,29 @@
 
 
                 case "toevoegen":
-                    $product_id = $database->query("INSERT INTO producten (`naam`,`beschrijving`, `merk`, `prijs`, `aantal`, `is_actief`, `is_verwijderd`) VALUES (?,?,?,?,?,?,?) ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal, $product_actief,0])->insert();
-                    foreach ($product_categorie_post as $key => $value) {
-                        $database->query("INSERT INTO product_categorieen (`product_id`, `categorie_id` ) VALUES (?,?) ", [$product_id, $key]);
 
+                    $data = $database->query("SELECT COUNT(*) FROM producten WHERE is_verwijderd = 0 and naam = ?",[$product_naam])->get();
+                    if ($data[0]['COUNT(*)'] == 0) {
+                        $product_id = $database->query("INSERT INTO producten (`naam`,`beschrijving`, `merk`, `prijs`, `aantal`, `is_actief`, `is_verwijderd`) VALUES (?,?,?,?,?,?,?) ", [$product_naam, $product_beschrijving, $product_merk, $product_prijs, $product_aantal, $product_actief, 0])->insert();
+                        foreach ($product_categorie_post as $key => $value) {
+                            $database->query("INSERT INTO product_categorieen (`product_id`, `categorie_id` ) VALUES (?,?) ", [$product_id, $key]);
+
+                        }
+                        $data = key($product_categorie_post);
+                        var_dump($data);
+
+                        $data = empty($data) ? "overig" : $data;
+                        $alert_type = "success";
+                        unset($_GET['Product']);
+
+                        $_GET['Product'] = $product_id . " " . $data;
+                        $alert = "<strong>Success!</strong> Product als nieuw product toegevoegd aan database.";
                     }
-                    $data = key($product_categorie_post);
-                    var_dump($data);
-
-                    $data = empty($data) ? "overig" : $data;
-                    $alert_type = "success";
-                    unset($_GET['Product']);
-                    var_dump($product_id." ".$data);
-                    $_GET['Product'] = $product_id." ".$data;
-                    $alert = "<strong>Success!</strong> Product als nieuw product toegevoegd aan database.";
+                    else
+                    {
+                        $alert_type = "danger";
+                        $alert = "<strong>Niet gelukt!</strong> Product naam bestaat al.";
+                    }
                     //$POST_GEWEEST = false;
                     break;
 
@@ -205,6 +214,7 @@
 
 
                     $data = $database->query("SELECT COUNT(*) FROM categorieen WHERE naam = ?",[$categorie_naam])->get();
+
 
 
                     if($categorie_naam != "" && $data[0]['COUNT(*)'] == 0) {
@@ -706,7 +716,7 @@
                 <button type="submit" class="btn btn-outline-secondary" id="opslaan"  name="opslaan" value='opslaan'  <?php echo $beschrijving_disabled ?> style="width: 100%">Opslaan</button>
             </div>
             <div class="col">
-                <button type="submit" <?php echo $product_id == ""? "hidden" : "" ?> class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#productverwijderen"  <?php echo $disabled ?> style="width: 100%">Verwijderen</button>
+                <button type="button" <?php echo $product_id == ""? "hidden" : "" ?> class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#productverwijderen"  <?php echo $disabled ?> style="width: 100%">Verwijderen</button>
             </div>
 
         </div>
