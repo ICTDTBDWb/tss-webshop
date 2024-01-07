@@ -3,9 +3,11 @@
 require("fpdf/fpdf.php");
 function bestellingOpslaan(int $klant_id, int $verzendmethode_id, $totaal, string $betaalmethode, array $producten, $voornaam, $tussenvoegsel, $achternaam, $straat, $huisnummer, $postcode, $woonplaats, $land)
 {
-    $datum = date('Y-m-d H:i:s');
+    $datum = date('Y-mp -d H:i:s');
 
-    $dbm = new PDO(Database::CONFIG['dns'], Database::CONFIG['username'], Database::CONFIG['password'] );
+
+    $dsn = 'mysql:' . http_build_query(Database::CONFIG['dsn'], '', ';');
+    $dbm = new PDO($dsn, Database::CONFIG['username'], Database::CONFIG['password'] );
 
     // Valideer voor opslaan
     $cadeaubonnen = $_SESSION['winkelwagen']['cadeaubonnen']??false;
