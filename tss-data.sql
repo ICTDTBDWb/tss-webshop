@@ -77,8 +77,8 @@ VALUES
     (4, 2, NULL, 2, 1499.99, 2999.98, 'Taylor 214ce Akoestische Gitaar'),
     (4, 3, NULL, 1, 799.99, 799.99, 'Ibanez SR500 Basgitaar'),
     (4, 4, NULL, 2, 1999.99, 3999.98, 'Marshall JVM410H Gitaarversterker'),
-    (4, 6, NULL, 2, 25.00, 50.00, 'Giftbox 25'),
-    (4, NULL, 1, 1, 2.00, 2.00, 'GITAAR10');
+    (4, 6, NULL, 2, 25.00, 50.00, 'Giftbox 25');
+
 
 -- Dummy data voor facturen
 INSERT INTO `tss`.`facturen` (`bestelling_id`, `datum`, `totaal`)
