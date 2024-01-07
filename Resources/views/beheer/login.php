@@ -1,4 +1,5 @@
 <?php
+    $error = false;
     $auth = Auth::getInstance();
 
     if ($auth->isLoggedIn()) {
@@ -16,6 +17,8 @@
         if ($auth->attempt([$email, $password], true)){
             header("Location: /beheer/overzicht"); // If the credentials match we redirect back to the homepage.
         }
+
+        $error = true;
     }
 ?>
 
@@ -24,6 +27,12 @@
         id="user-loginForm" method="POST" action="/beheer/login"
         class="w-75 w-lg-50 d-flex flex-column gap-4"
     >
+        <?php if ($error) { ?>
+            <div class="alert alert-danger" role="alert">
+                De ingevoerde gegevens zijn onjuist!
+            </div>
+        <?php } ?>
+
         <div>
             <label for="admin-emailInput">E-mail</label>
             <input

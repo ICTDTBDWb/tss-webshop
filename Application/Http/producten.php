@@ -48,13 +48,19 @@ function queryCategorieen() {
 
 // Funtion voor query van product informatie en bijbehorende afbeelding aan de hand van ID
 function queryProductEnAfbeelding() {
-    $database = new Database(); // Maak een instantie van de DatabaseManager klasse.
-    $result = $database->query("SELECT producten.id, producten.naam, producten.prijs, media.product_id, media.pad, media.extensie, product_categorieen.categorie_id
+    $query = "SELECT producten.id, producten.naam, producten.prijs, media.product_id, media.pad, media.extensie, product_categorieen.categorie_id
 FROM product_categorieen
 INNER JOIN producten ON producten.id = product_categorieen.product_id
 INNER JOIN categorieen ON categorieen.id = product_categorieen.categorie_id
 INNER JOIN media ON media.product_id = product_categorieen.product_id
-WHERE is_actief=1 AND is_verwijderd=0 " )->get(); // Voer een query uit en haal meerdere rijen op.
+WHERE is_actief=1 AND is_verwijderd=0 ";
+
+    if (isset($_GET['zoeken']) && strlen($_GET['zoeken']) >= 3) {
+        $query .= " AND producten.naam LIKE '%{$_GET['zoeken']}%'";
+    }
+
+    $database = new Database(); // Maak een instantie van de DatabaseManager klasse.
+    $result = $database->query($query)->get(); // Voer een query uit en haal meerdere rijen op.
 
     $database->close(); // Sluit de database connectie.
 

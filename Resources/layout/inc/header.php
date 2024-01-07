@@ -23,7 +23,7 @@
                            aria-describedby="addon-wrapping"
                            class="form-control border"
                            formmethod="post"
-
+                           value="<?php echo $_GET['zoeken'] ?? ""; ?>"
                     >
                     <button
                         value="producten-zoeken"
