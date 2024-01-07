@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php endif; ?>
         <!-- Beschrijving van de giftbox -->
         <br>
-        <p>De TSS Giftbox, een cadeaukaart die de ontvanger zelf kan inwisselen bij TSS voor een tegoed in de webwinkel, wordt sfeervol verpakt en kosteloos thuisbezorgd.</p>
+        <p>De TSS Giftbox, een cadeaukaart die de ontvanger zelf kan inwisselen bij TSS voor een tegoed in de webwinkel, wordt sfeervol verpakt en thuisbezorgd.</p>
         <!-- Afbeelding van een cadeaubon -->
         <img src="/assets/afbeeldingen/cadeaubon.jpg" alt="Cadeaubon Afbeelding" style="max-width: 100%; height: auto;">
     </div>
