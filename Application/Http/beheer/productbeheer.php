@@ -24,7 +24,7 @@ $_validExtensions['iframe'] = ["youtube"];
  * @param string $class //optional
  * @return string // gebruik dit samen met echo om waarde op scherm te tonen
  */
-function check_media($media, $class = "d-block")
+function check_media($media, $class = "d-block", $style = "object-fit: cover;")
 {
     $link = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
     $media_source = $link . htmlspecialchars($media['pad'] ?? "").".".htmlspecialchars($media['extensie'] ?? "");
@@ -33,7 +33,7 @@ function check_media($media, $class = "d-block")
     global $_validExtensions;
 
     if (in_array($media['extensie'], $_validExtensions['image'])) {
-        $source = "<img src='$media_source' alt='$naam'  class=$class style='object-fit: cover'>";
+        $source = "<img src='$media_source' alt='$naam' class='$class' style='$style'>";
 
     } elseif (in_array($media['extensie'], $_validExtensions['video'])) {
         $source = "<video src='$media' title='$naam' class=$class> </video>";

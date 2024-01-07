@@ -46,5 +46,11 @@
         >
             Login
         </button>
+        <a
+                href="/klant_account_aanmaken"
+                class="btn btn-primary w-100"
+        >
+            Registreren
+        </a>
     </form>
 </div>

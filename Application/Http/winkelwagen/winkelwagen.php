@@ -89,15 +89,16 @@ if ($_GET['addtocart']??false){
         $_SESSION["winkelwagen"]["producten"][$id]["media_extensie"] = $result['media_extensie'];
 }
 
+//var_dump($_SESSION);
 //Check winkelwagen of set false
 if(
     ($_SESSION["winkelwagen"]['producten']??false)
     && count($_SESSION["winkelwagen"]['producten'])
 ){
-    var_dump($_SESSION);
+//    var_dump($_SESSION);
     $producten = $_SESSION["winkelwagen"]['producten'];
 } else{
-    var_dump("helaas zit niks in");
+//    var_dump("helaas zit niks in");
     $producten = false;
 }
 

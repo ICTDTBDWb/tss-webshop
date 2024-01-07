@@ -5,25 +5,6 @@
 include basePath("Application/Http/beheer/productbeheer.php");
 ?>
 
-<style>
-    .media
-    {
-        border-radius: 25px;
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-    }
-
-    .media1
-    {
-        border-radius: 25px;
-        width: 200px;
-        height: auto;
-        object-fit: contain;
-    }
-
-</style>
-
 <!--Banner-->
 <section class="row gx-0 mb-5">
     <a href="/categorieen?id=<?php echo $categorieen[0]['id'] ?>" class="col-7 col-sm-8 pe-2 text-decoration-none">
@@ -77,20 +58,17 @@ include basePath("Application/Http/beheer/productbeheer.php");
 
         <div class="d-flex">
             <?php foreach (recenteProducten() as $recente_product) { ?>
-                <div class="card me-2 text-white" style="width: 200px; height: 200px">
-                  <!--  <img
-                        src="/assets/afbeeldingen/<?php echo $recente_product['pad'] . '.' . $recente_product['extensie']; ?>"
-                        alt="Product"
-                        class="rounded w-100 h-100"
-                        style="object-fit: cover"
-                    > !-->
-                    <?php echo check_media($recente_product, "media") ?>
+                <a
+                    href="/producten_detail?id=<?php echo $recente_product['id']; ?>"
+                    class="card me-2 text-white" style="width: 200px; height: 200px"
+                >
+                    <?php echo check_media($recente_product, "rounded w-100 h-100", "object-fit: contain;") ?>
                     <div class="w-100 h-100 position-absolute left-0 top-0 rounded bg-dark" style="opacity: .4"></div>
                     <div class="card-img-overlay">
                         <h5 class="card-title"><?php echo $recente_product['naam']; ?></h5>
                         <p class="card-text"><?php echo $recente_product['prijs']; ?></p>
                     </div>
-                </div>
+                </a>
             <?php } ?>
         </div>
     </section>
@@ -111,13 +89,7 @@ include basePath("Application/Http/beheer/productbeheer.php");
             href="/producten_detail?id=<?php echo $product['id']; ?>"
             class="w-md-auto card d-flex flex-sm-row text-decoration-none text-dark mb-2"
         >
-            <!--<img
-                    src="/assets/afbeeldingen/<?php echo $product['pad'] . '.' . $product['extensie']; ?>"
-                    alt="<?php echo $product['naam']; ?>"
-                    class="rounded"
-                    style="width: 200px; height: 200px; object-fit: contain"
-            >!-->
-            <?php echo check_media($product, "media1") ?>
+            <?php echo check_media($product, "rounded", "width: 200px; height: 200px; object-fit: contain;") ?>
             <div class="row-sm w-100 d-flex flex-column p-3">
                 <div class="col-sm-12 d-flex flex-column flex-sm-grow-1">
                     <h5><?php echo $product['naam']; ?></h5>
