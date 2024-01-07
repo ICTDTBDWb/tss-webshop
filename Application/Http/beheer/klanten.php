@@ -1,6 +1,6 @@
 <?php
 
-// Funtion voor query om alle klanten weer te geven
+// Functie voor query om alle klanten weer te geven
 function queryKlanten() {
     $database = new Database(); // Maak een instantie van de DatabaseManager klasse.
     $result = $database->query("SELECT * FROM klanten")->get(); // Voer een query uit en haal meerdere rijen op.
