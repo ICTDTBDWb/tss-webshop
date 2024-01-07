@@ -1,7 +1,7 @@
 <?php
 include basePath("Application/Http/beheer/menu.php");
 $auth->protectAdminPage(Auth::BEHEERDER_ROLES);
-$admin = $auth->check_admin_rol([auth::ADMIN_ROLE]);
+$admin = $auth->check_admin_rol([auth::WEBREDACTEUR_ROLE]);
 $errorMessage = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
