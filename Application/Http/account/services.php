@@ -67,7 +67,7 @@ ORDER BY
     b.besteldatum DESC
 ";
 
-    $resultaat = $database->query($query, [$klantId])->get(); 
+    $resultaat = $database->query($query, [$klantId])->get();
     $database->close();
 
     return $resultaat;
