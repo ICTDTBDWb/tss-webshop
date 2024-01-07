@@ -89,7 +89,6 @@ if ($_GET['addtocart']??false){
         $_SESSION["winkelwagen"]["producten"][$id]["media_extensie"] = $result['media_extensie'];
 }
 
-var_dump($_SESSION);
 //Check winkelwagen of set false
 if(
     ($_SESSION["winkelwagen"]['producten']??false)

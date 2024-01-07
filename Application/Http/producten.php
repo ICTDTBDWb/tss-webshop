@@ -9,7 +9,7 @@ function queryEnkelProduct($getProductId) {
                                         INNER JOIN producten ON producten.id = product_categorieen.product_id
                                         INNER JOIN categorieen ON categorieen.id = product_categorieen.categorie_id
                                         INNER JOIN media ON media.product_id = product_categorieen.product_id
-                                        WHERE producten.id = ? and is_actief=1 AND is_verwijderd=0 GROUP BY producten.id",
+                                        WHERE producten.id = ? and is_actief=1 AND is_verwijderd=0 and not categorieen.naam like '%Giftboxen%'GROUP BY producten.id",
         [$getProductId]
     )->get();
 
@@ -27,7 +27,7 @@ function queryEnkeleCategorie($categorieId) {
                                         INNER JOIN producten ON producten.id = product_categorieen.product_id
                                         INNER JOIN categorieen ON categorieen.id = product_categorieen.categorie_id
                                         INNER JOIN media ON media.product_id = product_categorieen.product_id
-                                        WHERE categorie_id = ? and is_actief=1 AND is_verwijderd=0 GROUP BY producten.id",
+                                        WHERE categorie_id = ? and is_actief=1 AND is_verwijderd=0 and not categorieen.naam like '%Giftboxen%' GROUP BY producten.id",
         [$categorieId]
     )->get();
 
@@ -54,7 +54,7 @@ FROM product_categorieen
 INNER JOIN producten ON producten.id = product_categorieen.product_id
 INNER JOIN categorieen ON categorieen.id = product_categorieen.categorie_id
 INNER JOIN media ON media.product_id = product_categorieen.product_id
-WHERE is_actief=1 AND is_verwijderd=0 " )->get(); // Voer een query uit en haal meerdere rijen op.
+WHERE is_actief=1 AND is_verwijderd=0 and not categorieen.naam like '%Giftboxen%'" )->get(); // Voer een query uit en haal meerdere rijen op.
 
     $database->close(); // Sluit de database connectie.
 
