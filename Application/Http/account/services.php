@@ -67,7 +67,7 @@ ORDER BY
     b.besteldatum DESC
 ";
 
-    $resultaat = $database->query($query, [$klantId])->get(); // De query methode moet worden aangepast om prepared statements te ondersteunen.
+    $resultaat = $database->query($query, [$klantId])->get(); 
     $database->close();
 
     return $resultaat;
