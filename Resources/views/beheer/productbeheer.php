@@ -166,7 +166,7 @@
 
                         }
                         $data = key($product_categorie_post);
-                        var_dump($data);
+//                        var_dump($data);
 
                         $data = empty($data) ? "overig" : $data;
                         $alert_type = "success";
